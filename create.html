@@ -368,26 +368,31 @@ async function generate(){
       body: JSON.stringify({
         model:'claude-sonnet-4-20250514', max_tokens:2000,
         messages:[{role:'user', content:
-`Parse this resume and respond with ONLY a valid JSON object (no markdown, no backticks, no explanation):
+`You are parsing a resume. CRITICAL RULES:
+- Only use information explicitly stated in the resume text below
+- Do NOT invent, assume, or hallucinate any companies, roles, dates, or achievements
+- If the resume text looks garbled or unreadable, return an error field instead
+- Only include companies and roles that are clearly named in the text
 
 Resume for ${name}:
 ---
 ${resume}
 ---
 
+Respond with ONLY a valid JSON object (no markdown, no backticks):
 {
-  "bio": "2-3 sentence compelling professional bio in third person. Be specific about their most impressive achievements.",
+  "bio": "2-3 sentence bio using ONLY facts from the resume above. Third person.",
   "experience": [
     {
-      "company": "Company Name",
-      "role": "Job Title",
-      "dates": "Month Year – Month Year",
-      "location": "City, ST",
-      "bullets": ["Key achievement with numbers if possible", "Another key responsibility or win"]
+      "company": "EXACT company name from resume only",
+      "role": "EXACT job title from resume only",
+      "dates": "dates as written in resume",
+      "location": "location if mentioned",
+      "bullets": ["achievement or responsibility exactly as described in resume"]
     }
   ],
-  "skills": ["Skill 1", "Skill 2", "up to 20 skills total"],
-  "systemPrompt": "You are a warm, confident AI assistant representing ${name}. Answer questions about their professional background on their behalf. Be specific, cite real achievements with numbers when possible, and always speak positively. Keep answers to 2-4 sentences. Here is their background: [include all key details from resume - experience, skills, achievements, education]"
+  "skills": ["only skills explicitly mentioned in the resume"],
+  "systemPrompt": "You are a professional AI assistant for ${name}. Only discuss what is in their resume. If asked about something not in their background, say you don't have that information. Background from resume: [paste all key facts from the resume here]"
 }`
         }]
       })
