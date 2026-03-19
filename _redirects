@@ -1,0 +1,6 @@
+/create /create.html 200
+/preview /preview.html 200
+/success /success.html 200
+/faq /faq.html 200
+/dashboard /dashboard.html 200
+/:slug /profile.html 200

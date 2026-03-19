@@ -282,7 +282,9 @@ const ASK_SERVER='https://ask-server.thedobrien.workers.dev';
 let systemPrompt='',chatHistory=[],chatLoading=false,chatOpen=false,avatarDataUrl=null;
 
 window.addEventListener('load',async()=>{
-  const slug=new URLSearchParams(window.location.search).get('slug')||window.location.pathname.slice(1);
+  // Try pathname first (clean URL), fall back to ?slug= param
+  const pathSlug = window.location.pathname.slice(1).replace('.html','');
+  const slug = (pathSlug && pathSlug !== 'profile') ? pathSlug : new URLSearchParams(window.location.search).get('slug');
   if(!slug){window.location.href='/';return;}
   try{
     const res=await fetch(`${ASK_SERVER}/${slug}`);
