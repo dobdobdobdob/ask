@@ -175,7 +175,33 @@
     html.soft #chat-toggle{background:#D48B3A!important;border-radius:50px!important;}
     html.soft footer{background:#2D2318!important;}
     html.soft .main-content{background:#FDF8F3!important;}
+    
+    /* GDPR Banner */
+    #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
+    #gdpr-banner.show{transform:translateY(0);}
+    .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
+    .gdpr-text a{color:rgba(255,255,255,0.4);text-decoration:underline;}
+    .gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
+    .gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:var(--accent);color:var(--black);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+    .gdpr-accept:hover{background:#fff;}
+    .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+    .gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
+    @media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
     </style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Y6Y16FEG2H');
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-96XWYGNS49');
+</script>
 </head>
 <body>
 
@@ -276,6 +302,7 @@ window.addEventListener('load',async()=>{
     // Socials
     const socialDefs=[{key:'linkedin',label:'LinkedIn'},{key:'github',label:'GitHub'},{key:'portfolio',label:'Portfolio'},{key:'twitter',label:'X'},{key:'tiktok',label:'TikTok'},{key:'instagram',label:'Instagram'}];
     socialDefs.forEach(({key,label})=>{if(d.socials?.[key]){const a=document.createElement('a');a.href=d.socials[key].startsWith('http')?d.socials[key]:'https://'+d.socials[key];a.className='social-pill';a.target='_blank';a.textContent=label;document.getElementById('profileSocials').appendChild(a);}});
+    if(d.email){const a=document.createElement('a');const subject=encodeURIComponent('Reaching out via Ask — '+d.name);a.href='mailto:'+d.email+'?subject='+subject;a.className='social-pill';a.textContent='✉ Email Me';document.getElementById('profileSocials').appendChild(a);}
     // Experience
     if(d.experience?.length>0){const list=document.getElementById('expList');d.experience.forEach(job=>{const card=document.createElement('div');card.className='exp-card';const bullets=(job.bullets||[]).map(b=>`<li>${b}</li>`).join('');card.innerHTML=`<div class="exp-header"><div><div class="exp-company">${job.company||''}</div><div class="exp-role">${job.role||''}</div></div><div class="exp-right"><div class="exp-dates">${job.dates||''}</div><div class="exp-location">${job.location||''}</div></div></div>${bullets?`<ul class="exp-bullets">${bullets}</ul>`:''}`;list.appendChild(card);});}
     else{document.getElementById('expSection').style.display='none';}
@@ -296,6 +323,16 @@ function showTyping(){const wrap=document.getElementById('cpMessages');const div
 function askSugg(btn){document.getElementById('cpSuggs').style.display='none';document.getElementById('cpInput').value=btn.textContent;sendChat();}
 function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
 async function sendChat(){const input=document.getElementById('cpInput');const text=input.value.trim();if(!text||chatLoading)return;chatLoading=true;document.getElementById('cpSend').disabled=true;document.getElementById('cpSuggs').style.display='none';input.value='';input.style.height='auto';addMsg('user',text);chatHistory.push({role:'user',content:text});showTyping();try{const res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:systemPrompt,messages:chatHistory})});const data=await res.json();const reply=data.content?.[0]?.text||"I'm having connection issues.";document.getElementById('typingMsg')?.remove();addMsg('assistant',reply);chatHistory.push({role:'assistant',content:reply});}catch(e){document.getElementById('typingMsg')?.remove();addMsg('assistant','Connection issue — please try again.');}chatLoading=false;document.getElementById('cpSend').disabled=false;}
+
+// GDPR
+function gdprInit(){
+  const consent = localStorage.getItem('gdpr_consent');
+  if(!consent) setTimeout(()=>document.getElementById('gdpr-banner').classList.add('show'), 1500);
+  if(consent === 'declined') window['ga-disable-G-Y6Y16FEG2H'] = true;
+}
+function gdprAccept(){ localStorage.setItem('gdpr_consent','accepted'); document.getElementById('gdpr-banner').classList.remove('show'); }
+function gdprDecline(){ localStorage.setItem('gdpr_consent','declined'); window['ga-disable-G-Y6Y16FEG2H']=true; document.getElementById('gdpr-banner').classList.remove('show'); }
+gdprInit();
 </script>
 </body>
 </html>

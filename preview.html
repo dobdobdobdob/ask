@@ -565,6 +565,14 @@ window.addEventListener('load', () => {
       socials.appendChild(a);
     }
   });
+  // Email Me pill
+  if(d.email){
+    const a=document.createElement('a');
+    const subject=encodeURIComponent('Reaching out via Ask — '+d.name);
+    a.href='mailto:'+d.email+'?subject='+subject;
+    a.className='social-pill';a.textContent='✉ Email Me';
+    socials.appendChild(a);
+  }
 
   // Experience
   if(d.experience && d.experience.length>0){
