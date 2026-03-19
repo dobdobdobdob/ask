@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script>
+    const slug = window.location.pathname.slice(1);
+    const skip = ['create.html','preview.html','success.html','profile.html','embed.js','404.html','CNAME'];
+    if(slug && !skip.includes(slug)){
+      window.location.replace('/profile.html?slug=' + slug);
+    } else if(!slug){
+      window.location.replace('/');
+    }
+  </script>
+</head>
+<body></body>
+</html>

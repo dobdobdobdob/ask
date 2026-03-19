@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Assistant is Live — Ask</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
+    body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text1);min-height:100vh;display:flex;flex-direction:column;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
+    .nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
+
+    .success-banner{background:var(--off-white);border-bottom:1px solid var(--border);padding:7rem 4rem 3rem;text-align:center;}
+    .success-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent);color:var(--black);font-size:0.72rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0.4rem 1rem;border-radius:100px;margin-bottom:1.25rem;}
+    .success-title{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem;}
+    .success-sub{font-size:0.95rem;color:var(--text2);font-weight:300;}
+
+    .main{max-width:760px;margin:0 auto;width:100%;padding:3rem 4rem 4rem;flex:1;}
+
+    .card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2rem;margin-bottom:1.5rem;}
+    .card-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;letter-spacing:-0.02em;margin-bottom:1.25rem;}
+
+    .url-row{display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.75rem 1rem;}
+    .url-text{flex:1;font-size:0.85rem;color:var(--text1);font-family:'DM Sans',monospace;word-break:break-all;}
+    .copy-btn{font-size:0.68rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:0.4rem 1rem;background:var(--black);color:var(--white);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;}
+    .copy-btn:hover{background:var(--accent);color:var(--black);}
+    .copy-btn.copied{background:var(--accent-dark);color:var(--white);}
+
+    .view-btn{display:block;text-align:center;background:var(--black);color:var(--white);padding:0.85rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;text-decoration:none;margin-top:1rem;}
+    .view-btn:hover{background:var(--accent);color:var(--black);}
+
+    /* EMBED SECTION */
+    .embed-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;}
+    .embed-sub{font-size:0.88rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:2rem;}
+
+    .embed-options{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;}
+    .embed-option{border:1px solid var(--border);border-radius:4px;padding:1.25rem;cursor:pointer;transition:all 0.2s;}
+    .embed-option:hover{border-color:var(--accent-dark);}
+    .embed-option.active{border-color:var(--accent-dark);background:var(--off-white);}
+    .embed-option-title{font-size:0.88rem;font-weight:500;margin-bottom:0.2rem;}
+    .embed-option-desc{font-size:0.75rem;color:var(--text2);font-weight:300;line-height:1.5;}
+
+    .platform-tabs{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+    .ptab{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;padding:0.6rem 1.1rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;transition:all 0.2s;margin-bottom:-1px;}
+    .ptab.on{color:var(--text1);border-bottom-color:var(--black);}
+    .ptab:hover{color:var(--text1);}
+
+    .platform-panel{display:none;}
+    .platform-panel.on{display:block;}
+
+    .step-list{display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.25rem;}
+    .step-item{display:flex;gap:0.85rem;align-items:flex-start;}
+    .step-circle{width:22px;height:22px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;color:var(--white);flex-shrink:0;margin-top:1px;}
+    .step-text{font-size:0.82rem;color:var(--text2);line-height:1.6;font-weight:300;}
+    .step-text strong{color:var(--text1);font-weight:500;}
+
+    .code-block{background:#F7F6F3;border:1px solid var(--border);border-radius:2px;padding:1rem;font-family:'DM Sans',monospace;font-size:0.75rem;color:var(--text1);word-break:break-all;line-height:1.6;margin-bottom:0.75rem;white-space:pre-wrap;}
+
+    footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+    .footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
+    .footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
+    .footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.05em;}
+
+    @media(max-width:768px){
+      nav{padding:1.25rem 1.5rem;}
+      .success-banner{padding:6rem 1.5rem 2.5rem;}
+      .main{padding:2.5rem 1.5rem 3rem;}
+      .embed-options{grid-template-columns:1fr;}
+      footer{flex-direction:column;gap:1rem;padding:1.5rem;text-align:center;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Ask<span>.</span></a>
+</nav>
+
+<div class="success-banner">
+  <div class="success-badge">✓ Payment Confirmed</div>
+  <h1 class="success-title">Your assistant is live.</h1>
+  <p class="success-sub">Share your link or embed your chat on any website.</p>
+</div>
+
+<div class="main">
+
+  <!-- SHAREABLE URL -->
+  <div class="card">
+    <div class="card-title">Your shareable page</div>
+    <div class="url-row">
+      <div class="url-text" id="shareUrl">Saving your profile...</div>
+      <button class="copy-btn" id="copyUrlBtn" onclick="copyUrl()">Copy</button>
+    </div>
+    <a class="view-btn" id="viewPageBtn" href="#" target="_blank">View My Page →</a>
+  </div>
+
+  <!-- EMBED SECTION -->
+  <div class="card">
+    <div class="embed-title">Add to your existing website.</div>
+    <p class="embed-sub">Choose how you want to embed your assistant — a full profile page or just a floating chat button.</p>
+
+    <div class="embed-options">
+      <div class="embed-option active" id="opt-chat" onclick="selectEmbed('chat')">
+        <div class="embed-option-title">Chat Button Only</div>
+        <div class="embed-option-desc">Floating "Ask Me" button on any page. Best for portfolios and personal sites.</div>
+      </div>
+      <div class="embed-option" id="opt-full" onclick="selectEmbed('full')">
+        <div class="embed-option-title">Full Profile Page</div>
+        <div class="embed-option-desc">Embed your complete profile with experience, skills, and chat.</div>
+      </div>
+    </div>
+
+    <!-- PLATFORM TABS -->
+    <div class="platform-tabs">
+      <button class="ptab on" onclick="selectPlatform('wix',this)">Wix</button>
+      <button class="ptab" onclick="selectPlatform('squarespace',this)">Squarespace</button>
+      <button class="ptab" onclick="selectPlatform('wordpress',this)">WordPress</button>
+      <button class="ptab" onclick="selectPlatform('any',this)">Any Site</button>
+    </div>
+
+    <div id="platform-content"></div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="/" class="footer-logo">Ask<span>.</span></a>
+  <div class="footer-copy">Powered by Menos Labs · menos-labs.com</div>
+</footer>
+
+<script>
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
+let shareUrl = '', slug = '', embedType = 'chat';
+
+const INSTRUCTIONS = {
+  wix: {
+    chat: [
+      'In your Wix editor, click <strong>Add Elements</strong> in the left sidebar',
+      'Select <strong>Embed Code</strong> → <strong>HTML iframe</strong>',
+      'Paste the code below into the HTML box',
+      'Click <strong>Apply</strong> and position the element',
+      'Publish your site',
+    ],
+    full: [
+      'In your Wix editor, click <strong>Add Elements</strong> → <strong>Embed Code</strong>',
+      'Select <strong>HTML iframe</strong>',
+      'Paste the iframe code below and click <strong>Apply</strong>',
+      'Resize the element to fill the section',
+      'Publish your site',
+    ]
+  },
+  squarespace: {
+    chat: [
+      'Go to the page where you want the chat button',
+      'Click <strong>Edit</strong> → hover over a section → click <strong>+</strong>',
+      'Select <strong>Code</strong> block',
+      'Paste the code below and click <strong>Apply</strong>',
+      'Save and publish',
+    ],
+    full: [
+      'Go to your page and click <strong>Edit</strong>',
+      'Add a <strong>Code</strong> block where you want the profile',
+      'Paste the iframe code below',
+      'Adjust the height as needed and publish',
+    ]
+  },
+  wordpress: {
+    chat: [
+      'In your WordPress dashboard, go to <strong>Appearance → Theme Editor</strong>',
+      'Open your theme\'s <strong>footer.php</strong> file',
+      'Paste the code just before the <strong>&lt;/body&gt;</strong> tag',
+      'Save and view your site — the chat button will appear on every page',
+    ],
+    full: [
+      'Create or edit a page in WordPress',
+      'Click the <strong>+</strong> to add a block → search for <strong>Custom HTML</strong>',
+      'Paste the iframe code below',
+      'Save and preview',
+    ]
+  },
+  any: {
+    chat: [
+      'Open your website\'s HTML file or template',
+      'Paste the code below just before the closing <strong>&lt;/body&gt;</strong> tag',
+      'Save and upload — the chat button will appear on every page',
+    ],
+    full: [
+      'Open the HTML file where you want the profile',
+      'Paste the iframe code below where you want it to appear',
+      'Save and upload',
+    ]
+  }
+};
+
+function getEmbedCode(type){
+  if(type==='chat'){
+    return `<script src="https://ask.menos-labs.com/embed.js" data-slug="${slug}"><\/script>`;
+  } else {
+    return `<iframe src="${shareUrl}" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;" title="Ask ${slug}"></iframe>`;
+  }
+}
+
+let currentPlatform = 'wix';
+
+function renderPlatformContent(){
+  const steps = INSTRUCTIONS[currentPlatform][embedType];
+  const code = getEmbedCode(embedType);
+  const stepsHtml = steps.map((s,i)=>`<div class="step-item"><div class="step-circle">${i+1}</div><div class="step-text">${s}</div></div>`).join('');
+  document.getElementById('platform-content').innerHTML = `
+    <div class="step-list">${stepsHtml}</div>
+    <div class="code-block" id="embedCodeBlock">${code}</div>
+    <button class="copy-btn" onclick="copyEmbed()">Copy Code</button>
+  `;
+}
+
+function selectEmbed(type){
+  embedType = type;
+  document.getElementById('opt-chat').classList.toggle('active', type==='chat');
+  document.getElementById('opt-full').classList.toggle('active', type==='full');
+  renderPlatformContent();
+}
+
+function selectPlatform(p, btn){
+  currentPlatform = p;
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderPlatformContent();
+}
+
+function copyUrl(){
+  navigator.clipboard.writeText(shareUrl).then(()=>{
+    const btn = document.getElementById('copyUrlBtn');
+    btn.textContent='Copied!'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyEmbed(){
+  const code = getEmbedCode(embedType);
+  navigator.clipboard.writeText(code).then(()=>{
+    const btns = document.querySelectorAll('.copy-btn');
+    btns.forEach(b=>{ if(b.onclick?.toString().includes('copyEmbed')){ b.textContent='Copied!'; b.classList.add('copied'); setTimeout(()=>{ b.textContent='Copy Code'; b.classList.remove('copied'); },2000); } });
+  });
+}
+
+// Load and save on arrival from Stripe
+window.addEventListener('load', async () => {
+  const raw = localStorage.getItem('ask_purchase_data');
+  if(!raw){ document.getElementById('shareUrl').textContent='No data found — please go back and try again.'; return; }
+
+  const data = JSON.parse(raw);
+
+  try {
+    const res = await fetch(ASK_SERVER+'/save', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if(result.slug){
+      slug = result.slug;
+      shareUrl = `https://ask.menos-labs.com/${slug}`;
+      document.getElementById('shareUrl').textContent = shareUrl;
+      document.getElementById('viewPageBtn').href = shareUrl;
+      localStorage.removeItem('ask_purchase_data');
+      renderPlatformContent();
+    }
+  } catch(e){
+    document.getElementById('shareUrl').textContent='Error saving — please contact hello@menos-labs.com';
+  }
+});
+
+// Initial render
+renderPlatformContent();
+</script>
+</body>
+</html>

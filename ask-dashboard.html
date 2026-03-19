@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Ask</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
+    body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text1);min-height:100vh;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 3rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
+    .nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 5px;margin-left:2px;font-style:italic;}
+    .nav-badge{font-size:0.65rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
+    .btn-logout{font-size:0.72rem;color:var(--text3);background:none;border:1px solid var(--border);padding:0.35rem 0.85rem;border-radius:2px;cursor:pointer;transition:all 0.2s;}
+    .btn-logout:hover{color:var(--text1);border-color:var(--text3);}
+
+    /* LOGIN */
+    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;}
+    .login-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2.5rem;width:100%;max-width:380px;}
+    .login-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.4rem;}
+    .login-sub{font-size:0.82rem;color:var(--text2);font-weight:300;margin-bottom:1.75rem;}
+    .login-error{font-size:0.78rem;color:#dc2626;margin-bottom:0.75rem;display:none;}
+
+    /* MAIN */
+    #dashScreen{display:none;padding:5rem 3rem 3rem;}
+    .dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;}
+    .dash-title{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;letter-spacing:-0.03em;}
+    .dash-sub{font-size:0.82rem;color:var(--text2);font-weight:300;margin-top:0.25rem;}
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:1.25rem 1.5rem;}
+    .stat-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;letter-spacing:-0.04em;color:var(--text1);margin-bottom:0.2rem;}
+    .stat-label{font-size:0.65rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;}
+
+    /* TABLE */
+    .table-card{background:var(--white);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+    .table-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .table-title{font-size:0.82rem;font-weight:500;color:var(--text1);}
+    .search-input{font-family:'DM Sans',sans-serif;font-size:0.78rem;background:var(--off-white);border:1px solid var(--border);color:var(--text1);padding:0.45rem 0.85rem;outline:none;border-radius:2px;width:220px;transition:border-color 0.2s;}
+    .search-input:focus{border-color:var(--accent-dark);}
+    .search-input::placeholder{color:var(--text3);}
+    table{width:100%;border-collapse:collapse;}
+    th{font-size:0.62rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);padding:0.75rem 1.5rem;text-align:left;border-bottom:1px solid var(--border);background:var(--off-white);}
+    td{font-size:0.82rem;color:var(--text2);padding:1rem 1.5rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:#FAFAF8;}
+    .profile-name-cell{font-weight:500;color:var(--text1);}
+    .profile-slug{font-size:0.72rem;color:var(--text3);margin-top:2px;}
+    .status-badge{font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.65rem;border-radius:100px;background:rgba(139,179,0,0.1);color:var(--accent-dark);}
+    .btn-edit{font-size:0.68rem;font-weight:500;padding:0.35rem 0.85rem;background:var(--black);color:var(--white);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;margin-right:0.4rem;}
+    .btn-edit:hover{background:var(--accent);color:var(--black);}
+    .btn-delete{font-size:0.68rem;font-weight:500;padding:0.35rem 0.85rem;background:none;color:var(--text3);border:1px solid var(--border);border-radius:2px;cursor:pointer;transition:all 0.2s;}
+    .btn-delete:hover{background:#fef2f2;color:#dc2626;border-color:#fca5a5;}
+    .empty-state{text-align:center;padding:3rem;color:var(--text3);font-size:0.85rem;}
+
+    /* EDIT PANEL */
+    #editPanel{position:fixed;top:0;right:-100%;width:100%;max-width:520px;height:100vh;background:var(--white);border-left:1px solid var(--border);z-index:200;transition:right 0.3s ease;overflow-y:auto;display:flex;flex-direction:column;}
+    #editPanel.open{right:0;}
+    .edit-header{padding:1.5rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--off-white);position:sticky;top:0;z-index:1;}
+    .edit-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;}
+    .edit-close{background:none;border:none;font-size:1.2rem;color:var(--text3);cursor:pointer;transition:color 0.2s;}
+    .edit-close:hover{color:var(--text1);}
+    .edit-body{padding:2rem;flex:1;}
+    .edit-section{font-size:0.62rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+    .field{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem;}
+    .flabel{font-size:0.62rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);}
+    .finput{font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:300;background:var(--off-white);border:1px solid var(--border);color:var(--text1);padding:0.65rem 0.9rem;outline:none;border-radius:2px;width:100%;transition:border-color 0.2s;}
+    .finput:focus{border-color:var(--accent-dark);}
+    .finput::placeholder{color:var(--text3);}
+    textarea.finput{resize:vertical;min-height:160px;line-height:1.65;}
+
+    .tab-row{display:flex;gap:0;margin-bottom:0.75rem;}
+    .rtab{font-size:0.62rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0.45rem 1rem;background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer;transition:all 0.2s;}
+    .rtab:first-child{border-radius:2px 0 0 2px;}
+    .rtab:last-child{border-radius:0 2px 2px 0;border-left:none;}
+    .rtab.on{background:var(--off-white);border-color:var(--accent-dark);color:var(--text1);}
+    .resume-panel{display:none;}
+    .resume-panel.on{display:block;}
+    .upload-area{border:1px dashed var(--border);padding:1.5rem;text-align:center;cursor:pointer;border-radius:2px;background:var(--off-white);transition:all 0.2s;}
+    .upload-area:hover{border-color:var(--accent-dark);background:var(--light);}
+    .upload-text{font-size:0.82rem;color:var(--text2);}
+    .upload-hint{font-size:0.7rem;color:var(--text3);margin-top:0.2rem;}
+    .upload-ok{font-size:0.72rem;color:var(--accent-dark);margin-top:0.4rem;display:none;font-weight:500;}
+
+    .btn-regen{background:var(--black);color:var(--white);padding:0.85rem;font-size:0.82rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;width:100%;margin-top:1.25rem;transition:all 0.2s;}
+    .btn-regen:hover{background:var(--accent);color:var(--black);}
+    .btn-regen:disabled{opacity:0.4;cursor:not-allowed;}
+
+    .regen-state{display:none;text-align:center;padding:1.5rem 0;}
+    .regen-dots{display:flex;gap:6px;justify-content:center;margin-bottom:0.75rem;}
+    .regen-dot{width:7px;height:7px;background:var(--accent-dark);border-radius:50%;animation:dotPulse 1.4s ease-in-out infinite;}
+    .regen-dot:nth-child(2){animation-delay:0.2s;}
+    .regen-dot:nth-child(3){animation-delay:0.4s;}
+    @keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
+    .regen-text{font-size:0.78rem;color:var(--text2);}
+
+    .regen-success{display:none;background:rgba(139,179,0,0.08);border:1px solid rgba(139,179,0,0.25);border-radius:2px;padding:1rem;text-align:center;margin-top:1rem;}
+    .regen-success-title{font-size:0.85rem;font-weight:500;color:var(--accent-dark);margin-bottom:0.25rem;}
+    .regen-success-sub{font-size:0.75rem;color:var(--text2);font-weight:300;}
+
+    #fileEditInput{display:none;}
+
+    /* OVERLAY */
+    #overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:199;display:none;backdrop-filter:blur(2px);}
+    #overlay.show{display:block;}
+
+    @media(max-width:768px){
+      #dashScreen{padding:5rem 1.25rem 2rem;}
+      nav{padding:1.25rem 1.5rem;}
+      .stats-row{grid-template-columns:1fr;}
+      #editPanel{max-width:100%;}
+    }
+  </style>
+</head>
+<body>
+
+<input type="file" id="fileEditInput" accept=".pdf,.doc,.docx,.txt">
+
+<nav>
+  <a href="/" class="nav-logo">Ask<span>.</span></a>
+  <span class="nav-badge">Dashboard</span>
+  <button class="btn-logout" onclick="logout()">Sign Out</button>
+</nav>
+
+<div id="overlay" onclick="closeEdit()"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-title">Dashboard</div>
+    <p class="login-sub">Sign in to manage Ask profiles.</p>
+    <div class="login-error" id="loginError">Incorrect password.</div>
+    <div class="field">
+      <label class="flabel">Password</label>
+      <input class="finput" id="loginPw" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-regen" style="margin-top:0.75rem" onclick="doLogin()">Sign In →</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashScreen">
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Profiles</div>
+      <div class="dash-sub">All active Ask assistant profiles</div>
+    </div>
+    <button class="btn-edit" style="padding:0.6rem 1.25rem;font-size:0.75rem;" onclick="loadProfiles()">↻ Refresh</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total Profiles</div></div>
+    <div class="stat-card"><div class="stat-num" id="statToday">—</div><div class="stat-label">This Month</div></div>
+    <div class="stat-card"><div class="stat-num">$9.99</div><div class="stat-label">Price Per Profile</div></div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <span class="table-title">All Profiles</span>
+      <input class="search-input" id="searchInput" type="text" placeholder="Search by name or slug..." oninput="filterProfiles()">
+    </div>
+    <div id="tableWrap">
+      <div class="empty-state">Loading profiles...</div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PANEL -->
+<div id="editPanel">
+  <div class="edit-header">
+    <div class="edit-title" id="editPanelTitle">Edit Profile</div>
+    <button class="edit-close" onclick="closeEdit()">✕</button>
+  </div>
+  <div class="edit-body">
+    <input type="hidden" id="editSlug">
+
+    <p class="edit-section">Profile Info</p>
+    <div class="field"><label class="flabel">Full Name</label><input class="finput" id="editName" type="text"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+      <div class="field"><label class="flabel">Title</label><input class="finput" id="editTitle" type="text"></div>
+      <div class="field"><label class="flabel">City</label><input class="finput" id="editCity" type="text"></div>
+    </div>
+    <div class="field"><label class="flabel">Email (for notification)</label><input class="finput" id="editEmail" type="email" placeholder="user@email.com"></div>
+
+    <p class="edit-section" style="margin-top:1.5rem;">Updated Resume</p>
+    <div class="tab-row">
+      <button class="rtab on" id="etab-paste" onclick="eTab('paste')">Paste Text</button>
+      <button class="rtab" id="etab-upload" onclick="eTab('upload')">Upload File</button>
+    </div>
+    <div class="resume-panel on" id="epanel-paste">
+      <textarea class="finput" id="editResume" placeholder="Paste the updated resume text here..."></textarea>
+    </div>
+    <div class="resume-panel" id="epanel-upload">
+      <div class="upload-area" onclick="document.getElementById('fileEditInput').click()">
+        <div class="upload-text">Click to upload updated resume</div>
+        <div class="upload-hint">PDF, Word, or .txt</div>
+        <div class="upload-ok" id="editUploadOk"></div>
+      </div>
+    </div>
+
+    <div id="editActions">
+      <button class="btn-regen" onclick="regenerate()">Regenerate Profile →</button>
+    </div>
+
+    <div class="regen-state" id="regenState">
+      <div class="regen-dots"><div class="regen-dot"></div><div class="regen-dot"></div><div class="regen-dot"></div></div>
+      <div class="regen-text" id="regenText">Reading resume...</div>
+    </div>
+
+    <div class="regen-success" id="regenSuccess">
+      <div class="regen-success-title">✓ Profile updated</div>
+      <div class="regen-success-sub" id="regenSuccessMsg">Profile saved. Notification email sent.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
+const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
+const PASS = 'Luckydog00';
+let allProfiles = [], editUploadText = '';
+
+// ── LOGIN ──
+function doLogin(){
+  const pw = document.getElementById('loginPw').value;
+  if(pw === PASS){
+    sessionStorage.setItem('ask_dash', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashScreen').style.display = 'block';
+    loadProfiles();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginPw').value = '';
+  }
+}
+
+function logout(){
+  sessionStorage.removeItem('ask_dash');
+  location.reload();
+}
+
+window.addEventListener('load', () => {
+  if(sessionStorage.getItem('ask_dash')){
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashScreen').style.display = 'block';
+    loadProfiles();
+  }
+  document.getElementById('loginPw').focus?.();
+});
+
+// ── LOAD PROFILES ──
+async function loadProfiles(){
+  document.getElementById('tableWrap').innerHTML = '<div class="empty-state">Loading...</div>';
+  try {
+    const res = await fetch(`${ASK_SERVER}/list`);
+    const data = await res.json();
+    allProfiles = data.profiles || [];
+    document.getElementById('statTotal').textContent = allProfiles.length;
+    renderTable(allProfiles);
+  } catch(e){
+    document.getElementById('tableWrap').innerHTML = '<div class="empty-state">Could not load profiles. Check Worker is running.</div>';
+  }
+}
+
+function renderTable(profiles){
+  if(!profiles.length){
+    document.getElementById('tableWrap').innerHTML = '<div class="empty-state">No profiles yet.</div>';
+    return;
+  }
+  const rows = profiles.map(p=>`
+    <tr>
+      <td>
+        <div class="profile-name-cell">${p.name||'Unknown'}</div>
+        <div class="profile-slug">${p.slug}</div>
+      </td>
+      <td>${p.meta||'—'}</td>
+      <td><a href="https://ask.menos-labs.com/${p.slug}" target="_blank" style="color:var(--accent-dark);font-size:0.75rem;text-decoration:none;">${p.slug} →</a></td>
+      <td><span class="status-badge">Active</span></td>
+      <td>
+        <button class="btn-edit" onclick="openEdit('${p.slug}')">Edit</button>
+        <button class="btn-delete" onclick="deleteProfile('${p.slug}','${p.name||'this profile'}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+  document.getElementById('tableWrap').innerHTML = `
+    <table>
+      <thead><tr><th>Name</th><th>Title / City</th><th>URL</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function filterProfiles(){
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  renderTable(allProfiles.filter(p=>(p.name||'').toLowerCase().includes(q)||(p.slug||'').toLowerCase().includes(q)));
+}
+
+// ── EDIT ──
+async function openEdit(slug){
+  document.getElementById('editSlug').value = slug;
+  document.getElementById('editActions').style.display = 'block';
+  document.getElementById('regenState').style.display = 'none';
+  document.getElementById('regenSuccess').style.display = 'none';
+  document.getElementById('editResume').value = '';
+  editUploadText = '';
+
+  try {
+    const res = await fetch(`${ASK_SERVER}/${slug}`);
+    const d = await res.json();
+    document.getElementById('editPanelTitle').textContent = `Edit — ${d.name||slug}`;
+    document.getElementById('editName').value = d.name||'';
+    document.getElementById('editTitle').value = d.title||'';
+    document.getElementById('editCity').value = d.city||'';
+    document.getElementById('editEmail').value = d.email||'';
+  } catch(e){
+    document.getElementById('editPanelTitle').textContent = `Edit — ${slug}`;
+  }
+
+  document.getElementById('editPanel').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeEdit(){
+  document.getElementById('editPanel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function eTab(tab){
+  ['paste','upload'].forEach(t=>{
+    document.getElementById('etab-'+t).classList.toggle('on',t===tab);
+    document.getElementById('epanel-'+t).classList.toggle('on',t===tab);
+  });
+}
+
+document.getElementById('fileEditInput').addEventListener('change', async function(){
+  const file = this.files[0]; if(!file) return;
+  const el = document.getElementById('editUploadOk');
+  el.style.display='block'; el.textContent=`✓ ${file.name} loaded`;
+  editUploadText = await file.text().catch(()=>'') || `[File: ${file.name}]`;
+});
+
+// ── REGENERATE ──
+async function regenerate(){
+  const slug = document.getElementById('editSlug').value;
+  const name = document.getElementById('editName').value.trim();
+  const title = document.getElementById('editTitle').value.trim();
+  const city = document.getElementById('editCity').value.trim();
+  const email = document.getElementById('editEmail').value.trim();
+  const resume = document.getElementById('editResume').value.trim() || editUploadText;
+
+  if(!resume){ alert('Please paste or upload the updated resume.'); return; }
+
+  document.getElementById('editActions').style.display = 'none';
+  document.getElementById('regenState').style.display = 'block';
+  document.getElementById('regenSuccess').style.display = 'none';
+
+  const texts = ['Reading resume...','Extracting experience...','Rebuilding profile...','Almost done...'];
+  let gi=0;
+  const iv = setInterval(()=>{ gi=(gi+1)%texts.length; document.getElementById('regenText').textContent=texts[gi]; }, 1800);
+
+  try {
+    // Generate new content
+    const res = await fetch(WORKER, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:2000,
+        messages:[{role:'user', content:
+`Parse this updated resume and respond with ONLY a valid JSON object (no markdown):
+
+Resume for ${name}:
+---
+${resume}
+---
+
+{
+  "bio": "2-3 sentence compelling professional bio in third person.",
+  "experience": [{"company":"","role":"","dates":"","location":"","bullets":["",""]}],
+  "skills": ["skill1","skill2"],
+  "systemPrompt": "You are a warm confident AI assistant for ${name}. Answer recruiter questions about their background. Keep answers to 2-4 sentences. Background: [include all key details]"
+}`
+        }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '{}';
+    let parsed;
+    try{ parsed = JSON.parse(raw); }
+    catch(e){ const m=raw.match(/\{[\s\S]*\}/); parsed=m?JSON.parse(m[0]):{bio:'',experience:[],skills:[],systemPrompt:`You are an AI assistant for ${name}.`}; }
+
+    clearInterval(iv);
+
+    // Fetch existing profile to preserve avatar and socials
+    let existing = {};
+    try{ const er=await fetch(`${ASK_SERVER}/${slug}`); existing=await er.json(); }catch(e){}
+
+    // Save updated profile back to KV with same slug
+    const updated = {
+      ...existing,
+      name, title, city, email,
+      meta: [title, city].filter(Boolean).join(' · '),
+      bio: parsed.bio,
+      experience: parsed.experience||[],
+      skills: parsed.skills||[],
+      systemPrompt: parsed.systemPrompt,
+    };
+
+    await fetch(`${ASK_SERVER}/update`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ slug, data: updated })
+    });
+
+    // Send notification email if email exists
+    let emailSent = false;
+    if(email){
+      try {
+        await fetch('https://waveform-email.thedobrien.workers.dev', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            email,
+            subject: 'Your Ask profile has been updated',
+            html: `<p>Hi ${name},</p><p>Your Ask assistant profile has been updated and is live at:</p><p><a href="https://ask.menos-labs.com/${slug}">ask.menos-labs.com/${slug}</a></p><p>The Menos Labs Team</p>`
+          })
+        });
+        emailSent = true;
+      } catch(e){}
+    }
+
+    document.getElementById('regenState').style.display = 'none';
+    document.getElementById('regenSuccess').style.display = 'block';
+    document.getElementById('regenSuccessMsg').textContent = emailSent ? `Profile saved. Notification sent to ${email}.` : 'Profile saved successfully.';
+    document.getElementById('editActions').style.display = 'block';
+    loadProfiles();
+
+  } catch(err){
+    clearInterval(iv);
+    document.getElementById('regenText').textContent = 'Something went wrong. Please try again.';
+    document.getElementById('editActions').style.display = 'block';
+    document.getElementById('regenState').style.display = 'none';
+  }
+}
+
+// ── DELETE ──
+async function deleteProfile(slug, name){
+  if(!confirm(`Delete profile for "${name}"? This cannot be undone.`)) return;
+  try {
+    await fetch(`${ASK_SERVER}/delete`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ slug })
+    });
+    loadProfiles();
+  } catch(e){ alert('Delete failed. Please try again.'); }
+}
+</script>
+</body>
+</html>
