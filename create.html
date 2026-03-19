@@ -391,7 +391,7 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl };
     profileData.theme = selectedTheme;
     sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
-    window.location.href = '/preview';
+    window.location.href = '/preview.html';
 
   } catch(err){
     clearInterval(iv);
