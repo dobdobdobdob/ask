@@ -91,6 +91,10 @@
     @media(max-width:480px){.theme-picker{grid-template-columns:repeat(2,1fr);}}
 
     /* Theme preview on form card */
+    .page.preview-dark{background:#0a0a0a;}
+    .page.preview-dark .page-eyebrow{color:rgba(255,255,255,0.3);}
+    .page.preview-dark .page-title{color:#ffffff;}
+    .page.preview-dark .page-sub{color:rgba(255,255,255,0.5);}
     .form-card.preview-dark{background:#141414;border-color:rgba(255,255,255,0.1);}
     .form-card.preview-dark .form-section-title{color:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.08);}
     .form-card.preview-dark .flabel{color:rgba(255,255,255,0.3);}
@@ -112,6 +116,8 @@
     .form-card.preview-dark .avatar-initials{color:rgba(255,255,255,0.4);}
     .form-card.preview-dark .avatar-hint{color:rgba(255,255,255,0.2);}
 
+    .page.preview-bold{background:#ffffff;}
+    .page.preview-bold .page-title{color:#000000;}
     .form-card.preview-bold{background:#fff;border:3px solid #000;}
     .form-card.preview-bold .form-section-title{color:#000;border-color:#000;letter-spacing:0.2em;}
     .form-card.preview-bold .flabel{color:#000;font-weight:700;}
@@ -125,6 +131,9 @@
     .form-card.preview-bold .btn-generate{background:#000;color:#fff;border-radius:0;letter-spacing:0.2em;}
     .form-card.preview-bold .avatar-circle{border:2px solid #000;border-radius:0;background:#f5f5f5;}
 
+    .page.preview-soft{background:#FDF8F3;}
+    .page.preview-soft .page-title{color:#2D2318;}
+    .page.preview-soft .page-sub{color:#6B5744;}
     .form-card.preview-soft{background:#FFFAF5;border-color:#DDD0BB;border-radius:12px;}
     .form-card.preview-soft .form-section-title{color:#A8917A;border-color:#EDE0CC;}
     .form-card.preview-soft .flabel{color:#A8917A;}
@@ -294,9 +303,8 @@ function pickTheme(name,el){
   document.querySelectorAll('.theme-card').forEach(c=>c.classList.toggle('on',c===el));
   const card = document.querySelector('.form-card');
   card.className = 'form-card' + (name !== 'classic' ? ' preview-' + name : '');
-  // Also update page background
-  const bg = {dark:'#0a0a0a', bold:'#ffffff', soft:'#FDF8F3', classic:'#F7F6F3'};
-  document.querySelector('.page').style.background = bg[name]||'';
+  const page = document.querySelector('.page');
+  page.className = 'page' + (name !== 'classic' ? ' preview-' + name : '');
 }
 let avatarDataUrl = null;
 
