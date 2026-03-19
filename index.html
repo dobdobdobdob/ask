@@ -118,7 +118,27 @@
     .chat-send { width: 42px; height: 42px; background: var(--black); border: none; border-radius: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
     .chat-send:hover { background: var(--accent); }
     .chat-send:disabled { opacity: 0.3; cursor: not-allowed; }
-    .reset-link { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); background: none; border: none; cursor: pointer; text-decoration: underline; margin-top: 0.6rem; display: block; text-align: center; transition: color 0.2s; }
+    .payment-banner {
+  background: var(--off-white);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem;
+}
+.payment-banner-text { font-size: 0.82rem; color: var(--text2); font-weight: 300; line-height: 1.5; }
+.payment-banner-text strong { color: var(--text1); font-weight: 500; }
+.btn-pay {
+  background: var(--black); color: var(--white);
+  padding: 0.65rem 1.5rem; font-size: 0.78rem;
+  font-weight: 500; letter-spacing: 0.05em;
+  border: none; border-radius: 2px; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+}
+.btn-pay:hover { background: var(--accent); color: var(--black); }
+
+.reset-link { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); background: none; border: none; cursor: pointer; text-decoration: underline; margin-top: 0.6rem; display: block; text-align: center; transition: color 0.2s; }
     .reset-link:hover { color: var(--text2); }
     #fileInputHidden, #avatarInput { display: none; }
     @media(max-width: 768px){
@@ -229,6 +249,10 @@
       </div>
     </div>
     <div class="chat-messages" id="chatMessages"></div>
+    <div class="payment-banner" id="paymentBanner">
+      <div class="payment-banner-text"><strong>Share your assistant.</strong> Get a permanent link to share with recruiters and hiring managers.</div>
+      <button class="btn-pay" onclick="handlePayment()">Unlock — $9.99 →</button>
+    </div>
     <div class="chat-input-bar">
       <div class="chat-input-row">
         <textarea class="chat-input" id="chatInput" placeholder="Ask about experience, skills, background..." rows="1"
@@ -424,6 +448,22 @@ async function sendChat(){
   }
   chatLoading=false;
   document.getElementById('chatSend').disabled=false;
+}
+
+function handlePayment(){
+  // Save assistant data to localStorage before redirecting to Stripe
+  const data = {
+    name: document.getElementById('profileName').textContent,
+    meta: document.getElementById('profileMeta').textContent,
+    bio: document.getElementById('profileBio').textContent,
+    linkedin: document.getElementById('iLinkedIn').value.trim(),
+    systemPrompt: systemPrompt,
+    avatar: avatarDataUrl,
+    chatHistory: chatHistory
+  };
+  localStorage.setItem('ask_assistant_data', JSON.stringify(data));
+  // Redirect to Stripe
+  window.location.href = 'https://buy.stripe.com/test_cNi28teANdLOgzgb75dby00';
 }
 
 function resetAll(){

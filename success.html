@@ -173,10 +173,11 @@
 
 <script>
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 let systemPrompt = '', chatHistory = [], chatLoading = false, avatarDataUrl = null;
 
-// Load assistant data from localStorage
-window.addEventListener('load', () => {
+// Load assistant data from localStorage and save to KV
+window.addEventListener('load', async () => {
   const raw = localStorage.getItem('ask_assistant_data');
   if(!raw){
     document.getElementById('profileName').textContent = 'No assistant data found.';
@@ -209,6 +210,24 @@ window.addEventListener('load', () => {
   }
 
   addMessage('assistant', `Hi! I'm ${data.name}'s AI assistant. Ask me anything about their background, experience, or skills.`);
+
+  // Save to KV and get permanent URL
+  try {
+    const res = await fetch(ASK_SERVER + '/save', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if(result.slug){
+      result.url = window.location.origin + '/' + result.slug;
+      document.getElementById('shareUrl').textContent = result.url;
+      document.getElementById('embedCode').textContent = `<iframe src="${result.url}" width="420" height="640" frameborder="0" style="border:none;border-radius:4px;"></iframe>`;
+      localStorage.removeItem('ask_assistant_data');
+    }
+  } catch(e) {
+    console.error('Failed to save to KV:', e);
+  }
 });
 
 function copyText(id, btn){
