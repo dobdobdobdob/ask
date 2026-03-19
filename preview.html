@@ -251,6 +251,39 @@
     html.soft #chat-toggle{background:#D48B3A!important;border-radius:50px!important;}
     html.soft footer{background:#2D2318!important;}
     html.soft .main-content{background:#FDF8F3!important;}
+    
+    /* FAQ Modal */
+    #faqModal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:none;align-items:flex-start;justify-content:center;backdrop-filter:blur(6px);padding:5rem 1.5rem 2rem;overflow-y:auto;}
+    #faqModal.show{display:flex;}
+    .faq-modal-card{background:var(--white);border:1px solid var(--border);border-radius:4px;width:100%;max-width:680px;position:relative;margin:auto;}
+    .faq-modal-header{padding:1.5rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1;border-radius:4px 4px 0 0;}
+    .faq-modal-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;letter-spacing:-0.02em;}
+    .faq-modal-close{background:none;border:none;font-size:1.2rem;color:var(--text3);cursor:pointer;transition:color 0.2s;line-height:1;}
+    .faq-modal-close:hover{color:var(--text1);}
+    .faq-modal-body{padding:2rem;}
+    .faq-modal-section{margin-bottom:2rem;}
+    .faq-modal-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+    .faq-modal-item{margin-bottom:1rem;}
+    .faq-modal-q{font-size:0.88rem;font-weight:500;color:var(--text1);margin-bottom:0.3rem;cursor:pointer;display:flex;justify-content:space-between;gap:1rem;}
+    .faq-modal-q::after{content:'+';color:var(--text3);flex-shrink:0;transition:transform 0.2s;}
+    .faq-modal-item.open .faq-modal-q::after{transform:rotate(45deg);}
+    .faq-modal-a{font-size:0.82rem;color:var(--text2);line-height:1.75;font-weight:300;display:none;padding-top:0.35rem;}
+    .faq-modal-item.open .faq-modal-a{display:block;}
+    .faq-modal-code{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.75rem;font-family:monospace;font-size:0.72rem;color:var(--text1);word-break:break-all;line-height:1.5;margin:0.5rem 0;white-space:pre-wrap;}
+    .faq-modal-steps{display:flex;flex-direction:column;gap:0.5rem;margin:0.5rem 0;}
+    .faq-modal-step{display:flex;gap:0.75rem;align-items:flex-start;}
+    .faq-modal-step-num{width:20px;height:20px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:var(--white);flex-shrink:0;margin-top:1px;}
+    .faq-modal-step-text{font-size:0.82rem;color:var(--text2);line-height:1.6;font-weight:300;}
+    .faq-modal-step-text strong{color:var(--text1);font-weight:500;}
+    .faq-modal-ptabs{display:flex;gap:0;margin:0.75rem 0 0.5rem;border-bottom:1px solid var(--border);}
+    .faq-modal-ptab{font-size:0.68rem;font-weight:500;letter-spacing:0.08em;padding:0.45rem 0.9rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;margin-bottom:-1px;transition:all 0.2s;}
+    .faq-modal-ptab.on{color:var(--text1);border-bottom-color:var(--black);}
+    .faq-modal-panel{display:none;}
+    .faq-modal-panel.on{display:block;}
+    .faq-modal-tip{background:rgba(204,255,0,0.08);border:1px solid rgba(139,179,0,0.2);border-radius:2px;padding:0.65rem 0.85rem;font-size:0.78rem;color:var(--text2);line-height:1.6;margin:0.5rem 0;}
+    .faq-modal-footer{padding:1.25rem 2rem;border-top:1px solid var(--border);text-align:center;}
+    .faq-modal-footer a{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
+    .faq-modal-footer a:hover{color:var(--text1);}
     </style>
 </head>
 <body>
@@ -276,8 +309,102 @@
 
 <nav>
   <a href="/" class="nav-logo">Ask<span>.</span></a>
+  <button onclick="openFaq()" style="font-size:0.78rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:1.5rem;transition:color 0.2s;padding:0;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">FAQ</button>
   <span class="nav-badge">Preview Mode</span>
 </nav>
+
+<!-- FAQ MODAL -->
+<div id="faqModal" onclick="if(event.target===this)closeFaq()">
+  <div class="faq-modal-card">
+    <div class="faq-modal-header">
+      <div class="faq-modal-title">Help & FAQ</div>
+      <button class="faq-modal-close" onclick="closeFaq()">✕</button>
+    </div>
+    <div class="faq-modal-body">
+
+      <div class="faq-modal-section">
+        <div class="faq-modal-section-title">Your shareable link</div>
+        <div class="faq-modal-item open">
+          <div class="faq-modal-q" onclick="toggleFaqModal(this)">What is my Ask link?</div>
+          <div class="faq-modal-a">Your permanent public page where anyone can ask your AI assistant questions. Share it in your email signature, LinkedIn, or resume. Example: <strong>ask.menoslabs.com/davidobrien-001</strong></div>
+        </div>
+        <div class="faq-modal-item">
+          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Will my link ever expire?</div>
+          <div class="faq-modal-a">No. One-time payment, yours forever. We never delete profiles or charge recurring fees.</div>
+        </div>
+      </div>
+
+      <div class="faq-modal-section">
+        <div class="faq-modal-section-title">Embed on your website</div>
+        <div class="faq-modal-item">
+          <div class="faq-modal-q" onclick="toggleFaqModal(this)">How do I add the chat button to my site?</div>
+          <div class="faq-modal-a">Paste one line of code before your closing &lt;/body&gt; tag:
+            <div class="faq-modal-code">&lt;script src="https://ask.menoslabs.com/embed.js" data-slug="YOUR-SLUG"&gt;&lt;/script&gt;</div>
+            <div class="faq-modal-ptabs">
+              <button class="faq-modal-ptab on" onclick="switchFaqTab('wix',this)">Wix</button>
+              <button class="faq-modal-ptab" onclick="switchFaqTab('squarespace',this)">Squarespace</button>
+              <button class="faq-modal-ptab" onclick="switchFaqTab('wordpress',this)">WordPress</button>
+              <button class="faq-modal-ptab" onclick="switchFaqTab('any',this)">Any Site</button>
+            </div>
+            <div class="faq-modal-panel on" id="faq-wix">
+              <div class="faq-modal-steps">
+                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Click <strong>Add Elements</strong> → <strong>Embed Code</strong> → <strong>HTML iframe</strong></div></div>
+                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script tag above and click <strong>Apply</strong></div></div>
+                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Publish your site</div></div>
+              </div>
+            </div>
+            <div class="faq-modal-panel" id="faq-squarespace">
+              <div class="faq-modal-steps">
+                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Edit your page → click <strong>+</strong> → add a <strong>Code</strong> block</div></div>
+                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script tag and click <strong>Apply</strong></div></div>
+                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Save and publish</div></div>
+              </div>
+            </div>
+            <div class="faq-modal-panel" id="faq-wordpress">
+              <div class="faq-modal-steps">
+                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Go to <strong>Appearance → Theme Editor → footer.php</strong></div></div>
+                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script just before <strong>&lt;/body&gt;</strong></div></div>
+                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Click <strong>Update File</strong></div></div>
+              </div>
+            </div>
+            <div class="faq-modal-panel" id="faq-any">
+              <div class="faq-modal-steps">
+                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Open your HTML file</div></div>
+                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script just before <strong>&lt;/body&gt;</strong> and save</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="faq-modal-item">
+          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Can I embed my full profile page?</div>
+          <div class="faq-modal-a">Yes — use an iframe:
+            <div class="faq-modal-code">&lt;iframe src="https://ask.menoslabs.com/YOUR-SLUG" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"&gt;&lt;/iframe&gt;</div>
+          </div>
+        </div>
+        <div class="faq-modal-item">
+          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Can I point my own domain to my Ask page?</div>
+          <div class="faq-modal-a">Yes. Add a CNAME record in your DNS pointing to <strong>ask.menoslabs.com</strong>, then email us at hello@menoslabs.com and we'll configure it.</div>
+        </div>
+      </div>
+
+      <div class="faq-modal-section">
+        <div class="faq-modal-section-title">Editing & billing</div>
+        <div class="faq-modal-item">
+          <div class="faq-modal-q" onclick="toggleFaqModal(this)">How do I update my profile?</div>
+          <div class="faq-modal-a">Email <strong>hello@menoslabs.com</strong> with your Ask URL and updated resume. We'll regenerate and your URL stays the same.</div>
+        </div>
+        <div class="faq-modal-item">
+          <div class="faq-modal-q" onclick="toggleFaqModal(this)">What is your refund policy?</div>
+          <div class="faq-modal-a">Full refund within 7 days, no questions asked. Email hello@menoslabs.com with your purchase details.</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="faq-modal-footer">
+      <a href="/faq.html" target="_blank">View full FAQ page →</a>
+    </div>
+  </div>
+</div>
 
 <div id="theme-switcher">
   <button class="ts-btn on" data-theme="classic" onclick="switchTheme('classic',this)">Classic</button>
@@ -534,6 +661,16 @@ async function sendChat(){
     addMessage('assistant',reply);chatHistory.push({role:'assistant',content:reply});
   }catch(e){document.getElementById('typingMsg')?.remove();addMessage('assistant','Connection issue — please try again.');}
   chatLoading=false;document.getElementById('chatSend').disabled=false;
+}
+
+function openFaq(){ document.getElementById('faqModal').classList.add('show'); document.body.style.overflow='hidden'; }
+function closeFaq(){ document.getElementById('faqModal').classList.remove('show'); document.body.style.overflow=''; }
+function toggleFaqModal(el){ el.parentElement.classList.toggle('open'); }
+function switchFaqTab(name,btn){
+  btn.closest('.faq-modal-a').querySelectorAll('.faq-modal-ptab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  btn.closest('.faq-modal-a').querySelectorAll('.faq-modal-panel').forEach(p=>p.classList.remove('on'));
+  btn.closest('.faq-modal-a').querySelector('#faq-'+name).classList.add('on');
 }
 </script>
 </body>

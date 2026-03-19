@@ -98,6 +98,7 @@
       <button class="copy-btn" id="copyUrlBtn" onclick="copyUrl()">Copy</button>
     </div>
     <a class="view-btn" id="viewPageBtn" href="#" target="_blank">View My Page →</a>
+    <a href="/faq.html" style="display:block;text-align:center;font-size:0.78rem;color:var(--text3);text-decoration:none;margin-top:0.85rem;transition:color 0.2s;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">Help & FAQ — embedding, custom domains, editing →</a>
   </div>
 
   <!-- EMBED SECTION -->
@@ -269,6 +270,28 @@ window.addEventListener('load', async () => {
       document.getElementById('viewPageBtn').href = shareUrl;
       localStorage.removeItem('ask_purchase_data');
       renderPlatformContent();
+      // Send confirmation email
+      if(data.email){
+        fetch('https://menoslabs-contact.thedobrien.workers.dev', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            name: data.name,
+            email: data.email,
+            subject: `Your Ask assistant is live — ${data.name}`,
+            html: `<p>Hi ${data.name},</p>
+<p>Your personal AI assistant is live! Here's your permanent link:</p>
+<p><strong><a href="${shareUrl}">${shareUrl}</a></strong></p>
+<p>Share it in your email signature, LinkedIn profile, or anywhere you want people to learn about you.</p>
+<p>To embed a chat button on your existing website, visit your page and click the embed instructions.</p>
+<br>
+<p>Need help embedding or have questions? Visit our <a href="https://ask.menoslabs.com/faq.html">Help & FAQ page</a>.</p>
+<br>
+<p>The Menos Labs Team<br>
+<a href="https://menoslabs.com">menoslabs.com</a></p>`
+          })
+        }).catch(()=>{});
+      }
     }
   } catch(e){
     document.getElementById('shareUrl').textContent='Error saving — please contact hello@menoslabs.com';
