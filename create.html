@@ -390,8 +390,8 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     // Save to sessionStorage and go to preview
     const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl };
     profileData.theme = selectedTheme;
-sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
-    window.location.href = '/preview.html';
+    sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
+    window.location.href = '/preview';
 
   } catch(err){
     clearInterval(iv);
