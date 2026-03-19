@@ -355,7 +355,7 @@ async function generate(){
     const res = await fetch(WORKER, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:2000,
+        model:'claude-sonnet-4-20250514', max_tokens:4000,
         messages:[{role:'user', content:
 `You are parsing a resume. CRITICAL RULES:
 - Only use information explicitly stated in the resume text below
