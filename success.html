@@ -236,19 +236,14 @@ function getEmbedCode(type){
 let currentPlatform = 'wix';
 
 function renderPlatformContent(){
-  if(!slug){ document.getElementById('platform-content').innerHTML = '<div style="font-size:0.82rem;color:var(--text3);padding:1rem 0;">Loading your embed code...</div>'; return; }
   const steps = INSTRUCTIONS[currentPlatform][embedType];
   const code = getEmbedCode(embedType);
   const stepsHtml = steps.map((s,i)=>`<div class="step-item"><div class="step-circle">${i+1}</div><div class="step-text">${s}</div></div>`).join('');
   document.getElementById('platform-content').innerHTML = `
     <div class="step-list">${stepsHtml}</div>
-    <div class="code-block" id="embedCodeBlock">${escapeHtml(code)}</div>
+    <div class="code-block" id="embedCodeBlock">${code}</div>
     <button class="copy-btn" onclick="copyEmbed()">Copy Code</button>
   `;
-}
-
-function escapeHtml(str){
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function selectEmbed(type){
@@ -331,7 +326,8 @@ window.addEventListener('load', async () => {
   }
 });
 
-// Platform content renders after slug is loaded
+// Initial render
+renderPlatformContent();
 
 // GDPR
 function gdprInit(){

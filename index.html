@@ -138,7 +138,33 @@
     .faq-modal-footer{padding:1.25rem 2rem;border-top:1px solid var(--border);text-align:center;}
     .faq-modal-footer a{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
     .faq-modal-footer a:hover{color:var(--text1);}
+    
+    /* GDPR Banner */
+    #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
+    #gdpr-banner.show{transform:translateY(0);}
+    .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
+    .gdpr-text a{color:rgba(255,255,255,0.4);text-decoration:underline;}
+    .gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
+    .gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:var(--accent);color:var(--black);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+    .gdpr-accept:hover{background:#fff;}
+    .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+    .gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
+    @media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
     </style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Y6Y16FEG2H');
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-96XWYGNS49');
+</script>
 </head>
 <body>
 
@@ -393,6 +419,16 @@ function switchFaqTab(name,btn){
   btn.closest('.faq-modal-a').querySelectorAll('.faq-modal-panel').forEach(p=>p.classList.remove('on'));
   btn.closest('.faq-modal-a').querySelector('#faq-'+name).classList.add('on');
 }
+
+// GDPR
+function gdprInit(){
+  const consent = localStorage.getItem('gdpr_consent');
+  if(!consent) setTimeout(()=>document.getElementById('gdpr-banner').classList.add('show'), 1500);
+  if(consent === 'declined') window['ga-disable-G-Y6Y16FEG2H'] = true;
+}
+function gdprAccept(){ localStorage.setItem('gdpr_consent','accepted'); document.getElementById('gdpr-banner').classList.remove('show'); }
+function gdprDecline(){ localStorage.setItem('gdpr_consent','declined'); window['ga-disable-G-Y6Y16FEG2H']=true; document.getElementById('gdpr-banner').classList.remove('show'); }
+gdprInit();
 </script>
 </body>
 </html>
