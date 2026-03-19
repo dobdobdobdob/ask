@@ -75,7 +75,7 @@
     const fn = name.split(' ')[0];
     panel.innerHTML = `
       <div class="ask-ph">
-        <div><div class="ask-ph-name">Ask ${fn}</div><div class="ask-ph-sub">Powered by Claude AI · ask.menos-labs.com</div></div>
+        <div><div class="ask-ph-name">Ask ${fn}</div><div class="ask-ph-sub">Powered by Claude AI · ask.menoslabs.com</div></div>
         <button class="ask-ph-close" onclick="document.getElementById('ask-embed-panel').classList.remove('open')">✕</button>
       </div>
       <div class="ask-suggs" id="ask-suggs">
@@ -90,7 +90,7 @@
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
-      <div class="ask-footer">Powered by <a href="https://ask.menos-labs.com" target="_blank" style="color:#8AB300;text-decoration:none;">Menos Labs</a></div>
+      <div class="ask-footer">Powered by <a href="https://ask.menoslabs.com" target="_blank" style="color:#8AB300;text-decoration:none;">Menos Labs</a></div>
     `;
     document.body.appendChild(panel);
     addAskMsg('assistant', `Hi! I'm ${name}'s AI assistant. Ask me anything about their background or experience.`);

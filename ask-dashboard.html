@@ -102,6 +102,12 @@
     .regen-success-sub{font-size:0.75rem;color:var(--text2);font-weight:300;}
 
     #fileEditInput{display:none;}
+    .theme-picker-sm{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:1rem;}
+    .tcard{border:1px solid var(--border);border-radius:4px;padding:0.6rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+    .tcard:hover{border-color:var(--accent-dark);}
+    .tcard.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+    .tcard-preview{width:100%;height:32px;border-radius:2px;margin-bottom:0.35rem;}
+    .tcard-label{font-size:0.65rem;font-weight:500;color:var(--text1);}
 
     /* OVERLAY */
     #overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:199;display:none;backdrop-filter:blur(2px);}
@@ -185,6 +191,26 @@
     </div>
     <div class="field"><label class="flabel">Email (for notification)</label><input class="finput" id="editEmail" type="email" placeholder="user@email.com"></div>
 
+    <p class="edit-section" style="margin-top:1.5rem;">Profile Theme</p>
+    <div class="theme-picker-sm" id="dashThemePicker">
+      <div class="tcard on" data-theme="classic" onclick="pickDashTheme('classic',this)">
+        <div class="tcard-preview" style="background:#F7F6F3;border:1px solid #E2DED8;"></div>
+        <div class="tcard-label">Classic</div>
+      </div>
+      <div class="tcard" data-theme="dark" onclick="pickDashTheme('dark',this)">
+        <div class="tcard-preview" style="background:#111111;"></div>
+        <div class="tcard-label">Dark</div>
+      </div>
+      <div class="tcard" data-theme="bold" onclick="pickDashTheme('bold',this)">
+        <div class="tcard-preview" style="background:#fff;border:2px solid #000;"></div>
+        <div class="tcard-label">Bold</div>
+      </div>
+      <div class="tcard" data-theme="soft" onclick="pickDashTheme('soft',this)">
+        <div class="tcard-preview" style="background:#FDF8F3;border:1px solid #DDD0BB;"></div>
+        <div class="tcard-label">Soft</div>
+      </div>
+    </div>
+
     <p class="edit-section" style="margin-top:1.5rem;">Updated Resume</p>
     <div class="tab-row">
       <button class="rtab on" id="etab-paste" onclick="eTab('paste')">Paste Text</button>
@@ -221,7 +247,8 @@
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 const PASS = 'Luckydog00';
-let allProfiles = [], editUploadText = '';
+let allProfiles = [], editUploadText = '', dashSelectedTheme = 'classic';
+function pickDashTheme(name,el){dashSelectedTheme=name;document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c===el));}
 
 // ── LOGIN ──
 function doLogin(){
@@ -277,7 +304,7 @@ function renderTable(profiles){
         <div class="profile-slug">${p.slug}</div>
       </td>
       <td>${p.meta||'—'}</td>
-      <td><a href="https://ask.menos-labs.com/${p.slug}" target="_blank" style="color:var(--accent-dark);font-size:0.75rem;text-decoration:none;">${p.slug} →</a></td>
+      <td><a href="https://ask.menoslabs.com/${p.slug}" target="_blank" style="color:var(--accent-dark);font-size:0.75rem;text-decoration:none;">${p.slug} →</a></td>
       <td><span class="status-badge">Active</span></td>
       <td>
         <button class="btn-edit" onclick="openEdit('${p.slug}')">Edit</button>
@@ -314,6 +341,9 @@ async function openEdit(slug){
     document.getElementById('editTitle').value = d.title||'';
     document.getElementById('editCity').value = d.city||'';
     document.getElementById('editEmail').value = d.email||'';
+    // Set theme picker
+    dashSelectedTheme = d.theme||'classic';
+    document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c.dataset.theme===dashSelectedTheme));
   } catch(e){
     document.getElementById('editPanelTitle').textContent = `Edit — ${slug}`;
   }
@@ -400,6 +430,7 @@ ${resume}
     const updated = {
       ...existing,
       name, title, city, email,
+      theme: dashSelectedTheme,
       meta: [title, city].filter(Boolean).join(' · '),
       bio: parsed.bio,
       experience: parsed.experience||[],
@@ -421,7 +452,7 @@ ${resume}
           body: JSON.stringify({
             email,
             subject: 'Your Ask profile has been updated',
-            html: `<p>Hi ${name},</p><p>Your Ask assistant profile has been updated and is live at:</p><p><a href="https://ask.menos-labs.com/${slug}">ask.menos-labs.com/${slug}</a></p><p>The Menos Labs Team</p>`
+            html: `<p>Hi ${name},</p><p>Your Ask assistant profile has been updated and is live at:</p><p><a href="https://ask.menoslabs.com/${slug}">ask.menoslabs.com/${slug}</a></p><p>The Menos Labs Team</p>`
           })
         });
         emailSent = true;
