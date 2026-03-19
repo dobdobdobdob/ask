@@ -3,259 +3,764 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ask — Your Personal AI Assistant</title>
+  <title>Menos Labs — AI Product Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-      --white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;
-      --border:#E2DED8;--text1:#1A1A1A;--text2:#555550;
-      --text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white: #FFFFFF;
+      --off-white: #F7F6F3;
+      --light: #EEECE8;
+      --border: #E2DED8;
+      --text1: #1A1A1A;
+      --text2: #555550;
+      --text3: #999990;
+      --accent: #CCFF00;
+      --accent-dark: #8AB300;
+      --black: #111111;
     }
-    html{scroll-behavior:smooth;}
-    body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text1);overflow-x:hidden;}
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-    .nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
-    .nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
-    .nav-cta{font-size:0.82rem;font-weight:500;padding:0.5rem 1.35rem;background:var(--black);color:var(--white);border:none;border-radius:2px;cursor:pointer;text-decoration:none;transition:all 0.2s;}
-    .nav-cta:hover{background:var(--accent);color:var(--black);}
+    html { scroll-behavior: smooth; }
 
-    /* HERO */
-    .hero{min-height:100vh;display:flex;align-items:center;background:var(--off-white);padding:8rem 4rem 6rem;position:relative;overflow:hidden;}
-    .hero-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-size:clamp(8rem,18vw,20rem);font-weight:700;color:transparent;-webkit-text-stroke:1px rgba(0,0,0,0.04);white-space:nowrap;pointer-events:none;letter-spacing:-0.05em;}
-    .hero-inner{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;position:relative;z-index:1;}
-    .hero-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1.25rem;}
-    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,5vw,4rem);font-weight:700;letter-spacing:-0.03em;line-height:1.08;margin-bottom:1.5rem;}
-    .hero-title em{font-style:italic;background:var(--accent);padding:0 8px;}
-    .hero-desc{font-size:1rem;color:var(--text2);line-height:1.8;font-weight:300;margin-bottom:2.5rem;max-width:440px;}
-    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
-    .btn-dark{background:var(--black);color:var(--white);padding:0.9rem 2rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block;}
-    .btn-dark:hover{background:var(--accent);color:var(--black);}
-    .btn-outline{background:transparent;color:var(--text1);padding:0.9rem 2rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:1px solid var(--border);border-radius:2px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block;}
-    .btn-outline:hover{border-color:var(--text1);}
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text1);
+      overflow-x: hidden;
+    }
 
-    /* HERO RIGHT — steps preview */
-    .hero-steps{display:flex;flex-direction:column;gap:1rem;}
-    .hero-step{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;transition:all 0.2s;}
-    .hero-step:hover{border-color:#C8C8C0;transform:translateX(4px);}
-    .step-num{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--accent-dark);line-height:1;flex-shrink:0;}
-    .step-title{font-size:0.88rem;font-weight:500;margin-bottom:0.2rem;}
-    .step-desc{font-size:0.78rem;color:var(--text2);font-weight:300;line-height:1.5;}
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.3s, border-bottom 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text1);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--black);
+      padding: 0 6px;
+      margin-left: 2px;
+      font-style: italic;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text2);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text1); }
+    .nav-cta {
+      background: var(--black) !important;
+      color: var(--white) !important;
+      padding: 0.5rem 1.35rem !important;
+      border-radius: 2px;
+    }
+    .nav-cta:hover { background: var(--accent) !important; color: var(--black) !important; }
 
-    /* HOW IT WORKS MODAL */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
-    .modal-overlay.show{display:flex;}
-    .modal-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2.5rem;max-width:520px;width:90%;max-height:90vh;overflow-y:auto;position:relative;}
-    .modal-close{position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;font-size:1.2rem;color:var(--text3);cursor:pointer;transition:color 0.2s;}
-    .modal-close:hover{color:var(--text1);}
-    .modal-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.4rem;}
-    .modal-title span{font-style:italic;background:var(--accent);padding:0 6px;}
-    .modal-sub{font-size:0.85rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:2rem;}
-    .how-steps{display:flex;flex-direction:column;gap:0;}
-    .how-step{display:flex;gap:1.25rem;padding:1.25rem 0;border-bottom:1px solid var(--border);}
-    .how-step:last-child{border-bottom:none;}
-    .how-num{width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;color:var(--black);flex-shrink:0;margin-top:2px;}
-    .how-content{}
-    .how-title{font-size:0.9rem;font-weight:500;margin-bottom:0.25rem;}
-    .how-desc{font-size:0.8rem;color:var(--text2);font-weight:300;line-height:1.6;}
-    .modal-cta{width:100%;margin-top:2rem;}
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+      background: var(--off-white);
+    }
 
-    /* SOCIAL PROOF */
-    .proof{padding:5rem 4rem;background:var(--white);text-align:center;}
-    .proof-inner{max-width:760px;margin:0 auto;}
-    .proof-tag{font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
-    .proof-title{font-family:'Playfair Display',serif;font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1.25rem;}
-    .proof-desc{font-size:0.95rem;color:var(--text2);line-height:1.8;font-weight:300;margin-bottom:3rem;max-width:540px;margin-left:auto;margin-right:auto;}
-    .proof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
-    .proof-stat{background:var(--off-white);border:1px solid var(--border);border-radius:4px;padding:1.75rem;}
-    .proof-stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;letter-spacing:-0.04em;color:var(--text1);margin-bottom:0.3rem;}
-    .proof-stat-num span{color:var(--accent-dark);}
-    .proof-stat-label{font-size:0.72rem;color:var(--text3);letter-spacing:0.05em;}
+    .hero-bg-text {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(8rem, 18vw, 20rem);
+      font-weight: 700;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(0,0,0,0.05);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.05em;
+    }
 
-    /* PRICING */
-    .pricing{padding:5rem 4rem;background:var(--off-white);}
-    .pricing-inner{max-width:860px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
-    .pricing-left .section-tag{font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
-    .pricing-left .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1.25rem;}
-    .pricing-left p{font-size:0.9rem;color:var(--text2);line-height:1.8;font-weight:300;}
-    .pricing-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2.5rem;}
-    .price{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;letter-spacing:-0.04em;margin-bottom:0.25rem;}
-    .price span{color:var(--accent-dark);}
-    .price-label{font-size:0.7rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.75rem;}
-    .price-features{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:2rem;}
-    .price-features li{font-size:0.85rem;color:var(--text2);font-weight:300;padding-left:1.25rem;position:relative;}
-    .price-features li::before{content:'✓';position:absolute;left:0;color:var(--accent-dark);font-weight:500;}
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
 
-    /* FOOTER */
-    footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;}
-    .footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
-    .footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
-    .footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.05em;}
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
 
-    @media(max-width:960px){
-      nav{padding:1.25rem 1.5rem;}
-      .hero{padding:7rem 1.5rem 4rem;}
-      .hero-inner{grid-template-columns:1fr;gap:3rem;}
-      .proof,.pricing{padding:4rem 1.5rem;}
-      .pricing-inner{grid-template-columns:1fr;gap:2.5rem;}
-      .proof-stats{grid-template-columns:1fr;}
-      footer{flex-direction:column;gap:1rem;padding:1.5rem;text-align:center;}
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.4s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      background: var(--accent);
+      padding: 0 8px;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.8;
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.6s forwards;
+    }
+
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.8s forwards;
+    }
+
+    .btn-dark {
+      background: var(--black);
+      color: var(--white);
+      padding: 0.85rem 2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-dark:hover { background: var(--accent); color: var(--black); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text1);
+      padding: 0.85rem 2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--text1); }
+
+    .hero-right {
+      opacity: 0;
+      animation: fadeIn 1.2s ease 1s forwards;
+    }
+
+    .hero-stat-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    }
+
+    .hero-stat {
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 1.75rem;
+      border-radius: 4px;
+    }
+
+    .hero-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--text1);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-stat-num span { color: var(--accent-dark); }
+
+    .hero-stat-label {
+      font-size: 0.75rem;
+      color: var(--text3);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SHARED ── */
+    section { padding: 7rem 4rem; }
+
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+
+    .section-tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.8;
+      max-width: 560px;
+      font-weight: 300;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--white); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: start;
+      margin-top: 4rem;
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.85;
+      font-weight: 300;
+      margin-bottom: 1.25rem;
+    }
+
+    .about-text p strong { color: var(--text1); font-weight: 500; }
+
+    .about-pillars { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .pillar {
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .pillar:hover { border-color: var(--accent-dark); transform: translateX(4px); }
+
+    .pillar-num {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--accent-dark);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .pillar-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .pillar-desc {
+      font-size: 0.82rem;
+      color: var(--text2);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* ── PROJECTS ── */
+    #projects { background: var(--off-white); }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .project-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.25s;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .project-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .project-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .project-desc {
+      font-size: 0.82rem;
+      color: var(--text2);
+      line-height: 1.7;
+      font-weight: 300;
+      flex: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-link {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent-dark);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--white); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      margin-top: 4rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .service-item {
+      padding: 2.5rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .service-item:hover { background: var(--off-white); }
+    .service-item:nth-child(2n) { border-right: none; }
+    .service-item:nth-last-child(-n+2) { border-bottom: none; }
+
+    .service-icon {
+      width: 40px; height: 40px;
+      background: var(--off-white);
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .service-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.01em;
+    }
+
+    .service-desc {
+      font-size: 0.82rem;
+      color: var(--text2);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    #contact .section-tag { color: rgba(255,255,255,0.3); }
+    #contact .section-title { color: var(--white); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+
+    .contact-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 2rem;
+    }
+
+    .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+
+    .contact-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .contact-link:hover { color: var(--accent); }
+
+    .contact-link svg { opacity: 0.4; flex-shrink: 0; }
+    .contact-link:hover svg { opacity: 1; }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+    .form-input {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.85rem 1rem;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.2); }
+    .form-input:focus { border-color: rgba(204,255,0,0.5); }
+
+    textarea.form-input { resize: vertical; min-height: 120px; }
+
+    .form-submit {
+      background: var(--accent);
+      color: var(--black);
+      border: none;
+      padding: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .form-submit:hover { background: var(--white); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 2rem 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+    }
+
+    .footer-logo span {
+      background: var(--accent);
+      color: var(--black);
+      padding: 0 5px;
+      font-style: italic;
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .js-ready .reveal.visible { opacity: 1; transform: translateY(0); }
+    .rd1 { transition-delay: 0.1s; }
+    .rd2 { transition-delay: 0.2s; }
+    .rd3 { transition-delay: 0.3s; }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+    @media (max-width: 960px) {
+      nav { padding: 1.25rem 2rem; }
+      section { padding: 5rem 2rem; }
+      .hero-content, .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-item { border-right: none; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem 2rem; }
+      .nav-links li:nth-child(1), .nav-links li:nth-child(2) { display: none; }
     }
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">Ask<span>.</span></a>
-  <a href="/create.html" class="nav-cta">Create My Assistant</a>
-</nav>
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">Menos<span>Labs</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+  </nav>
 
-<!-- HOW IT WORKS MODAL -->
-<div class="modal-overlay" id="howModal">
-  <div class="modal-card">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title">How it <span>works.</span></div>
-    <p class="modal-sub">Turn your resume into a personal AI assistant in under 2 minutes.</p>
-    <div class="how-steps">
-      <div class="how-step">
-        <div class="how-num">1</div>
-        <div class="how-content">
-          <div class="how-title">Add your profile details</div>
-          <div class="how-desc">Enter your name, title, city, and social links — LinkedIn, GitHub, portfolio, Instagram, and more.</div>
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg-text">Labs</div>
+    <div class="hero-content">
+      <div>
+        <div class="hero-eyebrow">AI Product Studio · Chicago, IL</div>
+        <h1 class="hero-title">Built with <em>force.</em> Shipped with passion.</h1>
+        <p class="hero-desc">Menos Labs designs and ships AI-powered tools for retail operations, creator workflows, and enterprise automation. From concept to live product, fast.</p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn-dark">See Our Work</a>
+          <a href="#contact" class="btn-outline">Start a Project</a>
         </div>
       </div>
-      <div class="how-step">
-        <div class="how-num">2</div>
-        <div class="how-content">
-          <div class="how-title">Upload your resume</div>
-          <div class="how-desc">Paste your resume text or upload a file. Our AI reads your experience, skills, and achievements.</div>
-        </div>
-      </div>
-      <div class="how-step">
-        <div class="how-num">3</div>
-        <div class="how-content">
-          <div class="how-title">Preview your assistant</div>
-          <div class="how-desc">See your full profile page with experience cards, skills, and a live AI chat. Try it before you buy.</div>
-        </div>
-      </div>
-      <div class="how-step">
-        <div class="how-num">4</div>
-        <div class="how-content">
-          <div class="how-title">Share your URL or embed on your site</div>
-          <div class="how-desc">Get a permanent shareable link and step-by-step embed instructions for Wix, Squarespace, WordPress, or any site. One-time payment. Yours forever.</div>
+      <div class="hero-right">
+        <div class="hero-stat-grid">
+          <div class="hero-stat">
+            <div class="hero-stat-num">10<span>+</span></div>
+            <div class="hero-stat-label">Years shipping product</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">4</div>
+            <div class="hero-stat-label">Live AI products</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">400<span>K</span></div>
+            <div class="hero-stat-label">Peak daily users</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">3<span>×</span></div>
+            <div class="hero-stat-label">Acquired products</div>
+          </div>
         </div>
       </div>
     </div>
-    <a href="/create.html" class="btn-dark modal-cta" style="display:block;text-align:center;">Create My Assistant →</a>
-  </div>
-</div>
+  </section>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg">Ask</div>
-  <div class="hero-inner">
-    <div>
-      <p class="hero-eyebrow">Personal AI Assistant</p>
-      <h1 class="hero-title">Your resume.<br>As an <em>AI assistant.</em></h1>
-      <p class="hero-desc">Upload your resume and get a personal AI page that answers questions about your background — for recruiters, hiring managers, or anyone curious.</p>
-      <div class="hero-actions">
-        <a href="/create.html" class="btn-dark">Create My Assistant →</a>
-        <button class="btn-outline" onclick="openModal()">How it works</button>
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <p class="section-tag reveal">About Menos Labs</p>
+      <h2 class="section-title reveal">Built with force.<br>Shipped with passion.</h2>
+      <div class="about-grid">
+        <div class="about-text reveal rd1">
+          <p>Menos Labs is an AI product studio built for operators who need results — not presentations. We ship AI-powered tools for retail operations, creator workflows, and enterprise automation.</p>
+          <p>We don't do slide decks. We build working software. Every project at Menos Labs starts with a real problem and ends with a live product — instrumented, deployed, and ready to scale.</p>
+          <p>Our edge is the combination of <strong>deep product strategy</strong> and <strong>hands-on AI development</strong>. From discovery to deployed in days, not quarters.</p>
+        </div>
+        <div class="about-pillars reveal rd2">
+          <div class="pillar">
+            <div class="pillar-num">01 —</div>
+            <div class="pillar-title">AI-Native by Default</div>
+            <div class="pillar-desc">Every product we build is designed with AI at the core — not bolted on as an afterthought. We use modern LLM workflows and proven APIs to move fast without sacrificing quality.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">02 —</div>
+            <div class="pillar-title">Operator Mindset</div>
+            <div class="pillar-desc">We've worked inside Fortune 500 retail, PE-backed startups, and scrappy agencies. We understand that the best product is the one that actually gets used — not the one with the most features.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">03 —</div>
+            <div class="pillar-title">Shipping Over Theorizing</div>
+            <div class="pillar-desc">We validate with real users, not stakeholder presentations. Our default is to build a working prototype first and refine based on what we learn.</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="hero-steps">
-      <div class="hero-step">
-        <div class="step-num">01</div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-inner">
+      <p class="section-tag reveal">Live Projects</p>
+      <h2 class="section-title reveal">Shipped. Not concepts.</h2>
+      <p class="section-desc reveal rd1">Every project below is live, instrumented, and actively used. No case studies without receipts.</p>
+      <div class="projects-grid">
+        <a href="https://waveform.rocks" target="_blank" class="project-card reveal">
+          <div class="project-tag">Music · Creator Tools · Consumer</div>
+          <div class="project-title">Waveform</div>
+          <p class="project-desc">Audio visualization platform that transforms any music track into downloadable geometric video art. Built with Web Audio API, Canvas, and MediaRecorder. Beta users collect emails via Resend.</p>
+          <span class="project-link">waveform.rocks →</span>
+        </a>
+        <a href="https://dobdobdobdob.github.io/retail-ai-dashboard" target="_blank" class="project-card reveal rd1">
+          <div class="project-tag">Retail · AI · Operations</div>
+          <div class="project-title">Retail AI Dashboard</div>
+          <p class="project-desc">Demand forecasting and inventory management dashboard with live KPIs, restock alerts, and a Claude-powered insights panel. Inspired by real-world retail operations AI deployments.</p>
+          <span class="project-link">View Live →</span>
+        </a>
+        <a href="https://ask.menoslabs.com" target="_blank" class="project-card reveal rd2">
+          <div class="project-tag">AI Assistant · Cloudflare Workers</div>
+          <div class="project-title">Ask by Menos Labs</div>
+          <p class="project-desc">Live AI assistant that answers questions about David's background and experience. Powered by Claude AI, deployed via Cloudflare Workers. Demonstrates AI-native personal branding at scale.</p>
+          <span class="project-link">Try It →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-inner">
+      <p class="section-tag reveal">What We Do</p>
+      <h2 class="section-title reveal">Services</h2>
+      <p class="section-desc reveal rd1">We work with retail operators, PE firms, and growth-stage companies that need AI-powered product built — not just advised on.</p>
+      <div class="services-grid">
+        <div class="service-item reveal">
+          <div class="service-icon">⚡</div>
+          <div class="service-title">AI Product Development</div>
+          <p class="service-desc">End-to-end build of AI-native tools and workflows. From scoping and architecture through deployment and instrumentation. We ship working software.</p>
+        </div>
+        <div class="service-item reveal rd1">
+          <div class="service-icon">📊</div>
+          <div class="service-title">Retail Operations AI</div>
+          <p class="service-desc">Demand forecasting, inventory automation, planogram compliance, and supplier exception handling — built for how retail actually works, not how it looks in demos.</p>
+        </div>
+        <div class="service-item reveal rd2">
+          <div class="service-icon">🔬</div>
+          <div class="service-title">AI Impact Analysis</div>
+          <p class="service-desc">For PE firms and portfolio companies: where does AI create measurable EBITDA impact? We map use cases to value drivers and build the roadmap to get there.</p>
+        </div>
+        <div class="service-item reveal rd3">
+          <div class="service-icon">🚀</div>
+          <div class="service-title">Fractional Product Leadership</div>
+          <p class="service-desc">Senior PM and CPO-level support for companies that need strategic product leadership without a full-time hire. Roadmaps, team structure, agile operating models.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-inner">
+      <p class="section-tag">Let's Build Something</p>
+      <h2 class="section-title">Start a conversation.</h2>
+      <div class="contact-grid">
         <div>
-          <div class="step-title">Add your details</div>
-          <div class="step-desc">Name, title, city, and social links.</div>
+          <p class="contact-desc">Whether you have a product that needs building, a workflow that needs automating, or an AI strategy that needs grounding in reality — we should talk.</p>
+          <div class="contact-links">
+            <a href="/cdn-cgi/l/email-protection#7f121a11100c131e1d0c3f18121e1613511c1012" class="contact-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span class="__cf_email__" data-cfemail="b5d8d0dbdac6d9d4d7c6f5d2d8d4dcd99bd6dad8">[email&#160;protected]</span>
+            </a>
+            <a href="https://menoslabs.com" target="_blank" class="contact-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              menoslabs.com
+            </a>
+            <a href="https://menoslabs.com" target="_blank" class="contact-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+              menoslabs.com
+            </a>
+          </div>
         </div>
-      </div>
-      <div class="hero-step">
-        <div class="step-num">02</div>
-        <div>
-          <div class="step-title">Upload your resume</div>
-          <div class="step-desc">AI parses experience, skills, and achievements.</div>
-        </div>
-      </div>
-      <div class="hero-step">
-        <div class="step-num">03</div>
-        <div>
-          <div class="step-title">Preview your page</div>
-          <div class="step-desc">Try the AI chat before you buy.</div>
-        </div>
-      </div>
-      <div class="hero-step">
-        <div class="step-num">04</div>
-        <div>
-          <div class="step-title">Share or embed</div>
-          <div class="step-desc">Permanent URL or chat button on your existing site.</div>
-        </div>
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <input class="form-input" type="text" placeholder="Your name" required>
+          <input class="form-input" type="email" placeholder="Your email" required>
+          <input class="form-input" type="text" placeholder="Company / project type">
+          <textarea class="form-input" placeholder="Tell us what you're building or trying to solve..."></textarea>
+          <button type="submit" class="form-submit">Send Message</button>
+          <div id="form-success" style="display:none;font-size:0.8rem;color:rgba(204,255,0,0.8);text-align:center;">Message sent — we'll be in touch shortly.</div>
+        </form>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- PROOF -->
-<section class="proof">
-  <div class="proof-inner">
-    <p class="proof-tag">Built for job seekers</p>
-    <h2 class="proof-title">Stand out before the interview.</h2>
-    <p class="proof-desc">Share your Ask link in your email signature, LinkedIn profile, or portfolio. Recruiters can ask questions and get instant answers — even when you're not available.</p>
-    <div class="proof-stats">
-      <div class="proof-stat">
-        <div class="proof-stat-num">2<span>min</span></div>
-        <div class="proof-stat-label">Setup time</div>
-      </div>
-      <div class="proof-stat">
-        <div class="proof-stat-num">$9<span>.99</span></div>
-        <div class="proof-stat-label">One-time forever</div>
-      </div>
-      <div class="proof-stat">
-        <div class="proof-stat-num">∞</div>
-        <div class="proof-stat-label">Conversations</div>
-      </div>
-    </div>
-  </div>
-</section>
+  <!-- FOOTER -->
+  <footer>
+    <a href="#hero" class="footer-logo">Menos<span>Labs</span></a>
+    <div class="footer-copy">© 2026 Menos Labs · Chicago, IL · AI Product Studio</div>
+    <a href="https://linkedin.com/company/menos-labs" target="_blank" style="opacity:0.35;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.35'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+  </footer>
 
-<!-- PRICING -->
-<section class="pricing">
-  <div class="pricing-inner">
-    <div class="pricing-left">
-      <p class="section-tag">Simple pricing</p>
-      <h2 class="section-title">One price.<br>Forever yours.</h2>
-      <p>No subscription. No monthly fees. Pay once and your assistant page lives permanently at your personal URL.</p>
-    </div>
-    <div class="pricing-card">
-      <div class="price">$9<span>.99</span></div>
-      <div class="price-label">One-time · Permanent</div>
-      <ul class="price-features">
-        <li>Permanent shareable URL</li>
-        <li>AI chat powered by Claude</li>
-        <li>Experience & skills extracted from resume</li>
-        <li>Embed on any website</li>
-        <li>LinkedIn, GitHub, portfolio links</li>
-        <li>Unlimited conversations</li>
-      </ul>
-      <a href="/create.html" class="btn-dark" style="width:100%;display:block;text-align:center;">Get Started →</a>
-    </div>
-  </div>
-</section>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    document.body.classList.add('js-ready');
 
-<footer>
-  <a href="/" class="footer-logo">Ask<span>.</span></a>
-  <div class="footer-copy">Powered by Menos Labs · menoslabs.com</div>
-</footer>
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+    });
 
-<script>
-function openModal(){ document.getElementById('howModal').classList.add('show'); }
-function closeModal(){ document.getElementById('howModal').classList.remove('show'); }
-document.getElementById('howModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
-</script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+      });
+    });
+
+    // Reveal
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, {threshold: 0.08});
+    document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+    // Form
+    function handleSubmit(e) {
+      e.preventDefault();
+      e.target.querySelectorAll('.form-input, .form-submit').forEach(el => el.style.display = 'none');
+      document.getElementById('form-success').style.display = 'block';
+    }
+  </script>
+
 </body>
 </html>
