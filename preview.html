@@ -120,6 +120,13 @@
     .chat-send:hover{background:var(--accent);}
     .chat-send:disabled{opacity:0.3;cursor:not-allowed;}
 
+    /* Editable fields */
+    [contenteditable]{outline:none;cursor:text;}
+    [contenteditable]:hover{background:rgba(204,255,0,0.06);border-radius:2px;}
+    [contenteditable]:focus{background:rgba(204,255,0,0.1);border-radius:2px;box-shadow:0 0 0 1px var(--accent-dark);}
+    .edit-hint{font-size:0.62rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.5rem;display:flex;align-items:center;gap:0.35rem;}
+    .edit-hint::before{content:'✎';font-size:0.7rem;}
+
     footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
     .footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
     .footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
@@ -232,9 +239,10 @@
       <div class="profile-avatar-initials" id="profileInitials">?</div>
     </div>
     <div>
-      <div class="profile-name" id="profileName"></div>
-      <div class="profile-meta" id="profileMeta"></div>
-      <div class="profile-bio" id="profileBio"></div>
+      <div class="profile-name" id="profileName" contenteditable="true" spellcheck="false" title="Click to edit"></div>
+      <div class="profile-meta" id="profileMeta" contenteditable="true" spellcheck="false" title="Click to edit"></div>
+      <div class="profile-bio" id="profileBio" contenteditable="true" spellcheck="true" title="Click to edit"></div>
+      <div class="edit-hint">Click any text above to edit</div>
       <div class="profile-socials" id="profileSocials"></div>
     </div>
   </div>
@@ -243,12 +251,12 @@
 <div class="main-content">
   <div id="expSection">
     <p class="section-tag">Experience</p>
-    <h2 class="section-title">Where I've Shipped</h2>
+    <h2 class="section-title">Highlights</h2>
     <div class="exp-list" id="expList"></div>
   </div>
   <div class="skills-wrap" id="skillsSection">
     <p class="section-tag">Skills</p>
-    <h2 class="section-title">What I Bring</h2>
+    <h2 class="section-title">Skills</h2>
     <div class="skills-pills" id="skillsList"></div>
   </div>
 </div>
@@ -353,7 +361,7 @@ window.addEventListener('load', () => {
     const list=document.getElementById('expList');
     d.experience.forEach(job=>{
       const card=document.createElement('div');card.className='exp-card';
-      const bullets=(job.bullets||[]).map(b=>`<li>${b}</li>`).join('');
+      const bullets=(job.bullets||[]).map(b=>`<li contenteditable='true' spellcheck='true'>${b}</li>`).join('');
       card.innerHTML=`
         <div class="exp-header">
           <div><div class="exp-company">${job.company||''}</div><div class="exp-role">${job.role||''}</div></div>
@@ -378,7 +386,20 @@ window.addEventListener('load', () => {
 
 function showPurchaseModal(){ document.getElementById('purchaseModal').classList.add('show'); }
 
+function saveEdits(){
+  const raw = sessionStorage.getItem('ask_draft');
+  if(!raw) return;
+  const d = JSON.parse(raw);
+  d.name = document.getElementById('profileName').textContent.trim();
+  d.meta = document.getElementById('profileMeta').textContent.trim();
+  d.bio = document.getElementById('profileBio').textContent.trim();
+  // Update system prompt with edited bio
+  d.systemPrompt = d.systemPrompt.replace(/Bio:.*?\n/s, `Bio: ${d.bio}\n`);
+  sessionStorage.setItem('ask_draft', JSON.stringify(d));
+}
+
 function handlePurchase(){
+  saveEdits();
   // Save data to localStorage before Stripe redirect
   const raw = sessionStorage.getItem('ask_draft');
   if(raw) localStorage.setItem('ask_purchase_data', raw);

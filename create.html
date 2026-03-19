@@ -60,7 +60,7 @@
     .rtab:last-child{border-radius:0 2px 2px 0;border-left:none;}
     .rtab.on{background:var(--off-white);border-color:var(--accent-dark);color:var(--text1);}
     .resume-panel{display:none;}
-    .resume-panel.on{display:block;}
+    .resume-panel.on{display:block;padding:1px;}
     .upload-area{border:1px dashed var(--border);padding:2rem;text-align:center;cursor:pointer;border-radius:2px;transition:all 0.2s;background:var(--off-white);}
     .upload-area:hover{border-color:var(--accent-dark);background:var(--light);}
     .upload-text{font-size:0.85rem;color:var(--text2);}
@@ -263,7 +263,7 @@
       </div>
     </div>
 
-    <p class="form-section-title" style="margin-top:1.5rem;">Resume *</p>
+    <p class="form-section-title" style="margin-top:1.5rem;text-align:center;">Resume *</p>
 
     <div class="tab-row">
       <button class="rtab on" id="tab-paste" onclick="switchTab('paste')">Paste Resume Text</button>
@@ -323,7 +323,7 @@ async function generate(){
   const resume = document.getElementById('iResume').value.trim();
 
   if(!name){ alert('Please enter your name.'); return; }
-  if(!resume){ alert('Please paste your resume or upload a file.'); return; }
+  if(!resume){ alert('Please paste your resume text above.'); return; }
   if(resume.length < 100){ alert('Resume content seems too short. Please paste your full resume text for best results.'); return; }
 
   const socials = {
