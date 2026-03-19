@@ -148,7 +148,6 @@
 </head>
 <body>
 
-<input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt">
 <input type="file" id="avatarInput" accept="image/*">
 
 <nav>
@@ -268,18 +267,11 @@
 
     <div class="tab-row">
       <button class="rtab on" id="tab-paste" onclick="switchTab('paste')">Paste Resume Text</button>
-      <button class="rtab" id="tab-upload" onclick="switchTab('upload')">Upload File</button>
     </div>
     <div class="resume-panel on" id="panel-paste">
       <textarea class="finput" id="iResume" placeholder="Paste your resume text — work experience, skills, education, achievements..."></textarea>
     </div>
-    <div class="resume-panel" id="panel-upload">
-      <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-        <div class="upload-text">Click to upload your resume</div>
-        <div class="upload-hint">For best results paste your resume as text — PDF extraction may vary</div>
-        <div class="upload-success" id="uploadSuccess"></div>
-      </div>
-    </div>
+
 
     <div id="formActions">
       <button class="btn-generate" onclick="generate()">Generate My Assistant →</button>
@@ -305,7 +297,7 @@ function pickTheme(name,el){
   const bg = {dark:'#0a0a0a', bold:'#ffffff', soft:'#FDF8F3', classic:'#F7F6F3'};
   document.querySelector('.page').style.background = bg[name]||'';
 }
-let avatarDataUrl = null, uploadedResumeText = '';
+let avatarDataUrl = null;
 
 document.getElementById('avatarInput').addEventListener('change', function(){
   const file = this.files[0]; if(!file) return;
@@ -321,26 +313,14 @@ function updateInitials(){
   document.getElementById('avatarInitials').textContent = i.toUpperCase();
 }
 
-function switchTab(tab){
-  ['paste','upload'].forEach(t=>{
-    document.getElementById('tab-'+t).classList.toggle('on',t===tab);
-    document.getElementById('panel-'+t).classList.toggle('on',t===tab);
-  });
-}
 
-document.getElementById('fileInput').addEventListener('change', async function(){
-  const file = this.files[0]; if(!file) return;
-  const el = document.getElementById('uploadSuccess');
-  el.style.display='block'; el.textContent=`✓ ${file.name} loaded`;
-  uploadedResumeText = await file.text().catch(()=>'') || `[File: ${file.name}]`;
-});
 
 async function generate(){
   const name = document.getElementById('iName').value.trim();
   const title = document.getElementById('iTitle').value.trim();
   const city = document.getElementById('iCity').value.trim();
   const email = document.getElementById('iEmail').value.trim();
-  const resume = document.getElementById('iResume').value.trim() || uploadedResumeText;
+  const resume = document.getElementById('iResume').value.trim();
 
   if(!name){ alert('Please enter your name.'); return; }
   if(!resume){ alert('Please paste your resume or upload a file.'); return; }
