@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-19T13:33:10.043361 -->
+<!-- v2026-03-19T13:43:10.778941 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -133,6 +133,21 @@
     .footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
     .footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.05em;}
 
+    /* Theme switcher bar */
+    #theme-switcher{position:fixed;top:4.5rem;left:50%;transform:translateX(-50%);z-index:90;display:flex;gap:0.4rem;background:rgba(255,255,255,0.95);border:1px solid var(--border);border-radius:50px;padding:0.35rem 0.5rem;backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+    .ts-btn{font-size:0.62rem;font-weight:500;letter-spacing:0.08em;padding:0.3rem 0.85rem;border:1px solid transparent;border-radius:50px;cursor:pointer;background:none;color:var(--text2);transition:all 0.2s;}
+    .ts-btn:hover{background:var(--off-white);color:var(--text1);}
+    .ts-btn.on{background:var(--black);color:var(--white);border-color:var(--black);}
+    html.dark #theme-switcher{background:rgba(20,20,20,0.95);border-color:rgba(255,255,255,0.1);}
+    html.dark .ts-btn{color:rgba(255,255,255,0.5);}
+    html.dark .ts-btn.on{background:#CCFF00;color:#000;border-color:#CCFF00;}
+    html.dark .ts-btn:hover{background:rgba(255,255,255,0.08);color:#fff;}
+    html.bold #theme-switcher{border-radius:0;border:2px solid #000;}
+    html.bold .ts-btn{border-radius:0;}
+    html.bold .ts-btn.on{background:#000;color:#fff;}
+    html.soft #theme-switcher{border-color:#DDD0BB;}
+    html.soft .ts-btn.on{background:#D48B3A;color:#fff;border-color:#D48B3A;}
+
     @media(max-width:768px){
       nav{padding:1.25rem 1.5rem;}
       .profile-hero{padding:6rem 1.5rem 2.5rem;}
@@ -248,6 +263,13 @@
   <span class="nav-badge">Preview Mode</span>
 </nav>
 
+<div id="theme-switcher">
+  <button class="ts-btn on" data-theme="classic" onclick="switchTheme('classic',this)">Classic</button>
+  <button class="ts-btn" data-theme="dark" onclick="switchTheme('dark',this)">Dark</button>
+  <button class="ts-btn" data-theme="bold" onclick="switchTheme('bold',this)">Bold</button>
+  <button class="ts-btn" data-theme="soft" onclick="switchTheme('soft',this)">Soft</button>
+</div>
+
 <div class="profile-hero">
   <div class="profile-hero-inner">
     <div class="profile-avatar" id="profileAvatar">
@@ -330,7 +352,10 @@ window.addEventListener('load', () => {
   const raw = sessionStorage.getItem('ask_draft');
   if(!raw){ window.location.href='/create.html'; return; }
   const d = JSON.parse(raw);
-  if(d.theme && d.theme !== 'classic') document.documentElement.className = d.theme;
+  if(d.theme && d.theme !== 'classic'){
+    document.documentElement.className = d.theme;
+    document.querySelectorAll('.ts-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===d.theme));
+  }
 
   systemPrompt = d.systemPrompt;
   avatarDataUrl = d.avatar;
@@ -398,6 +423,14 @@ window.addEventListener('load', () => {
   // Show purchase modal after 30s if not purchased
   setTimeout(showPurchaseModal, 30000);
 });
+
+function switchTheme(name, el){
+  document.documentElement.className = name === 'classic' ? '' : name;
+  document.querySelectorAll('.ts-btn').forEach(b => b.classList.toggle('on', b === el));
+  // Save to session
+  const raw = sessionStorage.getItem('ask_draft');
+  if(raw){ const d=JSON.parse(raw); d.theme=name; sessionStorage.setItem('ask_draft',JSON.stringify(d)); }
+}
 
 function showPurchaseModal(){ document.getElementById('purchaseModal').classList.add('show'); }
 
