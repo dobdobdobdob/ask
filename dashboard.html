@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T18:18:47.324503 -->
+<!-- v2026-03-20T18:29:34.880608 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -635,7 +635,7 @@ ${resume}
       return;
     }
 
-    await fetch(\`${ASK_SERVER}/update\`, {
+    await fetch(`${ASK_SERVER}/update`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ slug, data: updated })
     });
