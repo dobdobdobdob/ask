@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-19T12:19:09.646424 -->
+<!-- v2026-03-20T14:58:19.335641 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -157,12 +157,31 @@
 
 <!-- DASHBOARD -->
 <div id="dashScreen">
+  <!-- PASSWORD RESET MODAL -->
+  <div id="pwModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2rem;width:380px;max-width:90%;">
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:1.25rem;">Change Password</div>
+      <div class="field"><label class="flabel">Current Password</label><input class="finput" id="pwCurrent" type="password"></div>
+      <div class="field"><label class="flabel">New Password</label><input class="finput" id="pwNew" type="password"></div>
+      <div class="field"><label class="flabel">Confirm New Password</label><input class="finput" id="pwConfirm" type="password"></div>
+      <div id="pwError" style="font-size:0.75rem;color:#dc2626;margin-bottom:0.75rem;display:none;"></div>
+      <div style="display:flex;gap:0.75rem;">
+        <button class="btn-regen" style="margin-top:0;flex:1;" onclick="doChangePassword()">Update Password</button>
+        <button onclick="document.getElementById('pwModal').style.display='none'" style="flex:1;background:none;border:1px solid var(--border);border-radius:2px;cursor:pointer;font-size:0.82rem;color:var(--text2);">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <div class="dash-header">
     <div>
       <div class="dash-title">Profiles</div>
       <div class="dash-sub">All active Ask assistant profiles</div>
     </div>
-    <button class="btn-edit" style="padding:0.6rem 1.25rem;font-size:0.75rem;" onclick="loadProfiles()">↻ Refresh</button>
+    <div style="display:flex;gap:0.75rem;">
+      <button class="btn-edit" style="padding:0.6rem 1.25rem;font-size:0.75rem;background:var(--off-white);color:var(--text1);" onclick="document.getElementById('pwModal').style.display='flex'">Change Password</button>
+      <button class="btn-edit" style="padding:0.6rem 1.25rem;font-size:0.75rem;background:var(--off-white);color:var(--text1);" onclick="openCreateProfile()">+ Create Profile</button>
+      <button class="btn-edit" style="padding:0.6rem 1.25rem;font-size:0.75rem;" onclick="loadProfiles()">↻ Refresh</button>
+    </div>
   </div>
 
   <div class="stats-row">
@@ -446,7 +465,23 @@ ${resume}
       systemPrompt: parsed.systemPrompt,
     };
 
-    await fetch(`${ASK_SERVER}/update`, {
+    // If creating new profile, use /save endpoint
+    if(slug === '__new__'){
+      const saveRes = await fetch(`${ASK_SERVER}/save`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(updated)
+      });
+      const saveResult = await saveRes.json();
+      clearInterval(iv);
+      document.getElementById('regenState').style.display = 'none';
+      document.getElementById('regenSuccess').style.display = 'block';
+      document.getElementById('regenSuccessMsg').textContent = `Profile created: ask.menoslabs.com/${saveResult.slug}`;
+      document.getElementById('editActions').style.display = 'block';
+      loadProfiles();
+      return;
+    }
+
+    await fetch(\`${ASK_SERVER}/update\`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ slug, data: updated })
     });
@@ -485,12 +520,46 @@ ${resume}
 async function deleteProfile(slug, name){
   if(!confirm(`Delete profile for "${name}"? This cannot be undone.`)) return;
   try {
-    await fetch(`${ASK_SERVER}/delete`, {
+    const res = await fetch(`${ASK_SERVER}/delete`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ slug })
     });
-    loadProfiles();
-  } catch(e){ alert('Delete failed. Please try again.'); }
+    const result = await res.json();
+    if(result.ok){ loadProfiles(); }
+    else { alert('Delete failed: ' + (result.error||'Unknown error')); }
+  } catch(e){ alert('Delete failed: ' + e.message); }
+}
+
+// Password change
+let currentPassword = 'Luckydog00';
+function doChangePassword(){
+  const current = document.getElementById('pwCurrent').value;
+  const newPw = document.getElementById('pwNew').value;
+  const confirm = document.getElementById('pwConfirm').value;
+  const err = document.getElementById('pwError');
+  if(current !== currentPassword){ err.textContent='Current password incorrect.'; err.style.display='block'; return; }
+  if(newPw.length < 8){ err.textContent='New password must be at least 8 characters.'; err.style.display='block'; return; }
+  if(newPw !== confirm){ err.textContent='Passwords do not match.'; err.style.display='block'; return; }
+  currentPassword = newPw;
+  sessionStorage.setItem('ask_dash_pw', newPw);
+  document.getElementById('pwModal').style.display='none';
+  alert('Password updated for this session.');
+}
+
+// Create child profile
+function openCreateProfile(){
+  document.getElementById('editPanelTitle').textContent = 'Create New Profile';
+  document.getElementById('editSlug').value = '__new__';
+  document.getElementById('editName').value = '';
+  document.getElementById('editTitle').value = '';
+  document.getElementById('editCity').value = '';
+  document.getElementById('editEmail').value = '';
+  document.getElementById('editResume').value = '';
+  document.getElementById('editActions').style.display = 'block';
+  document.getElementById('regenState').style.display = 'none';
+  document.getElementById('regenSuccess').style.display = 'none';
+  document.getElementById('editPanel').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
 }
 </script>
 </body>
