@@ -2,452 +2,389 @@
 <!-- v2026-03-20T21:10:41.290541 -->
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Your Assistant — Ask</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
-    body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text1);min-height:100vh;}
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-    .nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
-    .nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
-    .nav-back{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
-    .nav-back:hover{color:var(--text1);}
-
-    .page{max-width:620px;margin:0 auto;padding:7rem 2rem 4rem;}
-
-    .page-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
-    .page-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem;}
-    .page-sub{font-size:0.9rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:2.5rem;}
-
-    .form-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2.5rem;}
-    .form-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
-
-    /* AVATAR */
-    .avatar-row{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;}
-    .avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:0.4rem;}
-    .avatar-circle{width:72px;height:72px;border-radius:50%;border:1px solid var(--border);background:var(--off-white);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;transition:border-color 0.2s;}
-    .avatar-circle:hover{border-color:var(--accent-dark);}
-    .avatar-circle img{width:100%;height:100%;object-fit:cover;}
-    .avatar-initials{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text3);}
-    .avatar-hint{font-size:0.62rem;color:var(--text3);letter-spacing:0.08em;}
-    .avatar-name-col{flex:1;display:flex;flex-direction:column;gap:0.75rem;}
-
-    .field{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem;}
-    .field:last-of-type{margin-bottom:0;}
-    .flabel{font-size:0.62rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);}
-    .finput{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:300;background:var(--off-white);border:1px solid var(--border);color:var(--text1);padding:0.7rem 1rem;outline:none;transition:border-color 0.2s;border-radius:2px;width:100%;}
-    .finput:focus{border-color:var(--accent-dark);}
-    .finput::placeholder{color:var(--text3);}
-    textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
-    .fields-2{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
-
-    /* SOCIALS */
-    .socials-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.5rem;}
-    .social-field{display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.6rem 0.9rem;transition:border-color 0.2s;}
-    .social-field:focus-within{border-color:var(--accent-dark);}
-    .social-icon{font-size:0.85rem;flex-shrink:0;width:18px;text-align:center;color:var(--text3);}
-    .social-input{flex:1;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:300;background:none;border:none;color:var(--text1);outline:none;}
-    .social-input::placeholder{color:var(--text3);}
-
-    /* RESUME TABS */
-    .tab-row{display:flex;gap:0;margin-bottom:0.75rem;}
-    .rtab{font-size:0.62rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0.5rem 1.1rem;background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer;transition:all 0.2s;}
-    .rtab:first-child{border-radius:2px 0 0 2px;}
-    .rtab:last-child{border-radius:0 2px 2px 0;border-left:none;}
-    .rtab.on{background:var(--off-white);border-color:var(--accent-dark);color:var(--text1);}
-    .resume-panel{display:none;}
-    .resume-panel.on{display:block;padding:1px;}
-    .upload-area{border:1px dashed var(--border);padding:2rem;text-align:center;cursor:pointer;border-radius:2px;transition:all 0.2s;background:var(--off-white);}
-    .upload-area:hover{border-color:var(--accent-dark);background:var(--light);}
-    .upload-text{font-size:0.85rem;color:var(--text2);}
-    .upload-hint{font-size:0.72rem;color:var(--text3);margin-top:0.25rem;}
-    .upload-success{font-size:0.75rem;color:var(--accent-dark);margin-top:0.5rem;display:none;font-weight:500;}
-
-    .btn-generate{background:var(--black);color:var(--white);padding:0.9rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;width:100%;margin-top:1.5rem;transition:all 0.2s;display:block;text-align:center;}
-    .btn-generate:hover{background:var(--accent);color:var(--black);}
-
-    /* PROCESSING STATE */
-    .processing{display:none;text-align:center;padding:2.5rem 0;}
-    .proc-dots{display:flex;gap:6px;justify-content:center;margin-bottom:1rem;}
-    .proc-dot{width:8px;height:8px;background:var(--accent-dark);border-radius:50%;animation:dotPulse 1.4s ease-in-out infinite;}
-    .proc-dot:nth-child(2){animation-delay:0.2s;}
-    .proc-dot:nth-child(3){animation-delay:0.4s;}
-    @keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
-    .proc-text{font-size:0.82rem;color:var(--text2);letter-spacing:0.05em;}
-
-    #fileInput,#avatarInput{display:none;}
-    .theme-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
-    .theme-card{border:1px solid var(--border);border-radius:4px;padding:0.75rem;cursor:pointer;transition:all 0.2s;}
-    .theme-card:hover{border-color:var(--accent-dark);}
-    .theme-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
-    .theme-preview{width:100%;height:52px;border-radius:3px;padding:8px;display:flex;flex-direction:column;justify-content:center;margin-bottom:0.5rem;overflow:hidden;}
-    .theme-label{font-size:0.75rem;font-weight:500;color:var(--text1);margin-bottom:1px;}
-    .theme-desc{font-size:0.62rem;color:var(--text3);}
-    @media(max-width:480px){.theme-picker{grid-template-columns:repeat(2,1fr);}}
-
-    /* Theme preview on form card */
-    .page.preview-dark{background:#0a0a0a;}
-    .page.preview-dark .page-eyebrow{color:rgba(255,255,255,0.3);}
-    .page.preview-dark .page-title{color:#ffffff;}
-    .page.preview-dark .page-sub{color:rgba(255,255,255,0.5);}
-    .form-card.preview-dark{background:#141414;border-color:rgba(255,255,255,0.1);}
-    .form-card.preview-dark .form-section-title{color:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.08);}
-    .form-card.preview-dark .flabel{color:rgba(255,255,255,0.3);}
-    .form-card.preview-dark .finput{background:#1e1e1e;border-color:rgba(255,255,255,0.1);color:#fff;}
-    .form-card.preview-dark .finput::placeholder{color:rgba(255,255,255,0.2);}
-    .form-card.preview-dark .social-field{background:#1e1e1e;border-color:rgba(255,255,255,0.1);}
-    .form-card.preview-dark .social-input{color:#fff;}
-    .form-card.preview-dark .social-input::placeholder{color:rgba(255,255,255,0.2);}
-    .form-card.preview-dark .rtab{border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);}
-    .form-card.preview-dark .rtab.on{background:#1e1e1e;border-color:#CCFF00;color:#fff;}
-    .form-card.preview-dark .upload-area{background:#1e1e1e;border-color:rgba(255,255,255,0.15);}
-    .form-card.preview-dark .upload-text{color:rgba(255,255,255,0.5);}
-    .form-card.preview-dark .theme-card{border-color:rgba(255,255,255,0.1);background:#1e1e1e;}
-    .form-card.preview-dark .theme-card.on{border-color:#CCFF00;background:#252525;}
-    .form-card.preview-dark .theme-label{color:#fff;}
-    .form-card.preview-dark .theme-desc{color:rgba(255,255,255,0.3);}
-    .form-card.preview-dark .btn-generate{background:#CCFF00;color:#000;}
-    .form-card.preview-dark .avatar-circle{background:#1e1e1e;border-color:rgba(255,255,255,0.15);}
-    .form-card.preview-dark .avatar-initials{color:rgba(255,255,255,0.4);}
-    .form-card.preview-dark .avatar-hint{color:rgba(255,255,255,0.2);}
-
-    .page.preview-bold{background:#ffffff;}
-    .page.preview-bold .page-title{color:#000000;}
-    .form-card.preview-bold{background:#fff;border:3px solid #000;}
-    .form-card.preview-bold .form-section-title{color:#000;border-color:#000;letter-spacing:0.2em;}
-    .form-card.preview-bold .flabel{color:#000;font-weight:700;}
-    .form-card.preview-bold .finput{background:#f5f5f5;border:2px solid #000;border-radius:0;}
-    .form-card.preview-bold .social-field{background:#f5f5f5;border:2px solid #000;border-radius:0;}
-    .form-card.preview-bold .rtab{border:2px solid #000;border-radius:0;color:#000;font-weight:700;}
-    .form-card.preview-bold .rtab.on{background:#000;color:#fff;border-color:#000;}
-    .form-card.preview-bold .upload-area{background:#f5f5f5;border:2px dashed #000;border-radius:0;}
-    .form-card.preview-bold .theme-card{border:2px solid #ccc;border-radius:0;}
-    .form-card.preview-bold .theme-card.on{border:2px solid #000;background:#f5f5f5;}
-    .form-card.preview-bold .btn-generate{background:#000;color:#fff;border-radius:0;letter-spacing:0.2em;}
-    .form-card.preview-bold .avatar-circle{border:2px solid #000;border-radius:0;background:#f5f5f5;}
-
-    .page.preview-soft{background:#FDF8F3;}
-    .page.preview-soft .page-title{color:#2D2318;}
-    .page.preview-soft .page-sub{color:#6B5744;}
-    .form-card.preview-soft{background:#FFFAF5;border-color:#DDD0BB;border-radius:12px;}
-    .form-card.preview-soft .form-section-title{color:#A8917A;border-color:#EDE0CC;}
-    .form-card.preview-soft .flabel{color:#A8917A;}
-    .form-card.preview-soft .finput{background:#F5EDE0;border-color:#DDD0BB;color:#2D2318;border-radius:8px;}
-    .form-card.preview-soft .finput::placeholder{color:#A8917A;}
-    .form-card.preview-soft .social-field{background:#F5EDE0;border-color:#DDD0BB;border-radius:8px;}
-    .form-card.preview-soft .rtab{border-color:#DDD0BB;color:#A8917A;border-radius:6px 0 0 6px;}
-    .form-card.preview-soft .rtab:last-child{border-radius:0 6px 6px 0;}
-    .form-card.preview-soft .rtab.on{background:#F5EDE0;border-color:#D48B3A;color:#2D2318;}
-    .form-card.preview-soft .upload-area{background:#F5EDE0;border-color:#DDD0BB;border-radius:8px;}
-    .form-card.preview-soft .theme-card{border-color:#DDD0BB;border-radius:8px;}
-    .form-card.preview-soft .theme-card.on{border-color:#D48B3A;background:#F5EDE0;}
-    .form-card.preview-soft .btn-generate{background:#D48B3A;color:#fff;border-radius:8px;}
-    .form-card.preview-soft .avatar-circle{border-color:#DDD0BB;background:#F5EDE0;border-radius:50%;}
-
-    @media(max-width:640px){
-      nav{padding:1.25rem 1.5rem;}
-      .form-card{padding:1.75rem;}
-      .fields-2,.socials-grid{grid-template-columns:1fr;}
-    }
-  
-    /* FAQ Modal */
-    #faqModal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:none;align-items:flex-start;justify-content:center;backdrop-filter:blur(6px);padding:5rem 1.5rem 2rem;overflow-y:auto;}
-    #faqModal.show{display:flex;}
-    .faq-modal-card{background:var(--white);border:1px solid var(--border);border-radius:4px;width:100%;max-width:680px;position:relative;margin:auto;}
-    .faq-modal-header{padding:1.5rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1;border-radius:4px 4px 0 0;}
-    .faq-modal-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;letter-spacing:-0.02em;}
-    .faq-modal-close{background:none;border:none;font-size:1.2rem;color:var(--text3);cursor:pointer;transition:color 0.2s;line-height:1;}
-    .faq-modal-close:hover{color:var(--text1);}
-    .faq-modal-body{padding:2rem;}
-    .faq-modal-section{margin-bottom:2rem;}
-    .faq-modal-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
-    .faq-modal-item{margin-bottom:1rem;}
-    .faq-modal-q{font-size:0.88rem;font-weight:500;color:var(--text1);margin-bottom:0.3rem;cursor:pointer;display:flex;justify-content:space-between;gap:1rem;}
-    .faq-modal-q::after{content:'+';color:var(--text3);flex-shrink:0;transition:transform 0.2s;}
-    .faq-modal-item.open .faq-modal-q::after{transform:rotate(45deg);}
-    .faq-modal-a{font-size:0.82rem;color:var(--text2);line-height:1.75;font-weight:300;display:none;padding-top:0.35rem;}
-    .faq-modal-item.open .faq-modal-a{display:block;}
-    .faq-modal-code{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.75rem;font-family:monospace;font-size:0.72rem;color:var(--text1);word-break:break-all;line-height:1.5;margin:0.5rem 0;white-space:pre-wrap;}
-    .faq-modal-steps{display:flex;flex-direction:column;gap:0.5rem;margin:0.5rem 0;}
-    .faq-modal-step{display:flex;gap:0.75rem;align-items:flex-start;}
-    .faq-modal-step-num{width:20px;height:20px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:var(--white);flex-shrink:0;margin-top:1px;}
-    .faq-modal-step-text{font-size:0.82rem;color:var(--text2);line-height:1.6;font-weight:300;}
-    .faq-modal-step-text strong{color:var(--text1);font-weight:500;}
-    .faq-modal-ptabs{display:flex;gap:0;margin:0.75rem 0 0.5rem;border-bottom:1px solid var(--border);}
-    .faq-modal-ptab{font-size:0.68rem;font-weight:500;letter-spacing:0.08em;padding:0.45rem 0.9rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;margin-bottom:-1px;transition:all 0.2s;}
-    .faq-modal-ptab.on{color:var(--text1);border-bottom-color:var(--black);}
-    .faq-modal-panel{display:none;}
-    .faq-modal-panel.on{display:block;}
-    .faq-modal-tip{background:rgba(204,255,0,0.08);border:1px solid rgba(139,179,0,0.2);border-radius:2px;padding:0.65rem 0.85rem;font-size:0.78rem;color:var(--text2);line-height:1.6;margin:0.5rem 0;}
-    .faq-modal-footer{padding:1.25rem 2rem;border-top:1px solid var(--border);text-align:center;}
-    .faq-modal-footer a{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
-    .faq-modal-footer a:hover{color:var(--text1);}
-    
-    /* GDPR Banner */
-    #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
-    #gdpr-banner.show{transform:translateY(0);}
-    .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
-    .gdpr-text a{color:rgba(255,255,255,0.4);text-decoration:underline;}
-    .gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
-    .gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:var(--accent);color:var(--black);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-    .gdpr-accept:hover{background:#fff;}
-    .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-    .gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
-    @media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Your Assistant — Ask</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text1);min-height:100vh;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
+.nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
+.nav-back{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
+.nav-back:hover{color:var(--text1);}
+.page{max-width:620px;margin:0 auto;padding:7rem 2rem 4rem;}
+.page-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
+.page-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem;}
+.page-sub{font-size:0.9rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:2.5rem;}
+.form-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2.5rem;}
+.form-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.avatar-row{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;}
+.avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:0.4rem;}
+.avatar-circle{width:72px;height:72px;border-radius:50%;border:1px solid var(--border);background:var(--off-white);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;transition:border-color 0.2s;}
+.avatar-circle:hover{border-color:var(--accent-dark);}
+.avatar-circle img{width:100%;height:100%;object-fit:cover;}
+.avatar-initials{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text3);}
+.avatar-hint{font-size:0.62rem;color:var(--text3);letter-spacing:0.08em;}
+.avatar-name-col{flex:1;display:flex;flex-direction:column;gap:0.75rem;}
+.field{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem;}
+.field:last-of-type{margin-bottom:0;}
+.flabel{font-size:0.62rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);}
+.finput{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:300;background:var(--off-white);border:1px solid var(--border);color:var(--text1);padding:0.7rem 1rem;outline:none;transition:border-color 0.2s;border-radius:2px;width:100%;}
+.finput:focus{border-color:var(--accent-dark);}
+.finput::placeholder{color:var(--text3);}
+textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
+.fields-2{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.socials-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.5rem;}
+.social-field{display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.6rem 0.9rem;transition:border-color 0.2s;}
+.social-field:focus-within{border-color:var(--accent-dark);}
+.social-icon{font-size:0.85rem;flex-shrink:0;width:18px;text-align:center;color:var(--text3);}
+.social-input{flex:1;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:300;background:none;border:none;color:var(--text1);outline:none;}
+.social-input::placeholder{color:var(--text3);}
+.tab-row{display:flex;gap:0;margin-bottom:0.75rem;}
+.rtab{font-size:0.62rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0.5rem 1.1rem;background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer;transition:all 0.2s;}
+.rtab:first-child{border-radius:2px 0 0 2px;}
+.rtab:last-child{border-radius:0 2px 2px 0;border-left:none;}
+.rtab.on{background:var(--off-white);border-color:var(--accent-dark);color:var(--text1);}
+.resume-panel{display:none;}
+.resume-panel.on{display:block;padding:1px;}
+.upload-area{border:1px dashed var(--border);padding:2rem;text-align:center;cursor:pointer;border-radius:2px;transition:all 0.2s;background:var(--off-white);}
+.upload-area:hover{border-color:var(--accent-dark);background:var(--light);}
+.upload-text{font-size:0.85rem;color:var(--text2);}
+.upload-hint{font-size:0.72rem;color:var(--text3);margin-top:0.25rem;}
+.upload-success{font-size:0.75rem;color:var(--accent-dark);margin-top:0.5rem;display:none;font-weight:500;}
+.btn-generate{background:var(--black);color:var(--white);padding:0.9rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;width:100%;margin-top:1.5rem;transition:all 0.2s;display:block;text-align:center;}
+.btn-generate:hover{background:var(--accent);color:var(--black);}
+.processing{display:none;text-align:center;padding:2.5rem 0;}
+.proc-dots{display:flex;gap:6px;justify-content:center;margin-bottom:1rem;}
+.proc-dot{width:8px;height:8px;background:var(--accent-dark);border-radius:50%;animation:dotPulse 1.4s ease-in-out infinite;}
+.proc-dot:nth-child(2){animation-delay:0.2s;}
+.proc-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
+.proc-text{font-size:0.82rem;color:var(--text2);letter-spacing:0.05em;}
+#fileInput,#avatarInput{display:none;}
+.theme-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.theme-card{border:1px solid var(--border);border-radius:4px;padding:0.75rem;cursor:pointer;transition:all 0.2s;}
+.theme-card:hover{border-color:var(--accent-dark);}
+.theme-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+.theme-preview{width:100%;height:52px;border-radius:3px;padding:8px;display:flex;flex-direction:column;justify-content:center;margin-bottom:0.5rem;overflow:hidden;}
+.theme-label{font-size:0.75rem;font-weight:500;color:var(--text1);margin-bottom:1px;}
+.theme-desc{font-size:0.62rem;color:var(--text3);}
+@media(max-width:480px){.theme-picker{grid-template-columns:repeat(2,1fr);}}
+.page.preview-dark{background:#0a0a0a;}
+.page.preview-dark .page-eyebrow{color:rgba(255,255,255,0.3);}
+.page.preview-dark .page-title{color:#ffffff;}
+.page.preview-dark .page-sub{color:rgba(255,255,255,0.5);}
+.form-card.preview-dark{background:#141414;border-color:rgba(255,255,255,0.1);}
+.form-card.preview-dark .form-section-title{color:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.08);}
+.form-card.preview-dark .flabel{color:rgba(255,255,255,0.3);}
+.form-card.preview-dark .finput{background:#1e1e1e;border-color:rgba(255,255,255,0.1);color:#fff;}
+.form-card.preview-dark .finput::placeholder{color:rgba(255,255,255,0.2);}
+.form-card.preview-dark .social-field{background:#1e1e1e;border-color:rgba(255,255,255,0.1);}
+.form-card.preview-dark .social-input{color:#fff;}
+.form-card.preview-dark .social-input::placeholder{color:rgba(255,255,255,0.2);}
+.form-card.preview-dark .rtab{border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);}
+.form-card.preview-dark .rtab.on{background:#1e1e1e;border-color:#CCFF00;color:#fff;}
+.form-card.preview-dark .upload-area{background:#1e1e1e;border-color:rgba(255,255,255,0.15);}
+.form-card.preview-dark .upload-text{color:rgba(255,255,255,0.5);}
+.form-card.preview-dark .theme-card{border-color:rgba(255,255,255,0.1);background:#1e1e1e;}
+.form-card.preview-dark .theme-card.on{border-color:#CCFF00;background:#252525;}
+.form-card.preview-dark .theme-label{color:#fff;}
+.form-card.preview-dark .theme-desc{color:rgba(255,255,255,0.3);}
+.form-card.preview-dark .btn-generate{background:#CCFF00;color:#000;}
+.form-card.preview-dark .avatar-circle{background:#1e1e1e;border-color:rgba(255,255,255,0.15);}
+.form-card.preview-dark .avatar-initials{color:rgba(255,255,255,0.4);}
+.form-card.preview-dark .avatar-hint{color:rgba(255,255,255,0.2);}
+.page.preview-bold{background:#ffffff;}
+.page.preview-bold .page-title{color:#000000;}
+.form-card.preview-bold{background:#fff;border:3px solid #000;}
+.form-card.preview-bold .form-section-title{color:#000;border-color:#000;letter-spacing:0.2em;}
+.form-card.preview-bold .flabel{color:#000;font-weight:700;}
+.form-card.preview-bold .finput{background:#f5f5f5;border:2px solid #000;border-radius:0;}
+.form-card.preview-bold .social-field{background:#f5f5f5;border:2px solid #000;border-radius:0;}
+.form-card.preview-bold .rtab{border:2px solid #000;border-radius:0;color:#000;font-weight:700;}
+.form-card.preview-bold .rtab.on{background:#000;color:#fff;border-color:#000;}
+.form-card.preview-bold .upload-area{background:#f5f5f5;border:2px dashed #000;border-radius:0;}
+.form-card.preview-bold .theme-card{border:2px solid #ccc;border-radius:0;}
+.form-card.preview-bold .theme-card.on{border:2px solid #000;background:#f5f5f5;}
+.form-card.preview-bold .btn-generate{background:#000;color:#fff;border-radius:0;letter-spacing:0.2em;}
+.form-card.preview-bold .avatar-circle{border:2px solid #000;border-radius:0;background:#f5f5f5;}
+.page.preview-soft{background:#FDF8F3;}
+.page.preview-soft .page-title{color:#2D2318;}
+.page.preview-soft .page-sub{color:#6B5744;}
+.form-card.preview-soft{background:#FFFAF5;border-color:#DDD0BB;border-radius:12px;}
+.form-card.preview-soft .form-section-title{color:#A8917A;border-color:#EDE0CC;}
+.form-card.preview-soft .flabel{color:#A8917A;}
+.form-card.preview-soft .finput{background:#F5EDE0;border-color:#DDD0BB;color:#2D2318;border-radius:8px;}
+.form-card.preview-soft .finput::placeholder{color:#A8917A;}
+.form-card.preview-soft .social-field{background:#F5EDE0;border-color:#DDD0BB;border-radius:8px;}
+.form-card.preview-soft .rtab{border-color:#DDD0BB;color:#A8917A;border-radius:6px 0 0 6px;}
+.form-card.preview-soft .rtab:last-child{border-radius:0 6px 6px 0;}
+.form-card.preview-soft .rtab.on{background:#F5EDE0;border-color:#D48B3A;color:#2D2318;}
+.form-card.preview-soft .upload-area{background:#F5EDE0;border-color:#DDD0BB;border-radius:8px;}
+.form-card.preview-soft .theme-card{border-color:#DDD0BB;border-radius:8px;}
+.form-card.preview-soft .theme-card.on{border-color:#D48B3A;background:#F5EDE0;}
+.form-card.preview-soft .btn-generate{background:#D48B3A;color:#fff;border-radius:8px;}
+.form-card.preview-soft .avatar-circle{border-color:#DDD0BB;background:#F5EDE0;border-radius:50%;}
+@media(max-width:640px){
+nav{padding:1.25rem 1.5rem;}
+.form-card{padding:1.75rem;}
+.fields-2,.socials-grid{grid-template-columns:1fr;}
+}
+#faqModal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:none;align-items:flex-start;justify-content:center;backdrop-filter:blur(6px);padding:5rem 1.5rem 2rem;overflow-y:auto;}
+#faqModal.show{display:flex;}
+.faq-modal-card{background:var(--white);border:1px solid var(--border);border-radius:4px;width:100%;max-width:680px;position:relative;margin:auto;}
+.faq-modal-header{padding:1.5rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1;border-radius:4px 4px 0 0;}
+.faq-modal-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;letter-spacing:-0.02em;}
+.faq-modal-close{background:none;border:none;font-size:1.2rem;color:var(--text3);cursor:pointer;transition:color 0.2s;line-height:1;}
+.faq-modal-close:hover{color:var(--text1);}
+.faq-modal-body{padding:2rem;}
+.faq-modal-section{margin-bottom:2rem;}
+.faq-modal-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+.faq-modal-item{margin-bottom:1rem;}
+.faq-modal-q{font-size:0.88rem;font-weight:500;color:var(--text1);margin-bottom:0.3rem;cursor:pointer;display:flex;justify-content:space-between;gap:1rem;}
+.faq-modal-q::after{content:'+';color:var(--text3);flex-shrink:0;transition:transform 0.2s;}
+.faq-modal-item.open .faq-modal-q::after{transform:rotate(45deg);}
+.faq-modal-a{font-size:0.82rem;color:var(--text2);line-height:1.75;font-weight:300;display:none;padding-top:0.35rem;}
+.faq-modal-item.open .faq-modal-a{display:block;}
+.faq-modal-code{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.75rem;font-family:monospace;font-size:0.72rem;color:var(--text1);word-break:break-all;line-height:1.5;margin:0.5rem 0;white-space:pre-wrap;}
+.faq-modal-steps{display:flex;flex-direction:column;gap:0.5rem;margin:0.5rem 0;}
+.faq-modal-step{display:flex;gap:0.75rem;align-items:flex-start;}
+.faq-modal-step-num{width:20px;height:20px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:var(--white);flex-shrink:0;margin-top:1px;}
+.faq-modal-step-text{font-size:0.82rem;color:var(--text2);line-height:1.6;font-weight:300;}
+.faq-modal-step-text strong{color:var(--text1);font-weight:500;}
+.faq-modal-ptabs{display:flex;gap:0;margin:0.75rem 0 0.5rem;border-bottom:1px solid var(--border);}
+.faq-modal-ptab{font-size:0.68rem;font-weight:500;letter-spacing:0.08em;padding:0.45rem 0.9rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;margin-bottom:-1px;transition:all 0.2s;}
+.faq-modal-ptab.on{color:var(--text1);border-bottom-color:var(--black);}
+.faq-modal-panel{display:none;}
+.faq-modal-panel.on{display:block;}
+.faq-modal-tip{background:rgba(204,255,0,0.08);border:1px solid rgba(139,179,0,0.2);border-radius:2px;padding:0.65rem 0.85rem;font-size:0.78rem;color:var(--text2);line-height:1.6;margin:0.5rem 0;}
+.faq-modal-footer{padding:1.25rem 2rem;border-top:1px solid var(--border);text-align:center;}
+.faq-modal-footer a{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
+.faq-modal-footer a:hover{color:var(--text1);}
+#gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
+#gdpr-banner.show{transform:translateY(0);}
+.gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
+.gdpr-text a{color:rgba(255,255,255,0.4);text-decoration:underline;}
+.gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
+.gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:var(--accent);color:var(--black);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.gdpr-accept:hover{background:#fff;}
+.gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
+@media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
+</style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-Y6Y16FEG2H');
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-Y6Y16FEG2H');
 </script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-96XWYGNS49');
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-96XWYGNS49');
 </script>
 </head>
 <body>
-
 <input type="file" id="avatarInput" accept="image/*">
-
 <nav>
-  <a href="/" class="nav-logo">Ask<span>.</span></a>
-  <button onclick="openFaq()" style="font-size:0.78rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:1.5rem;transition:color 0.2s;padding:0;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">FAQ</button>
-  <a href="/" class="nav-back">← Back</a>
+<a href="/" class="nav-logo">Ask<span>.</span></a>
+<button onclick="openFaq()" style="font-size:0.78rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:1.5rem;transition:color 0.2s;padding:0;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">FAQ</button>
+<a href="/" class="nav-back">← Back</a>
 </nav>
 
 <!-- FAQ MODAL -->
 <div id="faqModal" onclick="if(event.target===this)closeFaq()">
-  <div class="faq-modal-card">
-    <div class="faq-modal-header">
-      <div class="faq-modal-title">Help & FAQ</div>
-      <button class="faq-modal-close" onclick="closeFaq()">✕</button>
-    </div>
-    <div class="faq-modal-body">
-
-      <div class="faq-modal-section">
-        <div class="faq-modal-section-title">Your shareable link</div>
-        <div class="faq-modal-item open">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">What is my Ask link?</div>
-          <div class="faq-modal-a">Your permanent public page where anyone can ask your AI assistant questions. Share it in your email signature, LinkedIn, or resume. Example: <strong>ask.menoslabs.com/davidobrien-001</strong></div>
-        </div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Will my link ever expire?</div>
-          <div class="faq-modal-a">No. One-time payment, yours forever. We never delete profiles or charge recurring fees.</div>
-        </div>
-      </div>
-
-      <div class="faq-modal-section">
-        <div class="faq-modal-section-title">Embed on your website</div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">How do I add the chat button to my site?</div>
-          <div class="faq-modal-a">Paste one line of code before your closing &lt;/body&gt; tag:
-            <div class="faq-modal-code">&lt;script src="https://ask.menoslabs.com/embed.js" data-slug="YOUR-SLUG"&gt;&lt;/script&gt;</div>
-            <div class="faq-modal-ptabs">
-              <button class="faq-modal-ptab on" onclick="switchFaqTab('wix',this)">Wix</button>
-              <button class="faq-modal-ptab" onclick="switchFaqTab('squarespace',this)">Squarespace</button>
-              <button class="faq-modal-ptab" onclick="switchFaqTab('wordpress',this)">WordPress</button>
-              <button class="faq-modal-ptab" onclick="switchFaqTab('any',this)">Any Site</button>
-            </div>
-            <div class="faq-modal-panel on" id="faq-wix">
-              <div class="faq-modal-steps">
-                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Click <strong>Add Elements</strong> → <strong>Embed Code</strong> → <strong>HTML iframe</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script tag above and click <strong>Apply</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Publish your site</div></div>
-              </div>
-            </div>
-            <div class="faq-modal-panel" id="faq-squarespace">
-              <div class="faq-modal-steps">
-                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Edit your page → click <strong>+</strong> → add a <strong>Code</strong> block</div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script tag and click <strong>Apply</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Save and publish</div></div>
-              </div>
-            </div>
-            <div class="faq-modal-panel" id="faq-wordpress">
-              <div class="faq-modal-steps">
-                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Go to <strong>Appearance → Theme Editor → footer.php</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script just before <strong>&lt;/body&gt;</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Click <strong>Update File</strong></div></div>
-              </div>
-            </div>
-            <div class="faq-modal-panel" id="faq-any">
-              <div class="faq-modal-steps">
-                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Open your HTML file</div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script just before <strong>&lt;/body&gt;</strong> and save</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Can I embed my full profile page?</div>
-          <div class="faq-modal-a">Yes — use an iframe:
-            <div class="faq-modal-code">&lt;iframe src="https://ask.menoslabs.com/YOUR-SLUG" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"&gt;&lt;/iframe&gt;</div>
-          </div>
-        </div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Can I point my own domain to my Ask page?</div>
-          <div class="faq-modal-a">Yes. Add a CNAME record in your DNS pointing to <strong>ask.menoslabs.com</strong>, then email us at hello@menoslabs.com and we'll configure it.</div>
-        </div>
-      </div>
-
-      <div class="faq-modal-section">
-        <div class="faq-modal-section-title">Editing & billing</div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">How do I update my profile?</div>
-          <div class="faq-modal-a">Email <strong>hello@menoslabs.com</strong> with your Ask URL and updated resume. We'll regenerate and your URL stays the same.</div>
-        </div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">What is your refund policy?</div>
-          <div class="faq-modal-a">Full refund within 7 days, no questions asked. Email hello@menoslabs.com with your purchase details.</div>
-        </div>
-      </div>
-
-    </div>
-    <div class="faq-modal-footer">
-      <a href="/faq.html" target="_blank">View full FAQ page →</a>
-    </div>
-  </div>
+<div class="faq-modal-card">
+<div class="faq-modal-header">
+<div class="faq-modal-title">Help & FAQ</div>
+<button class="faq-modal-close" onclick="closeFaq()">✕</button>
+</div>
+<div class="faq-modal-body">
+<div class="faq-modal-section">
+<div class="faq-modal-section-title">Your shareable link</div>
+<div class="faq-modal-item open">
+<div class="faq-modal-q" onclick="toggleFaqModal(this)">What is my Ask link?</div>
+<div class="faq-modal-a">Your permanent public page where anyone can ask your AI assistant questions. Share it in your email signature, LinkedIn, or resume. Example: <strong>ask.menoslabs.com/davidobrien-001</strong></div>
+</div>
+<div class="faq-modal-item">
+<div class="faq-modal-q" onclick="toggleFaqModal(this)">Will my link ever expire?</div>
+<div class="faq-modal-a">No. One-time payment, yours forever. We never delete profiles or charge recurring fees.</div>
+</div>
+</div>
+<div class="faq-modal-section">
+<div class="faq-modal-section-title">Embed on your website</div>
+<div class="faq-modal-item">
+<div class="faq-modal-q" onclick="toggleFaqModal(this)">How do I add the chat button to my site?</div>
+<div class="faq-modal-a">Paste one line of code before your closing &lt;/body&gt; tag:
+<div class="faq-modal-code">&lt;script src="https://ask.menoslabs.com/embed.js" data-slug="YOUR-SLUG"&gt;&lt;/script&gt;</div>
+<div class="faq-modal-ptabs">
+<button class="faq-modal-ptab on" onclick="switchFaqTab('wix',this)">Wix</button>
+<button class="faq-modal-ptab" onclick="switchFaqTab('squarespace',this)">Squarespace</button>
+<button class="faq-modal-ptab" onclick="switchFaqTab('wordpress',this)">WordPress</button>
+<button class="faq-modal-ptab" onclick="switchFaqTab('any',this)">Any Site</button>
+</div>
+<div class="faq-modal-panel on" id="faq-wix">
+<div class="faq-modal-steps">
+<div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Click <strong>Add Elements</strong> → <strong>Embed Code</strong> → <strong>HTML iframe</strong></div></div>
+<div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script tag above and click <strong>Apply</strong></div></div>
+<div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Publish your site</div></div>
+</div>
+</div>
+<div class="faq-modal-panel" id="faq-squarespace">
+<div class="faq-modal-steps">
+<div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Edit your page → click <strong>+</strong> → add a <strong>Code</strong> block</div></div>
+<div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script tag and click <strong>Apply</strong></div></div>
+<div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Save and publish</div></div>
+</div>
+</div>
+<div class="faq-modal-panel" id="faq-wordpress">
+<div class="faq-modal-steps">
+<div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Go to <strong>Appearance → Theme Editor → footer.php</strong></div></div>
+<div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script just before <strong>&lt;/body&gt;</strong></div></div>
+<div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Click <strong>Update File</strong></div></div>
+</div>
+</div>
+<div class="faq-modal-panel" id="faq-any">
+<div class="faq-modal-steps">
+<div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Open your HTML file</div></div>
+<div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script just before <strong>&lt;/body&gt;</strong> and save</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="faq-modal-item">
+<div class="faq-modal-q" onclick="toggleFaqModal(this)">Can I embed my full profile page?</div>
+<div class="faq-modal-a">Yes — use an iframe:
+<div class="faq-modal-code">&lt;iframe src="https://ask.menoslabs.com/YOUR-SLUG" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"&gt;&lt;/iframe&gt;</div>
+</div>
+</div>
+<div class="faq-modal-item">
+<div class="faq-modal-q" onclick="toggleFaqModal(this)">Can I point my own domain to my Ask page?</div>
+<div class="faq-modal-a">Yes. Add a CNAME record in your DNS pointing to <strong>ask.menoslabs.com</strong>, then email us at hello@menoslabs.com and we'll configure it.</div>
+</div>
+</div>
+<div class="faq-modal-section">
+<div class="faq-modal-section-title">Editing & billing</div>
+<div class="faq-modal-item">
+<div class="faq-modal-q" onclick="toggleFaqModal(this)">How do I update my profile?</div>
+<div class="faq-modal-a">Email <strong>hello@menoslabs.com</strong> with your Ask URL and updated resume. We'll regenerate and your URL stays the same.</div>
+</div>
+<div class="faq-modal-item">
+<div class="faq-modal-q" onclick="toggleFaqModal(this)">What is your refund policy?</div>
+<div class="faq-modal-a">Full refund within 7 days, no questions asked. Email hello@menoslabs.com with your purchase details.</div>
+</div>
+</div>
+</div>
+<div class="faq-modal-footer">
+<a href="/faq.html" target="_blank">View full FAQ page →</a>
+</div>
+</div>
 </div>
 
 <div class="page">
-  <p class="page-eyebrow">Step 1 of 2</p>
-  <h1 class="page-title">Tell us about yourself.</h1>
-  <p class="page-sub">Fill in your details and upload your resume. We'll generate your personal AI assistant in under 30 seconds.</p>
-
-  <div class="form-card">
-
-    <p class="form-section-title">Profile</p>
-
-    <div class="avatar-row">
-      <div class="avatar-wrap">
-        <div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()">
-          <div class="avatar-initials" id="avatarInitials">?</div>
-        </div>
-        <div class="avatar-hint">Upload photo</div>
-      </div>
-      <div class="avatar-name-col">
-        <div class="field" style="margin-bottom:0">
-          <label class="flabel">Full Name *</label>
-          <input class="finput" id="iName" type="text" placeholder="Jane Smith" oninput="updateInitials()">
-        </div>
-        <div class="field" style="margin-bottom:0">
-          <label class="flabel">Title / Role</label>
-          <input class="finput" id="iTitle" type="text" placeholder="Senior Product Manager">
-        </div>
-      </div>
-    </div>
-
-    <div class="fields-2" style="margin-bottom:1.5rem;">
-      <div class="field" style="margin-bottom:0">
-        <label class="flabel">City</label>
-        <input class="finput" id="iCity" type="text" placeholder="Chicago, IL">
-      </div>
-      <div class="field" style="margin-bottom:0">
-        <label class="flabel">Email</label>
-        <input class="finput" id="iEmail" type="email" placeholder="jane@example.com">
-      </div>
-    </div>
-
-    <p class="form-section-title" style="margin-top:1.5rem;">Social Links</p>
-
-    <div class="socials-grid">
-      <div class="social-field">
-        <span class="social-icon">in</span>
-        <input class="social-input" id="sLinkedIn" placeholder="LinkedIn URL">
-      </div>
-      <div class="social-field">
-        <span class="social-icon">⌂</span>
-        <input class="social-input" id="sPortfolio" placeholder="Portfolio URL">
-      </div>
-      <div class="social-field">
-        <span class="social-icon">gh</span>
-        <input class="social-input" id="sGithub" placeholder="GitHub URL">
-      </div>
-      <div class="social-field">
-        <span class="social-icon">𝕏</span>
-        <input class="social-input" id="sTwitter" placeholder="X / Twitter URL">
-      </div>
-      <div class="social-field">
-        <span class="social-icon">▶</span>
-        <input class="social-input" id="sTiktok" placeholder="TikTok URL">
-      </div>
-      <div class="social-field">
-        <span class="social-icon">◻</span>
-        <input class="social-input" id="sInstagram" placeholder="Instagram URL">
-      </div>
-    </div>
-
-    <p class="form-section-title" style="margin-top:1.5rem;">Profile Theme</p>
-    <div class="theme-picker" id="themePicker" style="margin-bottom:1.5rem;">
-      <div class="theme-card on" data-theme="classic" onclick="pickTheme('classic',this)">
-        <div class="theme-preview" style="background:#F7F6F3;border:1px solid #E2DED8;">
-          <div style="width:55%;height:7px;background:#1A1A1A;border-radius:2px;margin-bottom:5px;"></div>
-          <div style="width:85%;height:3px;background:#E2DED8;border-radius:2px;margin-bottom:3px;"></div>
-          <div style="width:70%;height:3px;background:#E2DED8;border-radius:2px;"></div>
-        </div>
-        <div class="theme-label">Classic</div>
-        <div class="theme-desc">Clean & professional</div>
-      </div>
-      <div class="theme-card" data-theme="dark" onclick="pickTheme('dark',this)">
-        <div class="theme-preview" style="background:#111111;">
-          <div style="width:55%;height:7px;background:#ffffff;border-radius:2px;margin-bottom:5px;"></div>
-          <div style="width:85%;height:3px;background:rgba(255,255,255,0.15);border-radius:2px;margin-bottom:3px;"></div>
-          <div style="width:38%;height:5px;background:#CCFF00;border-radius:2px;"></div>
-        </div>
-        <div class="theme-label">Dark</div>
-        <div class="theme-desc">Bold & striking</div>
-      </div>
-      <div class="theme-card" data-theme="bold" onclick="pickTheme('bold',this)">
-        <div class="theme-preview" style="background:#ffffff;border:2px solid #000;">
-          <div style="width:55%;height:7px;background:#000000;margin-bottom:5px;"></div>
-          <div style="width:85%;height:2px;background:#000000;margin-bottom:4px;"></div>
-          <div style="width:70%;height:2px;background:#000000;"></div>
-        </div>
-        <div class="theme-label">Bold</div>
-        <div class="theme-desc">Editorial & graphic</div>
-      </div>
-      <div class="theme-card" data-theme="soft" onclick="pickTheme('soft',this)">
-        <div class="theme-preview" style="background:#FDF8F3;border:1px solid #DDD0BB;">
-          <div style="width:55%;height:7px;background:#2D2318;border-radius:5px;margin-bottom:5px;"></div>
-          <div style="width:85%;height:3px;background:#DDD0BB;border-radius:5px;margin-bottom:3px;"></div>
-          <div style="width:40%;height:5px;background:#D48B3A;border-radius:5px;"></div>
-        </div>
-        <div class="theme-label">Soft</div>
-        <div class="theme-desc">Warm & approachable</div>
-      </div>
-    </div>
-
-    <p class="form-section-title" style="margin-top:1.5rem;text-align:center;">Resume *</p>
-
-    <div class="resume-panel on" id="panel-paste">
-      <textarea class="finput" id="iResume" placeholder="Paste your resume text — work experience, skills, education, achievements..."></textarea>
-    </div>
-
-
-    <div id="formActions">
-      <button class="btn-generate" onclick="generate()">Generate My Assistant →</button>
-    </div>
-
-    <div class="processing" id="processing">
-      <div class="proc-dots"><div class="proc-dot"></div><div class="proc-dot"></div><div class="proc-dot"></div></div>
-      <div class="proc-text" id="procText">Reading your resume...</div>
-    </div>
-
-  </div>
+<p class="page-eyebrow">Step 1 of 2</p>
+<h1 class="page-title">Tell us about yourself.</h1>
+<p class="page-sub">Fill in your details and upload your resume. We'll generate your personal AI assistant in under 30 seconds.</p>
+<div class="form-card">
+<p class="form-section-title">Profile</p>
+<div class="avatar-row">
+<div class="avatar-wrap">
+<div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()">
+<div class="avatar-initials" id="avatarInitials">?</div>
+</div>
+<div class="avatar-hint">Upload photo</div>
+</div>
+<div class="avatar-name-col">
+<div class="field" style="margin-bottom:0">
+<label class="flabel">Full Name *</label>
+<input class="finput" id="iName" type="text" placeholder="Jane Smith" oninput="updateInitials()">
+</div>
+<div class="field" style="margin-bottom:0">
+<label class="flabel">Title / Role</label>
+<input class="finput" id="iTitle" type="text" placeholder="Senior Product Manager">
+</div>
+</div>
+</div>
+<div class="fields-2" style="margin-bottom:1.5rem;">
+<div class="field" style="margin-bottom:0">
+<label class="flabel">City</label>
+<input class="finput" id="iCity" type="text" placeholder="Chicago, IL">
+</div>
+<div class="field" style="margin-bottom:0">
+<label class="flabel">Email</label>
+<input class="finput" id="iEmail" type="email" placeholder="jane@example.com">
+</div>
+</div>
+<p class="form-section-title" style="margin-top:1.5rem;">Social Links</p>
+<div class="socials-grid">
+<div class="social-field"><span class="social-icon">in</span><input class="social-input" id="sLinkedIn" placeholder="LinkedIn URL"></div>
+<div class="social-field"><span class="social-icon">⌂</span><input class="social-input" id="sPortfolio" placeholder="Portfolio URL"></div>
+<div class="social-field"><span class="social-icon">gh</span><input class="social-input" id="sGithub" placeholder="GitHub URL"></div>
+<div class="social-field"><span class="social-icon">𝕏</span><input class="social-input" id="sTwitter" placeholder="X / Twitter URL"></div>
+<div class="social-field"><span class="social-icon">▶</span><input class="social-input" id="sTiktok" placeholder="TikTok URL"></div>
+<div class="social-field"><span class="social-icon">◻</span><input class="social-input" id="sInstagram" placeholder="Instagram URL"></div>
+</div>
+<p class="form-section-title" style="margin-top:1.5rem;">Profile Theme</p>
+<div class="theme-picker" id="themePicker" style="margin-bottom:1.5rem;">
+<div class="theme-card on" data-theme="classic" onclick="pickTheme('classic',this)">
+<div class="theme-preview" style="background:#F7F6F3;border:1px solid #E2DED8;">
+<div style="width:55%;height:7px;background:#1A1A1A;border-radius:2px;margin-bottom:5px;"></div>
+<div style="width:85%;height:3px;background:#E2DED8;border-radius:2px;margin-bottom:3px;"></div>
+<div style="width:70%;height:3px;background:#E2DED8;border-radius:2px;"></div>
+</div>
+<div class="theme-label">Classic</div><div class="theme-desc">Clean & professional</div>
+</div>
+<div class="theme-card" data-theme="dark" onclick="pickTheme('dark',this)">
+<div class="theme-preview" style="background:#111111;">
+<div style="width:55%;height:7px;background:#ffffff;border-radius:2px;margin-bottom:5px;"></div>
+<div style="width:85%;height:3px;background:rgba(255,255,255,0.15);border-radius:2px;margin-bottom:3px;"></div>
+<div style="width:38%;height:5px;background:#CCFF00;border-radius:2px;"></div>
+</div>
+<div class="theme-label">Dark</div><div class="theme-desc">Bold & striking</div>
+</div>
+<div class="theme-card" data-theme="bold" onclick="pickTheme('bold',this)">
+<div class="theme-preview" style="background:#ffffff;border:2px solid #000;">
+<div style="width:55%;height:7px;background:#000000;margin-bottom:5px;"></div>
+<div style="width:85%;height:2px;background:#000000;margin-bottom:4px;"></div>
+<div style="width:70%;height:2px;background:#000000;"></div>
+</div>
+<div class="theme-label">Bold</div><div class="theme-desc">Editorial & graphic</div>
+</div>
+<div class="theme-card" data-theme="soft" onclick="pickTheme('soft',this)">
+<div class="theme-preview" style="background:#FDF8F3;border:1px solid #DDD0BB;">
+<div style="width:55%;height:7px;background:#2D2318;border-radius:5px;margin-bottom:5px;"></div>
+<div style="width:85%;height:3px;background:#DDD0BB;border-radius:5px;margin-bottom:3px;"></div>
+<div style="width:40%;height:5px;background:#D48B3A;border-radius:5px;"></div>
+</div>
+<div class="theme-label">Soft</div><div class="theme-desc">Warm & approachable</div>
+</div>
+</div>
+<p class="form-section-title" style="margin-top:1.5rem;text-align:center;">Resume *</p>
+<div class="resume-panel on" id="panel-paste">
+<textarea class="finput" id="iResume" placeholder="Paste your resume text — work experience, skills, education, achievements..."></textarea>
+</div>
+<div id="formActions">
+<button class="btn-generate" onclick="generate()">Generate My Assistant →</button>
+</div>
+<div class="processing" id="processing">
+<div class="proc-dots"><div class="proc-dot"></div><div class="proc-dot"></div><div class="proc-dot"></div></div>
+<div class="proc-text" id="procText">Reading your resume...</div>
+</div>
+</div>
 </div>
 
 <script>
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 let selectedTheme = 'classic';
+
 function pickTheme(name,el){
   selectedTheme=name;
   document.querySelectorAll('.theme-card').forEach(c=>c.classList.toggle('on',c===el));
@@ -456,19 +393,17 @@ function pickTheme(name,el){
   const page = document.querySelector('.page');
   page.className = 'page' + (name !== 'classic' ? ' preview-' + name : '');
 }
-let avatarDataUrl = null;
 
+let avatarDataUrl = null;
 document.getElementById('avatarInput').addEventListener('change', function(){
   const file = this.files[0]; if(!file) return;
   const r = new FileReader();
   r.onload = e => {
     const img = new Image();
     img.onload = () => {
-      // Resize to 200x200 and compress
       const canvas = document.createElement('canvas');
       canvas.width = 200; canvas.height = 200;
       const ctx = canvas.getContext('2d');
-      // Crop to square from center
       const size = Math.min(img.width, img.height);
       const sx = (img.width - size) / 2;
       const sy = (img.height - size) / 2;
@@ -491,15 +426,12 @@ function updateInitials(){
   el.textContent = i.toUpperCase();
 }
 
-
-
 async function generate(){
   const name = document.getElementById('iName').value.trim().replace(/[^a-zA-Z0-9\s\-]/g, '').trim();
   const title = document.getElementById('iTitle').value.trim();
   const city = document.getElementById('iCity').value.trim();
   const email = document.getElementById('iEmail').value.trim();
   const rawResume = document.getElementById('iResume').value.trim();
-  // Strip phone numbers for privacy
   const resume = rawResume.replace(/\+?[\d][\d\s\-().]{7,}[\d]/g, '[phone removed]').trim();
 
   if(!name){ alert('Please enter your name.'); return; }
@@ -517,7 +449,6 @@ async function generate(){
 
   document.getElementById('formActions').style.display='none';
   document.getElementById('processing').style.display='block';
-
   const texts = ['Reading your resume...','Extracting experience...','Building your assistant...','Almost ready...'];
   let gi=0;
   const iv = setInterval(()=>{ gi=(gi+1)%texts.length; document.getElementById('procText').textContent=texts[gi]; }, 1800);
@@ -526,7 +457,7 @@ async function generate(){
     const res = await fetch(WORKER, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:4000,
+        model:'claude-sonnet-4-6', max_tokens:4000,
         messages:[{role:'user', content:
 `You are parsing a resume. CRITICAL RULES:
 - Only use information explicitly stated in the resume text below
@@ -535,11 +466,15 @@ async function generate(){
 - Only include companies and roles that are clearly named in the text
 
 Resume for ${name}:
+
 ---
+
 ${resume}
+
 ---
 
 Respond with ONLY a valid JSON object (no markdown, no backticks):
+
 {
   "bio": "2-3 sentence bio using ONLY facts from the resume above. Third person.",
   "experience": [
@@ -561,17 +496,18 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     const data = await res.json();
     const raw = data.content?.[0]?.text || '{}';
     console.log('Claude raw response:', raw.substring(0,500));
+
     let parsed;
     try { parsed = JSON.parse(raw); }
     catch(e){ const m=raw.match(/\{[\s\S]*\}/); parsed=m?JSON.parse(m[0]):{bio:'',experience:[],skills:[],systemPrompt:`You are an AI assistant for ${name}.`}; }
 
     clearInterval(iv);
 
-    // Save to sessionStorage and go to preview
     const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, theme:selectedTheme, resume:resume };
-    // Store avatar separately to avoid sessionStorage size limit
+
     if(avatarDataUrl) sessionStorage.setItem('ask_avatar', avatarDataUrl);
     else sessionStorage.removeItem('ask_avatar');
+
     sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
     window.location.href = '/preview';
 
@@ -594,8 +530,6 @@ function switchFaqTab(name,btn){
   btn.closest('.faq-modal-a').querySelector('#faq-'+name).classList.add('on');
 }
 
-// GDPR
-
 function gdprInit(){
   const c=localStorage.getItem('gdpr_consent');
   if(!c) setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},1500);
@@ -608,11 +542,11 @@ gdprInit();
 
 <!-- GDPR Banner -->
 <div id="gdpr-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:999;background:#111;border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;">
-  <div style="font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;">We use cookies to understand how visitors use our site.</div>
-  <div style="display:flex;gap:0.5rem;flex-shrink:0;">
-    <button onclick="gdprDecline()" style="font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;">Decline</button>
-    <button onclick="gdprAccept()" style="font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:#CCFF00;color:#000;border:none;border-radius:2px;cursor:pointer;">Accept</button>
-  </div>
+<div style="font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;">We use cookies to understand how visitors use our site.</div>
+<div style="display:flex;gap:0.5rem;flex-shrink:0;">
+<button onclick="gdprDecline()" style="font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;">Decline</button>
+<button onclick="gdprAccept()" style="font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:#CCFF00;color:#000;border:none;border-radius:2px;cursor:pointer;">Accept</button>
+</div>
 </div>
 </body>
 </html>
