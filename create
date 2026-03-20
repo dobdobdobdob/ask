@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-19T13:33:10.043361 -->
+<!-- v2026-03-20T15:55:15.003539 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -482,7 +482,9 @@ async function generate(){
   const title = document.getElementById('iTitle').value.trim();
   const city = document.getElementById('iCity').value.trim();
   const email = document.getElementById('iEmail').value.trim();
-  const resume = document.getElementById('iResume').value.trim();
+  const rawResume = document.getElementById('iResume').value.trim();
+  // Strip phone numbers for privacy
+  const resume = rawResume.replace(/\+?[\d][\d\s\-().]{7,}[\d]/g, '[phone removed]').trim();
 
   if(!name){ alert('Please enter your name.'); return; }
   if(!resume){ alert('Please paste your resume text above.'); return; }
