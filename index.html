@@ -400,6 +400,14 @@
   </div>
 </section>
 
+<!-- GDPR Banner -->
+<div id="gdpr-banner">
+  <div class="gdpr-text">We use cookies to understand how visitors use our site.</div>
+  <div class="gdpr-btns">
+    <button class="gdpr-decline" onclick="gdprDecline()">Decline</button>
+    <button class="gdpr-accept" onclick="gdprAccept()">Accept</button>
+  </div>
+</div>
 <footer>
   <a href="/" class="footer-logo">Ask<span>.</span></a>
   <div class="footer-copy">Powered by Menos Labs · menoslabs.com</div>
@@ -421,13 +429,14 @@ function switchFaqTab(name,btn){
 }
 
 // GDPR
+
 function gdprInit(){
-  const consent = localStorage.getItem('gdpr_consent');
-  if(!consent) setTimeout(()=>document.getElementById('gdpr-banner').classList.add('show'), 1500);
-  if(consent === 'declined') window['ga-disable-G-Y6Y16FEG2H'] = true;
+  const c=localStorage.getItem('gdpr_consent');
+  if(!c) setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},1500);
+  if(c==='declined') window['ga-disable-G-Y6Y16FEG2H']=true;
 }
-function gdprAccept(){ localStorage.setItem('gdpr_consent','accepted'); document.getElementById('gdpr-banner').classList.remove('show'); }
-function gdprDecline(){ localStorage.setItem('gdpr_consent','declined'); window['ga-disable-G-Y6Y16FEG2H']=true; document.getElementById('gdpr-banner').classList.remove('show'); }
+function gdprAccept(){localStorage.setItem('gdpr_consent','accepted');const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
+function gdprDecline(){localStorage.setItem('gdpr_consent','declined');window['ga-disable-G-Y6Y16FEG2H']=true;const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
 gdprInit();
 </script>
 </body>

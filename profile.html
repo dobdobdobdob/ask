@@ -271,6 +271,14 @@
   </div>
 </div>
 
+<!-- GDPR Banner -->
+<div id="gdpr-banner">
+  <div class="gdpr-text">We use cookies to understand how visitors use our site.</div>
+  <div class="gdpr-btns">
+    <button class="gdpr-decline" onclick="gdprDecline()">Decline</button>
+    <button class="gdpr-accept" onclick="gdprAccept()">Accept</button>
+  </div>
+</div>
 <footer>
   <a href="/" class="footer-logo">Ask<span>.</span></a>
   <div class="footer-copy">Powered by Menos Labs · menoslabs.com</div>
@@ -288,6 +296,10 @@ window.addEventListener('load',async()=>{
   const pathSlug = window.location.pathname.slice(1).replace('.html','');
   const slug = storedSlug || (pathSlug && pathSlug !== 'profile' ? pathSlug : null) || new URLSearchParams(window.location.search).get('slug');
   if(!slug){window.location.href='/';return;}
+  // Clean URL in browser bar without reloading
+  if(slug && window.location.search.includes('slug=')) {
+    history.replaceState(null, '', '/' + slug);
+  }
   try{
     const res=await fetch(`${ASK_SERVER}/${slug}`);
     if(!res.ok){document.getElementById('notFound').style.display='block';return;}
@@ -329,13 +341,14 @@ function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat
 async function sendChat(){const input=document.getElementById('cpInput');const text=input.value.trim();if(!text||chatLoading)return;chatLoading=true;document.getElementById('cpSend').disabled=true;document.getElementById('cpSuggs').style.display='none';input.value='';input.style.height='auto';addMsg('user',text);chatHistory.push({role:'user',content:text});showTyping();try{const res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:systemPrompt,messages:chatHistory})});const data=await res.json();const reply=data.content?.[0]?.text||"I'm having connection issues.";document.getElementById('typingMsg')?.remove();addMsg('assistant',reply);chatHistory.push({role:'assistant',content:reply});}catch(e){document.getElementById('typingMsg')?.remove();addMsg('assistant','Connection issue — please try again.');}chatLoading=false;document.getElementById('cpSend').disabled=false;}
 
 // GDPR
+
 function gdprInit(){
-  const consent = localStorage.getItem('gdpr_consent');
-  if(!consent) setTimeout(()=>document.getElementById('gdpr-banner').classList.add('show'), 1500);
-  if(consent === 'declined') window['ga-disable-G-Y6Y16FEG2H'] = true;
+  const c=localStorage.getItem('gdpr_consent');
+  if(!c) setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},1500);
+  if(c==='declined') window['ga-disable-G-Y6Y16FEG2H']=true;
 }
-function gdprAccept(){ localStorage.setItem('gdpr_consent','accepted'); document.getElementById('gdpr-banner').classList.remove('show'); }
-function gdprDecline(){ localStorage.setItem('gdpr_consent','declined'); window['ga-disable-G-Y6Y16FEG2H']=true; document.getElementById('gdpr-banner').classList.remove('show'); }
+function gdprAccept(){localStorage.setItem('gdpr_consent','accepted');const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
+function gdprDecline(){localStorage.setItem('gdpr_consent','declined');window['ga-disable-G-Y6Y16FEG2H']=true;const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
 gdprInit();
 </script>
 </body>

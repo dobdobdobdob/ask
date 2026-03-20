@@ -120,7 +120,14 @@
       .stats-row{grid-template-columns:1fr;}
       #editPanel{max-width:100%;}
     }
-  </style>
+  
+    #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
+    #gdpr-banner.show{transform:translateY(0);}
+    .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
+    .gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
+    .gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:#CCFF00;color:#000;border:none;border-radius:2px;cursor:pointer;}
+    .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;}
+    </style>
 </head>
 <body>
 

@@ -575,13 +575,14 @@ function switchFaqTab(name,btn){
 }
 
 // GDPR
+
 function gdprInit(){
-  const consent = localStorage.getItem('gdpr_consent');
-  if(!consent) setTimeout(()=>document.getElementById('gdpr-banner').classList.add('show'), 1500);
-  if(consent === 'declined') window['ga-disable-G-Y6Y16FEG2H'] = true;
+  const c=localStorage.getItem('gdpr_consent');
+  if(!c) setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},1500);
+  if(c==='declined') window['ga-disable-G-Y6Y16FEG2H']=true;
 }
-function gdprAccept(){ localStorage.setItem('gdpr_consent','accepted'); document.getElementById('gdpr-banner').classList.remove('show'); }
-function gdprDecline(){ localStorage.setItem('gdpr_consent','declined'); window['ga-disable-G-Y6Y16FEG2H']=true; document.getElementById('gdpr-banner').classList.remove('show'); }
+function gdprAccept(){localStorage.setItem('gdpr_consent','accepted');const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
+function gdprDecline(){localStorage.setItem('gdpr_consent','declined');window['ga-disable-G-Y6Y16FEG2H']=true;const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
 gdprInit();
 </script>
 </body>
