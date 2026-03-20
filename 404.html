@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <script>
-    const slug = window.location.pathname.slice(1);
-    const skip = ['create.html','preview.html','success.html','profile.html','embed.js','404.html','CNAME'];
-    if(slug && !skip.includes(slug)){
-      window.location.replace('/profile.html?slug=' + slug);
-    } else if(!slug){
+    const path = window.location.pathname.slice(1);
+    const skip = ['create','preview','success','profile','faq','dashboard','embed.js','404','CNAME','_redirects','_config.yml','_routes.json'];
+    if(path && !skip.includes(path) && !path.includes('.')){
+      // Clean slug URL - redirect to profile with slug in path
+      window.location.replace('/profile?slug=' + path);
+    } else if(!path){
       window.location.replace('/');
     }
   </script>
