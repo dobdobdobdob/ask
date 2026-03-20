@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T11:39:24.127158 -->
+<!-- v2026-03-20T11:49:58.725002 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -125,6 +125,13 @@
     </div>
     <a class="view-btn" id="viewPageBtn" href="#" target="_blank">View My Page →</a>
     <a id="faqLink" href="/faq.html" style="display:block;text-align:center;font-size:0.78rem;color:var(--text3);text-decoration:none;margin-top:0.85rem;transition:color 0.2s;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">Help & FAQ — embedding, custom domains, editing →</a>
+  </div>
+
+  <!-- PDF DOWNLOAD -->
+  <div class="card" id="pdfCard">
+    <div class="card-title">Save your setup guide</div>
+    <p style="font-size:0.82rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:1rem;">Download a PDF with your shareable link and step-by-step instructions for embedding your assistant on any website.</p>
+    <button class="view-btn" onclick="downloadPDF()" style="background:var(--off-white);color:var(--text1);border:1px solid var(--border);">↓ Download Setup Guide (PDF)</button>
   </div>
 
   <!-- EMBED SECTION -->
@@ -307,6 +314,7 @@ window.addEventListener('load', async () => {
     const result = await res.json();
     if(result.slug){
       slug = result.slug;
+      localStorage.setItem('ask_pdf_name', data.name||'Your Assistant');
       shareUrl = `https://ask.menoslabs.com/${slug}`;
       document.getElementById('shareUrl').textContent = shareUrl;
       document.getElementById('viewPageBtn').href = shareUrl;
@@ -315,6 +323,7 @@ window.addEventListener('load', async () => {
       localStorage.removeItem('ask_purchase_data');
       renderPlatformContent();
       // Send confirmation email
+      console.log("Email field:", data.email);
       if(data.email){
         fetch('https://menoslabs-contact.thedobrien.workers.dev', {
           method:'POST',
@@ -341,6 +350,79 @@ window.addEventListener('load', async () => {
     document.getElementById('shareUrl').textContent='Error saving — please contact hello@menoslabs.com';
   }
 });
+
+// PDF Download
+function downloadPDF(){
+  const name = localStorage.getItem('ask_pdf_name') || 'Your Assistant';
+  const url = document.getElementById('shareUrl').textContent;
+  const chatCode = `<script src="https://ask.menoslabs.com/embed.js" data-slug="${slug}"><\/script>`;
+  const iframeCode = `<iframe src="${url}" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"></iframe>`;
+
+  const html = `<!DOCTYPE html>
+<!-- v2026-03-20T11:49:58.725002 -->
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ask Setup Guide — ${name}</title>
+<style>
+  body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1A1A1A;line-height:1.6;}
+  h1{font-size:2rem;margin-bottom:0.25rem;}
+  h2{font-size:1.1rem;margin-top:2rem;margin-bottom:0.5rem;border-bottom:1px solid #ccc;padding-bottom:0.35rem;}
+  .url{background:#F7F6F3;border:1px solid #E2DED8;padding:0.75rem 1rem;font-family:monospace;font-size:0.85rem;word-break:break-all;margin:0.5rem 0;}
+  .step{display:flex;gap:0.75rem;margin-bottom:0.5rem;}
+  .num{background:#111;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;flex-shrink:0;margin-top:2px;}
+  .code{background:#F7F6F3;border:1px solid #E2DED8;padding:0.75rem;font-family:monospace;font-size:0.75rem;word-break:break-all;margin:0.5rem 0;white-space:pre-wrap;}
+  .footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #ccc;font-size:0.75rem;color:#999;}
+</style>
+</head>
+<body>
+<h1>Ask Setup Guide</h1>
+<p style="color:#999;font-size:0.85rem;">Generated for ${name} · ask.menoslabs.com</p>
+
+<h2>Your Shareable Link</h2>
+<p>Share this link in your email signature, LinkedIn profile, or resume:</p>
+<div class="url">${url}</div>
+
+<h2>Add Chat Button to Your Website</h2>
+<p>Paste this one line of code before the closing &lt;/body&gt; tag on your website:</p>
+<div class="code">${chatCode}</div>
+
+<h2>Wix</h2>
+<div class="step"><div class="num">1</div><div>Click Add Elements → Embed Code → HTML iframe</div></div>
+<div class="step"><div class="num">2</div><div>Paste the code above and click Apply</div></div>
+<div class="step"><div class="num">3</div><div>Publish your site</div></div>
+
+<h2>Squarespace</h2>
+<div class="step"><div class="num">1</div><div>Edit your page → click + → add a Code block</div></div>
+<div class="step"><div class="num">2</div><div>Paste the code above and click Apply</div></div>
+<div class="step"><div class="num">3</div><div>Save and publish</div></div>
+
+<h2>WordPress</h2>
+<div class="step"><div class="num">1</div><div>Go to Appearance → Theme Editor → footer.php</div></div>
+<div class="step"><div class="num">2</div><div>Paste the code just before &lt;/body&gt;</div></div>
+<div class="step"><div class="num">3</div><div>Click Update File</div></div>
+
+<h2>Any Website</h2>
+<div class="step"><div class="num">1</div><div>Open your HTML file</div></div>
+<div class="step"><div class="num">2</div><div>Paste the code just before &lt;/body&gt; and save</div></div>
+
+<h2>Embed Full Profile Page</h2>
+<p>To embed your complete profile with experience, skills, and chat:</p>
+<div class="code">${iframeCode}</div>
+
+<div class="footer">
+  Questions? Visit ask.menoslabs.com/faq or email hello@menoslabs.com<br>
+  Powered by Menos Labs · menoslabs.com
+</div>
+</body>
+</html>`;
+
+  const blob = new Blob([html], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ask-setup-guide.html';
+  a.click();
+}
 
 // Platform content renders after slug is loaded
 
