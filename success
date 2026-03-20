@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T14:53:13.137541 -->
+<!-- v2026-03-20T15:15:36.395594 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -250,14 +250,15 @@ function getEmbedCode(type){
 
 let currentPlatform = 'wix';
 
+let rawEmbedCode = '';
 function renderPlatformContent(){
   if(!slug){ document.getElementById('platform-content').innerHTML = '<div style="font-size:0.82rem;color:var(--text3);padding:1rem 0;">Loading your embed code...</div>'; return; }
   const steps = INSTRUCTIONS[currentPlatform][embedType];
-  const code = getEmbedCode(embedType);
+  rawEmbedCode = getEmbedCode(embedType);
   const stepsHtml = steps.map((s,i)=>`<div class="step-item"><div class="step-circle">${i+1}</div><div class="step-text">${s}</div></div>`).join('');
   document.getElementById('platform-content').innerHTML = `
     <div class="step-list">${stepsHtml}</div>
-    <div class="code-block" id="embedCodeBlock">${escapeHtml(code)}</div>
+    <div class="code-block" id="embedCodeBlock">${escapeHtml(rawEmbedCode)}</div>
     <button class="copy-btn" onclick="copyEmbed()">Copy Code</button>
   `;
 }
@@ -289,7 +290,7 @@ function copyUrl(){
 }
 
 function copyEmbed(){
-  const code = getEmbedCode(embedType);
+  const code = rawEmbedCode || getEmbedCode(embedType);
   navigator.clipboard.writeText(code).then(()=>{
     const btns = document.querySelectorAll('.copy-btn');
     btns.forEach(b=>{ if(b.onclick?.toString().includes('copyEmbed')){ b.textContent='Copied!'; b.classList.add('copied'); setTimeout(()=>{ b.textContent='Copy Code'; b.classList.remove('copied'); },2000); } });
@@ -359,7 +360,7 @@ function downloadPDF(){
   const iframeCode = `<iframe src="${url}" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"></iframe>`;
 
   const html = `<!DOCTYPE html>
-<!-- v2026-03-20T14:53:13.137541 -->
+<!-- v2026-03-20T15:15:36.395594 -->
 <html>
 <head>
 <meta charset="UTF-8">
