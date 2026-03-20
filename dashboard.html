@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T18:39:28.522619 -->
+<!-- v2026-03-20T18:56:09.306964 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -490,7 +490,7 @@ function renderTable(profiles){
       <td><span class="status-badge">Active</span></td>
       <td>
         <button class="btn-edit" onclick="openEdit('${p.slug}')">Edit</button>
-        <button class="btn-delete" onclick="deleteProfile('${p.slug}','${p.name||'Profile'}')">Delete</button>
+        <button class="btn-delete" data-slug="${p.slug}" data-name="${(p.name||'Profile').replace(/'/g,'').replace(/"/g,'')}" onclick="deleteProfile(this.dataset.slug,this.dataset.name)">Delete</button>
       </td>
     </tr>
   `).join('');
@@ -673,7 +673,7 @@ ${resume}
 
 // ── DELETE ──
 async function deleteProfile(slug, name){
-  if(!window.confirm('Delete profile for ' + name + '? This cannot be undone.')) return;
+  if(!window.confirm('Delete this profile? This cannot be undone.')) return;
   try {
     console.log('Deleting slug:', slug);
     const res = await fetch(ASK_SERVER + '/delete', {
