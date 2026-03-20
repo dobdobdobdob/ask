@@ -428,6 +428,11 @@ gtag('config', 'G-96XWYGNS49');
 <h2 class="section-title">Highlights</h2>
 <div class="exp-list" id="expList"></div>
 </div>
+<div class="edu-wrap" id="eduSection">
+<p class="section-tag">Education</p>
+<h2 class="section-title">Education</h2>
+<div class="exp-list" id="eduList"></div>
+</div>
 <div class="skills-wrap" id="skillsSection">
 <p class="section-tag">Skills</p>
 <h2 class="section-title">Skills</h2>
@@ -567,6 +572,20 @@ window.addEventListener('load', () => {
       list.appendChild(card);
     });
   } else { document.getElementById('expSection').style.display='none'; }
+
+  // Education
+  if(d.education && d.education.length>0){
+    const eduList=document.getElementById('eduList');
+    d.education.forEach(edu=>{
+      const card=document.createElement('div');card.className='exp-card';
+      card.innerHTML=`
+        <div class="exp-header">
+          <div><div class="exp-company">${edu.institution||''}</div><div class="exp-role">${edu.degree||''}</div></div>
+          <div class="exp-right"><div class="exp-dates">${edu.dates||''}</div><div class="exp-location">${edu.location||''}</div></div>
+        </div>`;
+      eduList.appendChild(card);
+    });
+  } else { document.getElementById('eduSection').style.display='none'; }
 
   // Skills
   if(d.skills && d.skills.length>0){
