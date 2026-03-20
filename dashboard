@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T18:29:34.880608 -->
+<!-- v2026-03-20T18:39:28.522619 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -486,16 +486,17 @@ function renderTable(profiles){
       </td>
       <td>${p.meta||'—'}</td>
       <td><a href="https://ask.menoslabs.com/${p.slug}" target="_blank" style="color:var(--accent-dark);font-size:0.75rem;text-decoration:none;">${p.slug} →</a></td>
+      <td style="font-size:0.75rem;color:var(--text3);">${p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-GB') : '—'}</td>
       <td><span class="status-badge">Active</span></td>
       <td>
         <button class="btn-edit" onclick="openEdit('${p.slug}')">Edit</button>
-        <button class="btn-delete" onclick="deleteProfile('${p.slug}','${p.name||'this profile'}')">Delete</button>
+        <button class="btn-delete" onclick="deleteProfile('${p.slug}','${p.name||'Profile'}')">Delete</button>
       </td>
     </tr>
   `).join('');
   document.getElementById('tableWrap').innerHTML = `
     <table>
-      <thead><tr><th>Name</th><th>Title / City</th><th>URL</th><th>Status</th><th>Actions</th></tr></thead>
+      <thead><tr><th>Name</th><th>Title / City</th><th>URL</th><th>Created</th><th>Status</th><th>Actions</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
 }
@@ -672,7 +673,7 @@ ${resume}
 
 // ── DELETE ──
 async function deleteProfile(slug, name){
-  if(!confirm('Delete profile for "' + name + '"? This cannot be undone.')) return;
+  if(!window.confirm('Delete profile for ' + name + '? This cannot be undone.')) return;
   try {
     console.log('Deleting slug:', slug);
     const res = await fetch(ASK_SERVER + '/delete', {
