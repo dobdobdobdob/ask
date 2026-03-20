@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <script>
     const path = window.location.pathname.slice(1);
-    const skip = ['create','preview','success','profile','faq','dashboard','embed.js','404','CNAME'];
+    const skip = ['create','preview','success','profile','faq','dashboard','embed.js','404','CNAME','_redirects','_config.yml','_routes.json','index'];
     if(path && !skip.includes(path) && !path.includes('.')){
       sessionStorage.setItem('ask_slug', path);
       window.location.replace('/profile');

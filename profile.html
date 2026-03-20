@@ -293,11 +293,12 @@ window.addEventListener('load',async()=>{
   // Read slug from sessionStorage (set by 404.html), pathname, or query param
   const storedSlug = sessionStorage.getItem('ask_slug');
   if(storedSlug) sessionStorage.removeItem('ask_slug');
-  const pathSlug = window.location.pathname.slice(1).replace('.html','');
-  const slug = storedSlug || (pathSlug && pathSlug !== 'profile' ? pathSlug : null) || new URLSearchParams(window.location.search).get('slug');
+  const pathSlug = window.location.pathname.slice(1).replace('.html','').replace('profile','').replace(/^\//, '');
+  const querySlug = new URLSearchParams(window.location.search).get('slug');
+  const slug = storedSlug || querySlug || (pathSlug && pathSlug !== '' ? pathSlug : null);
   if(!slug){window.location.href='/';return;}
-  // Clean URL in browser bar without reloading
-  if(slug && window.location.search.includes('slug=')) {
+  // Clean URL in browser bar
+  if(slug && (window.location.search.includes('slug=') || window.location.pathname.includes('profile'))) {
     history.replaceState(null, '', '/' + slug);
   }
   try{
