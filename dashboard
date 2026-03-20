@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T14:58:19.335641 -->
+<!-- v2026-03-20T15:38:40.694184 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -146,12 +146,19 @@
   <div class="login-card">
     <div class="login-title">Dashboard</div>
     <p class="login-sub">Sign in to manage Ask profiles.</p>
-    <div class="login-error" id="loginError">Incorrect password.</div>
+    <div class="login-error" id="loginError">Incorrect email or password.</div>
+    <div class="field">
+      <label class="flabel">Email</label>
+      <input class="finput" id="loginEmail" type="email" placeholder="hello@menoslabs.com" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
     <div class="field">
       <label class="flabel">Password</label>
       <input class="finput" id="loginPw" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
     <button class="btn-regen" style="margin-top:0.75rem" onclick="doLogin()">Sign In →</button>
+    <div style="text-align:center;margin-top:0.75rem;">
+      <button onclick="forgotPassword()" style="background:none;border:none;font-size:0.75rem;color:var(--text3);cursor:pointer;text-decoration:underline;">Forgot password?</button>
+    </div>
   </div>
 </div>
 
@@ -278,9 +285,13 @@ let allProfiles = [], editUploadText = '', dashSelectedTheme = 'classic';
 function pickDashTheme(name,el){dashSelectedTheme=name;document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c===el));}
 
 // ── LOGIN ──
+const ADMIN_EMAIL = 'menoslabs@proton.me';
+
 function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
   const pw = document.getElementById('loginPw').value;
-  if(pw === PASS){
+  const storedPw = sessionStorage.getItem('ask_dash_pw') || PASS;
+  if(email === ADMIN_EMAIL && pw === storedPw){
     sessionStorage.setItem('ask_dash', '1');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashScreen').style.display = 'block';
@@ -289,6 +300,18 @@ function doLogin(){
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPw').value = '';
   }
+}
+
+function forgotPassword(){
+  fetch('https://menoslabs-contact.thedobrien.workers.dev', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      name: 'Dashboard',
+      email: ADMIN_EMAIL,
+      subject: 'Dashboard Password Reminder',
+      html: '<p>Your current dashboard password is: <strong>' + (sessionStorage.getItem('ask_dash_pw') || PASS) + '</strong></p><p>Go to <a href="https://ask.menoslabs.com/dashboard">ask.menoslabs.com/dashboard</a></p>'
+    })
+  }).then(()=> alert('Password reminder sent to ' + ADMIN_EMAIL)).catch(()=> alert('Could not send email.'));
 }
 
 function logout(){
