@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T11:49:58.725002 -->
+<!-- v2026-03-20T14:53:13.137541 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -62,10 +62,10 @@
 
     .code-block{background:#F7F6F3;border:1px solid var(--border);border-radius:2px;padding:1rem;font-family:'DM Sans',monospace;font-size:0.75rem;color:var(--text1);word-break:break-all;line-height:1.6;margin-bottom:0.75rem;white-space:pre-wrap;}
 
-    footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
-    .footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
-    .footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
-    .footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.05em;}
+    footer{background:#111111;padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+    .footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:#ffffff;text-decoration:none;}
+    .footer-logo span{background:#CCFF00;color:#111111;padding:0 5px;font-style:italic;}
+    .footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.6);letter-spacing:0.05em;}
 
     @media(max-width:768px){
       nav{padding:1.25rem 1.5rem;}
@@ -359,7 +359,7 @@ function downloadPDF(){
   const iframeCode = `<iframe src="${url}" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"></iframe>`;
 
   const html = `<!DOCTYPE html>
-<!-- v2026-03-20T11:49:58.725002 -->
+<!-- v2026-03-20T14:53:13.137541 -->
 <html>
 <head>
 <meta charset="UTF-8">
