@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <script>
     const path = window.location.pathname.slice(1);
-    const skip = ['create','preview','success','profile','faq','dashboard','embed.js','404','CNAME','_redirects','_config.yml','_routes.json'];
+    const skip = ['create','preview','success','profile','faq','dashboard','embed.js','404','CNAME'];
     if(path && !skip.includes(path) && !path.includes('.')){
-      // Clean slug URL - redirect to profile with slug in path
-      window.location.replace('/profile?slug=' + path);
+      sessionStorage.setItem('ask_slug', path);
+      window.location.replace('/profile');
     } else if(!path){
       window.location.replace('/');
     }
