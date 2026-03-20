@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T19:36:59.734711 -->
+<!-- v2026-03-20T20:37:03.891382 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -604,5 +604,14 @@ function gdprAccept(){localStorage.setItem('gdpr_consent','accepted');const b=do
 function gdprDecline(){localStorage.setItem('gdpr_consent','declined');window['ga-disable-G-Y6Y16FEG2H']=true;const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
 gdprInit();
 </script>
+
+<!-- GDPR Banner -->
+<div id="gdpr-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:999;background:#111;border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;">
+  <div style="font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;">We use cookies to understand how visitors use our site.</div>
+  <div style="display:flex;gap:0.5rem;flex-shrink:0;">
+    <button onclick="gdprDecline()" style="font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;">Decline</button>
+    <button onclick="gdprAccept()" style="font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:#CCFF00;color:#000;border:none;border-radius:2px;cursor:pointer;">Accept</button>
+  </div>
+</div>
 </body>
 </html>
