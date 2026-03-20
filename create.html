@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T20:53:27.566483 -->
+<!-- v2026-03-20T21:05:01.128879 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -560,6 +560,7 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
 
     const data = await res.json();
     const raw = data.content?.[0]?.text || '{}';
+    console.log('Claude raw response:', raw.substring(0,500));
     let parsed;
     try { parsed = JSON.parse(raw); }
     catch(e){ const m=raw.match(/\{[\s\S]*\}/); parsed=m?JSON.parse(m[0]):{bio:'',experience:[],skills:[],systemPrompt:`You are an AI assistant for ${name}.`}; }
@@ -572,7 +573,7 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     if(avatarDataUrl) sessionStorage.setItem('ask_avatar', avatarDataUrl);
     else sessionStorage.removeItem('ask_avatar');
     sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
-    window.location.href = '/preview.html';
+    window.location.href = '/preview';
 
   } catch(err){
     clearInterval(iv);
