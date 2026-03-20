@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T15:38:40.694184 -->
+<!-- v2026-03-20T18:18:47.324503 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -103,6 +103,35 @@
     .regen-success-sub{font-size:0.75rem;color:var(--text2);font-weight:300;}
 
     #fileEditInput{display:none;}
+
+    /* Profile Manager */
+    .profile-mgr{position:relative;}
+    .profile-btn{display:flex;align-items:center;gap:0.6rem;background:none;border:1px solid var(--border);border-radius:100px;padding:0.35rem 0.85rem 0.35rem 0.35rem;cursor:pointer;transition:all 0.2s;}
+    .profile-btn:hover{border-color:var(--accent-dark);}
+    .profile-btn-av{width:28px;height:28px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.65rem;font-weight:700;color:var(--accent);overflow:hidden;flex-shrink:0;}
+    .profile-btn-av img{width:100%;height:100%;object-fit:cover;}
+    .profile-btn-name{font-size:0.75rem;font-weight:500;color:var(--text1);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .profile-dropdown{position:absolute;top:calc(100% + 0.5rem);right:0;background:var(--white);border:1px solid var(--border);border-radius:4px;width:280px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:200;display:none;}
+    .profile-dropdown.open{display:block;}
+    .profile-dropdown-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.75rem;}
+    .profile-dropdown-av{width:44px;height:44px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--accent);overflow:hidden;flex-shrink:0;cursor:pointer;}
+    .profile-dropdown-av img{width:100%;height:100%;object-fit:cover;}
+    .profile-dropdown-av:hover{opacity:0.85;}
+    .profile-dropdown-info{flex:1;}
+    .profile-dropdown-name{font-size:0.88rem;font-weight:500;color:var(--text1);}
+    .profile-dropdown-email{font-size:0.72rem;color:var(--text3);margin-top:2px;}
+    .profile-dropdown-body{padding:1rem 1.25rem;display:flex;flex-direction:column;gap:0.6rem;}
+    .profile-field{display:flex;flex-direction:column;gap:0.2rem;}
+    .profile-field-label{font-size:0.58rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);}
+    .profile-field-input{font-family:'DM Sans',sans-serif;font-size:0.8rem;background:var(--off-white);border:1px solid var(--border);color:var(--text1);padding:0.45rem 0.75rem;border-radius:2px;outline:none;transition:border-color 0.2s;}
+    .profile-field-input:focus{border-color:var(--accent-dark);}
+    .profile-dropdown-footer{padding:0.75rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;}
+    .btn-save-profile{flex:1;background:var(--black);color:var(--white);border:none;border-radius:2px;padding:0.5rem;font-size:0.75rem;font-weight:500;cursor:pointer;transition:all 0.2s;}
+    .btn-save-profile:hover{background:var(--accent);color:var(--black);}
+    .btn-signout{background:none;color:var(--text3);border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.85rem;font-size:0.75rem;cursor:pointer;transition:all 0.2s;}
+    .btn-signout:hover{color:var(--text1);border-color:var(--text3);}
+    .profile-avatar-hint{font-size:0.6rem;color:var(--text3);text-align:center;margin-top:0.25rem;}
+    #profileAvatarInput{display:none;}
     .theme-picker-sm{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:1rem;}
     .tcard{border:1px solid var(--border);border-radius:4px;padding:0.6rem;cursor:pointer;transition:all 0.2s;text-align:center;}
     .tcard:hover{border-color:var(--accent-dark);}
@@ -136,7 +165,41 @@
 <nav>
   <a href="/" class="nav-logo">Ask<span>.</span></a>
   <span class="nav-badge">Dashboard</span>
-  <button class="btn-logout" onclick="logout()">Sign Out</button>
+  <div class="profile-mgr" id="profileMgr">
+    <button class="profile-btn" onclick="toggleProfileDropdown()">
+      <div class="profile-btn-av" id="profileBtnAv">D</div>
+      <span class="profile-btn-name" id="profileBtnName">Admin</span>
+    </button>
+    <div class="profile-dropdown" id="profileDropdown">
+      <div class="profile-dropdown-header">
+        <div class="profile-dropdown-av" id="profileDropdownAv" onclick="document.getElementById('profileAvatarInput').click()" title="Click to change photo">D</div>
+        <div class="profile-dropdown-info">
+          <div class="profile-dropdown-name" id="profileDropdownName">Admin</div>
+          <div class="profile-dropdown-email" id="profileDropdownEmail">menoslabs@proton.me</div>
+        </div>
+      </div>
+      <input type="file" id="profileAvatarInput" accept="image/*">
+      <div class="profile-avatar-hint" style="padding:0.4rem 1.25rem 0;font-size:0.6rem;color:var(--text3);">Click photo to change</div>
+      <div class="profile-dropdown-body">
+        <div class="profile-field">
+          <div class="profile-field-label">Name</div>
+          <input class="profile-field-input" id="profileNameInput" type="text" placeholder="Your name">
+        </div>
+        <div class="profile-field">
+          <div class="profile-field-label">Email</div>
+          <input class="profile-field-input" id="profileEmailInput" type="email" placeholder="your@email.com">
+        </div>
+        <div class="profile-field">
+          <div class="profile-field-label">New Password</div>
+          <input class="profile-field-input" id="profilePwInput" type="password" placeholder="Leave blank to keep current">
+        </div>
+      </div>
+      <div class="profile-dropdown-footer">
+        <button class="btn-save-profile" onclick="saveProfile()">Save Changes</button>
+        <button class="btn-signout" onclick="logout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
 </nav>
 
 <div id="overlay" onclick="closeEdit()"></div>
@@ -280,7 +343,7 @@
 <script>
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
-const PASS = 'Luckydog00';
+const PASS = '7f6fkEb0MCVcrz22';
 let allProfiles = [], editUploadText = '', dashSelectedTheme = 'classic';
 function pickDashTheme(name,el){dashSelectedTheme=name;document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c===el));}
 
@@ -302,16 +365,83 @@ function doLogin(){
   }
 }
 
+// ── PROFILE MANAGER ──
+let adminName = localStorage.getItem('dash_name') || 'Admin';
+let adminEmail = localStorage.getItem('dash_email') || ADMIN_EMAIL;
+let adminAvatarUrl = localStorage.getItem('dash_avatar') || null;
+
+function initProfileManager(){
+  document.getElementById('profileBtnName').textContent = adminName;
+  document.getElementById('profileDropdownName').textContent = adminName;
+  document.getElementById('profileDropdownEmail').textContent = adminEmail;
+  document.getElementById('profileNameInput').value = adminName;
+  document.getElementById('profileEmailInput').value = adminEmail;
+  const initials = adminName.split(' ').filter(Boolean).map(p=>p[0]).slice(0,2).join('').toUpperCase() || 'A';
+  if(adminAvatarUrl){
+    document.getElementById('profileBtnAv').innerHTML = '<img src="'+adminAvatarUrl+'" alt="avatar">';
+    document.getElementById('profileDropdownAv').innerHTML = '<img src="'+adminAvatarUrl+'" alt="avatar">';
+  } else {
+    document.getElementById('profileBtnAv').textContent = initials;
+    document.getElementById('profileDropdownAv').textContent = initials;
+  }
+}
+
+function toggleProfileDropdown(){
+  document.getElementById('profileDropdown').classList.toggle('open');
+}
+
+document.addEventListener('click', e => {
+  const mgr = document.getElementById('profileMgr');
+  if(mgr && !mgr.contains(e.target)) document.getElementById('profileDropdown').classList.remove('open');
+});
+
+document.getElementById('profileAvatarInput').addEventListener('change', function(){
+  const file = this.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 80; canvas.height = 80;
+      const ctx = canvas.getContext('2d');
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width-size)/2, sy = (img.height-size)/2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 80, 80);
+      adminAvatarUrl = canvas.toDataURL('image/jpeg', 0.8);
+      localStorage.setItem('dash_avatar', adminAvatarUrl);
+      document.getElementById('profileBtnAv').innerHTML = '<img src="'+adminAvatarUrl+'" alt="avatar">';
+      document.getElementById('profileDropdownAv').innerHTML = '<img src="'+adminAvatarUrl+'" alt="avatar">';
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(file);
+});
+
+function saveProfile(){
+  const name = document.getElementById('profileNameInput').value.trim();
+  const email = document.getElementById('profileEmailInput').value.trim();
+  const pw = document.getElementById('profilePwInput').value;
+  if(name){ adminName = name; localStorage.setItem('dash_name', name); }
+  if(email){ adminEmail = email; localStorage.setItem('dash_email', email); }
+  if(pw && pw.length >= 8){ currentPassword = pw; sessionStorage.setItem('ask_dash_pw', pw); }
+  else if(pw && pw.length > 0){ alert('Password must be at least 8 characters.'); return; }
+  document.getElementById('profilePwInput').value = '';
+  initProfileManager();
+  document.getElementById('profileDropdown').classList.remove('open');
+  alert('Profile updated.');
+}
+
 function forgotPassword(){
+  // Send password hint to admin email via contact worker
   fetch('https://menoslabs-contact.thedobrien.workers.dev', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({
-      name: 'Dashboard',
-      email: ADMIN_EMAIL,
-      subject: 'Dashboard Password Reminder',
-      html: '<p>Your current dashboard password is: <strong>' + (sessionStorage.getItem('ask_dash_pw') || PASS) + '</strong></p><p>Go to <a href="https://ask.menoslabs.com/dashboard">ask.menoslabs.com/dashboard</a></p>'
+      name: 'Dashboard System',
+      email: 'thedobrien@gmail.com',
+      company: 'Password Reminder',
+      message: 'Dashboard password reminder requested. Current password: ' + (sessionStorage.getItem('ask_dash_pw') || PASS) + ' | Login: https://ask.menoslabs.com/dashboard | Email: ' + ADMIN_EMAIL
     })
-  }).then(()=> alert('Password reminder sent to ' + ADMIN_EMAIL)).catch(()=> alert('Could not send email.'));
+  }).then(()=> alert('Password reminder sent to thedobrien@gmail.com')).catch(()=> alert('Could not send — check your internet connection.'));
 }
 
 function logout(){
@@ -323,6 +453,7 @@ window.addEventListener('load', () => {
   if(sessionStorage.getItem('ask_dash')){
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashScreen').style.display = 'block';
+    initProfileManager();
     loadProfiles();
   }
   document.getElementById('loginPw').focus?.();
@@ -541,20 +672,26 @@ ${resume}
 
 // ── DELETE ──
 async function deleteProfile(slug, name){
-  if(!confirm(`Delete profile for "${name}"? This cannot be undone.`)) return;
+  if(!confirm('Delete profile for "' + name + '"? This cannot be undone.')) return;
   try {
-    const res = await fetch(`${ASK_SERVER}/delete`, {
+    console.log('Deleting slug:', slug);
+    const res = await fetch(ASK_SERVER + '/delete', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ slug })
     });
+    console.log('Delete response status:', res.status);
     const result = await res.json();
+    console.log('Delete result:', result);
     if(result.ok){ loadProfiles(); }
     else { alert('Delete failed: ' + (result.error||'Unknown error')); }
-  } catch(e){ alert('Delete failed: ' + e.message); }
+  } catch(e){ 
+    console.error('Delete error:', e);
+    alert('Delete failed: ' + e.message); 
+  }
 }
 
 // Password change
-let currentPassword = 'Luckydog00';
+let currentPassword = PASS;
 function doChangePassword(){
   const current = document.getElementById('pwCurrent').value;
   const newPw = document.getElementById('pwNew').value;
