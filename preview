@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T05:48:27.518480 -->
+<!-- v2026-03-20T20:53:11.065226 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -530,7 +530,7 @@ let systemPrompt='', chatHistory=[], chatLoading=false, chatOpen=false, avatarDa
 
 window.addEventListener('load', () => {
   const raw = sessionStorage.getItem('ask_draft');
-  if(!raw){ window.location.href='/create.html'; return; }
+  if(!raw){ window.location.href='/create'; return; }
   const d = JSON.parse(raw);
   if(d.theme && d.theme !== 'classic'){
     document.documentElement.className = d.theme;
@@ -643,7 +643,7 @@ function saveEdits(){
   d.meta = document.getElementById('profileMeta').textContent.trim();
   d.bio = document.getElementById('profileBio').textContent.trim();
   // Update system prompt with edited bio
-  d.systemPrompt = d.systemPrompt.replace(/Bio:.*?\n/s, `Bio: ${d.bio}\n`);
+  if(d.systemPrompt) d.systemPrompt = d.systemPrompt.replace(/Bio:[\s\S]*?\n/, 'Bio: ' + d.bio + '\n');
   sessionStorage.setItem('ask_draft', JSON.stringify(d));
 }
 

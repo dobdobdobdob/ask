@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T20:37:03.891382 -->
+<!-- v2026-03-20T20:53:27.566483 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -428,9 +428,6 @@
 
     <p class="form-section-title" style="margin-top:1.5rem;text-align:center;">Resume *</p>
 
-    <div class="tab-row">
-      <button class="rtab on" id="tab-paste" onclick="switchTab('paste')">Paste Resume Text</button>
-    </div>
     <div class="resume-panel on" id="panel-paste">
       <textarea class="finput" id="iResume" placeholder="Paste your resume text — work experience, skills, education, achievements..."></textarea>
     </div>
@@ -486,10 +483,12 @@ document.getElementById('avatarInput').addEventListener('change', function(){
 });
 
 function updateInitials(){
+  const el = document.getElementById('avatarInitials');
+  if(!el) return;
   const n = document.getElementById('iName').value.trim();
   const p = n.split(' ').filter(Boolean);
   const i = p.length>=2 ? p[0][0]+p[p.length-1][0] : p[0]?.[0]||'?';
-  document.getElementById('avatarInitials').textContent = i.toUpperCase();
+  el.textContent = i.toUpperCase();
 }
 
 
