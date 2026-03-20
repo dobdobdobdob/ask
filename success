@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T15:15:36.395594 -->
+<!-- v2026-03-20T15:30:04.029018 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -130,8 +130,8 @@
   <!-- PDF DOWNLOAD -->
   <div class="card" id="pdfCard">
     <div class="card-title">Save your setup guide</div>
-    <p style="font-size:0.82rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:1rem;">Download a PDF with your shareable link and step-by-step instructions for embedding your assistant on any website.</p>
-    <button class="view-btn" onclick="downloadPDF()" style="background:var(--off-white);color:var(--text1);border:1px solid var(--border);">↓ Download Setup Guide (PDF)</button>
+    <p style="font-size:0.82rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:1rem;">Download a printable guide with your link and embed instructions.</p>
+    <button class="view-btn" id="pdfBtn" onclick="downloadPDF()" style="background:var(--off-white);color:var(--text1);border:1px solid var(--border);">↓ Download Setup Guide</button>
   </div>
 
   <!-- EMBED SECTION -->
@@ -260,7 +260,8 @@ function renderPlatformContent(){
     <div class="step-list">${stepsHtml}</div>
     <div class="code-block" id="embedCodeBlock">${escapeHtml(rawEmbedCode)}</div>
     <button class="copy-btn" onclick="copyEmbed()">Copy Code</button>
-  `;
+    <p style="font-size:0.72rem;color:var(--text3);margin-top:0.75rem;line-height:1.6;">💡 <strong style="color:var(--text2);">Save this code</strong> — paste it into a Google Doc or Notes app so you always have it handy.</p>
+  \`;
 }
 
 function escapeHtml(str){
@@ -353,76 +354,61 @@ window.addEventListener('load', async () => {
 });
 
 // PDF Download
+
+
 function downloadPDF(){
-  const name = localStorage.getItem('ask_pdf_name') || 'Your Assistant';
-  const url = document.getElementById('shareUrl').textContent;
-  const chatCode = `<script src="https://ask.menoslabs.com/embed.js" data-slug="${slug}"><\/script>`;
-  const iframeCode = `<iframe src="${url}" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"></iframe>`;
+  var name = localStorage.getItem('ask_pdf_name') || 'Your Assistant';
+  var url = document.getElementById('shareUrl').textContent;
+  var chatScript = ['<','script src="https://ask.menoslabs.com/embed.js" data-slug="',slug,'">','<','/script>'].join('');
+  var iframeEmbed = ['<','iframe src="',url,'" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;">','<','/iframe>'].join('');
+  
+  var html = '<!DOCTYPE html>
+<!-- v2026-03-20T15:30:04.029018 --><html><head><meta charset="UTF-8"><title>Ask Setup Guide</title><style>';
+  html += 'body{font-family:Georgia,serif;max-width:680px;margin:32px auto;padding:0 24px;color:#1A1A1A;line-height:1.65;font-size:13px;}';
+  html += 'h1{font-size:1.75rem;margin-bottom:4px;}';
+  html += '.sub{color:#999;font-size:0.8rem;margin-bottom:2rem;}';
+  html += 'h2{font-size:0.9rem;font-weight:700;margin-top:1.75rem;margin-bottom:0.5rem;border-bottom:2px solid #111;padding-bottom:4px;text-transform:uppercase;letter-spacing:0.08em;}';
+  html += '.box{background:#F7F6F3;border:1px solid #E2DED8;padding:10px 14px;font-family:monospace;font-size:0.75rem;word-break:break-all;margin:8px 0;white-space:pre-wrap;}';
+  html += '.step{display:flex;gap:10px;margin-bottom:5px;}';
+  html += '.num{background:#111;color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;flex-shrink:0;}';
+  html += '.footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid #ccc;font-size:0.72rem;color:#999;text-align:center;}';
+  html += '.print-btn{display:block;margin:0 auto 24px;padding:10px 28px;background:#111;color:#fff;border:none;font-size:0.85rem;cursor:pointer;}';
+  html += '@media print{.print-btn{display:none;}}';
+  html += '</style></head><body>';
+  html += '<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>';
+  html += '<h1>Ask Setup Guide</h1>';
+  html += '<p class="sub">For ' + name + ' &nbsp;&middot;&nbsp; ask.menoslabs.com</p>';
+  html += '<h2>Your Shareable Link</h2>';
+  html += '<p style="font-size:0.82rem;color:#555;">Share in your email signature, LinkedIn, or resume:</p>';
+  html += '<div class="box">' + url + '</div>';
+  html += '<h2>Chat Button Embed Code</h2>';
+  html += '<p style="font-size:0.82rem;color:#555;">Paste before the closing &lt;/body&gt; tag:</p>';
+  html += '<div class="box">' + chatScript.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+  html += '<h2>Wix</h2>';
+  html += '<div class="step"><div class="num">1</div><div>Add Elements &rarr; Embed Code &rarr; HTML iframe</div></div>';
+  html += '<div class="step"><div class="num">2</div><div>Paste the chat button code above and click Apply</div></div>';
+  html += '<div class="step"><div class="num">3</div><div>Publish your site</div></div>';
+  html += '<h2>Squarespace</h2>';
+  html += '<div class="step"><div class="num">1</div><div>Edit page &rarr; click + &rarr; add a Code block</div></div>';
+  html += '<div class="step"><div class="num">2</div><div>Paste the chat button code and click Apply</div></div>';
+  html += '<div class="step"><div class="num">3</div><div>Save and publish</div></div>';
+  html += '<h2>WordPress</h2>';
+  html += '<div class="step"><div class="num">1</div><div>Appearance &rarr; Theme Editor &rarr; footer.php</div></div>';
+  html += '<div class="step"><div class="num">2</div><div>Paste the chat button code just before &lt;/body&gt;</div></div>';
+  html += '<div class="step"><div class="num">3</div><div>Click Update File</div></div>';
+  html += '<h2>Any Website</h2>';
+  html += '<div class="step"><div class="num">1</div><div>Open your HTML file</div></div>';
+  html += '<div class="step"><div class="num">2</div><div>Paste the chat button code just before &lt;/body&gt; and save</div></div>';
+  html += '<h2>Full Profile Page Embed</h2>';
+  html += '<p style="font-size:0.82rem;color:#555;">Embed your complete profile with experience, skills, and chat:</p>';
+  html += '<div class="box">' + iframeEmbed.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+  html += '<div class="footer">Questions? hello@menoslabs.com &nbsp;&middot;&nbsp; ask.menoslabs.com/faq &nbsp;&middot;&nbsp; Powered by Menos Labs</div>';
+  html += '</body></html>';
 
-  const html = `<!DOCTYPE html>
-<!-- v2026-03-20T15:15:36.395594 -->
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Ask Setup Guide — ${name}</title>
-<style>
-  body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1A1A1A;line-height:1.6;}
-  h1{font-size:2rem;margin-bottom:0.25rem;}
-  h2{font-size:1.1rem;margin-top:2rem;margin-bottom:0.5rem;border-bottom:1px solid #ccc;padding-bottom:0.35rem;}
-  .url{background:#F7F6F3;border:1px solid #E2DED8;padding:0.75rem 1rem;font-family:monospace;font-size:0.85rem;word-break:break-all;margin:0.5rem 0;}
-  .step{display:flex;gap:0.75rem;margin-bottom:0.5rem;}
-  .num{background:#111;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;flex-shrink:0;margin-top:2px;}
-  .code{background:#F7F6F3;border:1px solid #E2DED8;padding:0.75rem;font-family:monospace;font-size:0.75rem;word-break:break-all;margin:0.5rem 0;white-space:pre-wrap;}
-  .footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #ccc;font-size:0.75rem;color:#999;}
-</style>
-</head>
-<body>
-<h1>Ask Setup Guide</h1>
-<p style="color:#999;font-size:0.85rem;">Generated for ${name} · ask.menoslabs.com</p>
-
-<h2>Your Shareable Link</h2>
-<p>Share this link in your email signature, LinkedIn profile, or resume:</p>
-<div class="url">${url}</div>
-
-<h2>Add Chat Button to Your Website</h2>
-<p>Paste this one line of code before the closing &lt;/body&gt; tag on your website:</p>
-<div class="code">${chatCode}</div>
-
-<h2>Wix</h2>
-<div class="step"><div class="num">1</div><div>Click Add Elements → Embed Code → HTML iframe</div></div>
-<div class="step"><div class="num">2</div><div>Paste the code above and click Apply</div></div>
-<div class="step"><div class="num">3</div><div>Publish your site</div></div>
-
-<h2>Squarespace</h2>
-<div class="step"><div class="num">1</div><div>Edit your page → click + → add a Code block</div></div>
-<div class="step"><div class="num">2</div><div>Paste the code above and click Apply</div></div>
-<div class="step"><div class="num">3</div><div>Save and publish</div></div>
-
-<h2>WordPress</h2>
-<div class="step"><div class="num">1</div><div>Go to Appearance → Theme Editor → footer.php</div></div>
-<div class="step"><div class="num">2</div><div>Paste the code just before &lt;/body&gt;</div></div>
-<div class="step"><div class="num">3</div><div>Click Update File</div></div>
-
-<h2>Any Website</h2>
-<div class="step"><div class="num">1</div><div>Open your HTML file</div></div>
-<div class="step"><div class="num">2</div><div>Paste the code just before &lt;/body&gt; and save</div></div>
-
-<h2>Embed Full Profile Page</h2>
-<p>To embed your complete profile with experience, skills, and chat:</p>
-<div class="code">${iframeCode}</div>
-
-<div class="footer">
-  Questions? Visit ask.menoslabs.com/faq or email hello@menoslabs.com<br>
-  Powered by Menos Labs · menoslabs.com
-</div>
-</body>
-</html>`;
-
-  const blob = new Blob([html], {type:'text/html'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'ask-setup-guide.html';
-  a.click();
+  var win = window.open('','_blank');
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
 }
 
 // Platform content renders after slug is loaded
