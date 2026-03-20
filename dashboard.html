@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T18:56:09.306964 -->
+<!-- v2026-03-20T19:07:13.623934 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -683,7 +683,14 @@ async function deleteProfile(slug, name){
     console.log('Delete response status:', res.status);
     const result = await res.json();
     console.log('Delete result:', result);
-    if(result.ok){ loadProfiles(); }
+    if(result.ok){
+      // Remove from local array immediately (KV has eventual consistency)
+      allProfiles = allProfiles.filter(p => p.slug !== slug);
+      document.getElementById('statTotal').textContent = allProfiles.length;
+      renderTable(allProfiles);
+      // Also refresh after 2s to confirm
+      setTimeout(loadProfiles, 2000);
+    }
     else { alert('Delete failed: ' + (result.error||'Unknown error')); }
   } catch(e){ 
     console.error('Delete error:', e);
