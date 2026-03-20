@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T19:07:13.623934 -->
+<!-- v2026-03-20T19:29:10.671864 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -645,12 +645,13 @@ ${resume}
     let emailSent = false;
     if(email){
       try {
-        await fetch('https://waveform-email.thedobrien.workers.dev', {
+        await fetch('https://menoslabs-contact.thedobrien.workers.dev', {
           method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({
-            email,
+            name: name,
+            email: email,
             subject: 'Your Ask profile has been updated',
-            html: `<p>Hi ${name},</p><p>Your Ask assistant profile has been updated and is live at:</p><p><a href="https://ask.menoslabs.com/${slug}">ask.menoslabs.com/${slug}</a></p><p>The Menos Labs Team</p>`
+            html: '<p>Hi ' + name + ',</p><p>Your Ask assistant profile has been updated and is live at:</p><p><a href="https://ask.menoslabs.com/' + slug + '">ask.menoslabs.com/' + slug + '</a></p><p>The Menos Labs Team</p>'
           })
         });
         emailSent = true;
