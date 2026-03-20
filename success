@@ -158,7 +158,13 @@ window.addEventListener('load', async () => {
   const raw = localStorage.getItem('ask_purchase_data');
   if(!raw){ document.getElementById('shareUrl').textContent='No profile data found.'; document.getElementById('viewPageBtn').textContent='← Create Your Assistant'; document.getElementById('viewPageBtn').href='/create'; return; }
   const data = JSON.parse(raw);
-  delete data.avatar;
+  // Re-attach compressed avatar from sessionStorage
+  const savedAvatar = sessionStorage.getItem('ask_avatar');
+  if(savedAvatar && savedAvatar.length < 100000) {
+    data.avatar = savedAvatar;
+  } else {
+    delete data.avatar;
+  }
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 10000);
