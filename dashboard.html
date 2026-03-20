@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T19:29:10.671864 -->
+<!-- v2026-03-20T19:36:59.736409 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -523,6 +523,8 @@ async function openEdit(slug){
     document.getElementById('editTitle').value = d.title||'';
     document.getElementById('editCity').value = d.city||'';
     document.getElementById('editEmail').value = d.email||'';
+    // Pre-fill resume if stored
+    if(d.resume) document.getElementById('editResume').value = d.resume;
     // Set theme picker
     dashSelectedTheme = d.theme||'classic';
     document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c.dataset.theme===dashSelectedTheme));

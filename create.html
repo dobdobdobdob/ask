@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T15:55:15.003539 -->
+<!-- v2026-03-20T19:36:59.734711 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -495,7 +495,7 @@ function updateInitials(){
 
 
 async function generate(){
-  const name = document.getElementById('iName').value.trim();
+  const name = document.getElementById('iName').value.trim().replace(/[^a-zA-Z0-9\s\-]/g, '').trim();
   const title = document.getElementById('iTitle').value.trim();
   const city = document.getElementById('iCity').value.trim();
   const email = document.getElementById('iEmail').value.trim();
@@ -568,7 +568,7 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     clearInterval(iv);
 
     // Save to sessionStorage and go to preview
-    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, theme:selectedTheme };
+    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, theme:selectedTheme, resume:resume };
     // Store avatar separately to avoid sessionStorage size limit
     if(avatarDataUrl) sessionStorage.setItem('ask_avatar', avatarDataUrl);
     else sessionStorage.removeItem('ask_avatar');
