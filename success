@@ -126,8 +126,8 @@ let shareUrl = '', slug = '', embedType = 'chat', currentPlatform = 'wix', rawEm
 const INSTRUCTIONS = {
   wix:{chat:['In your Wix editor, click <strong>Add Elements</strong> in the left sidebar','Select <strong>Embed Code</strong> → <strong>HTML iframe</strong>','Paste the code below into the HTML box','Click <strong>Apply</strong> and position the element','Publish your site'],full:['In your Wix editor click <strong>Add Elements</strong> → <strong>Embed Code</strong>','Select <strong>HTML iframe</strong>','Paste the iframe code below and click <strong>Apply</strong>','Resize the element to fill the section','Publish your site']},
   squarespace:{chat:['Go to the page where you want the chat button','Click <strong>Edit</strong> → hover over a section → click <strong>+</strong>','Select <strong>Code</strong> block','Paste the code below and click <strong>Apply</strong>','Save and publish'],full:['Go to your page and click <strong>Edit</strong>','Add a <strong>Code</strong> block where you want the profile','Paste the iframe code below','Adjust the height as needed and publish']},
-  wordpress:{chat:['In WordPress go to <strong>Appearance → Theme Editor</strong>','Open your theme's <strong>footer.php</strong> file','Paste the code just before the <strong>&lt;/body&gt;</strong> tag','Save — the chat button will appear on every page'],full:['Create or edit a page in WordPress','Click <strong>+</strong> to add a block → search for <strong>Custom HTML</strong>','Paste the iframe code below','Save and preview']},
-  any:{chat:['Open your website's HTML file or template','Paste the code below just before the closing <strong>&lt;/body&gt;</strong> tag','Save and upload — the chat button will appear on every page'],full:['Open the HTML file where you want the profile','Paste the iframe code below where you want it to appear','Save and upload']}
+  wordpress:{chat:['In WordPress go to <strong>Appearance → Theme Editor</strong>','Open your theme&#39;s <strong>footer.php</strong> file','Paste the code just before the <strong>&lt;/body&gt;</strong> tag','Save — the chat button will appear on every page'],full:['Create or edit a page in WordPress','Click <strong>+</strong> to add a block → search for <strong>Custom HTML</strong>','Paste the iframe code below','Save and preview']},
+  any:{chat:['Open your website&#39;s HTML file or template','Paste the code below just before the closing <strong>&lt;/body&gt;</strong> tag','Save and upload — the chat button will appear on every page'],full:['Open the HTML file where you want the profile','Paste the iframe code below where you want it to appear','Save and upload']}
 };
 
 function getEmbedCode(type){
@@ -160,7 +160,15 @@ window.addEventListener('load', async () => {
   const data = JSON.parse(raw);
   delete data.avatar;
   try {
-    const res = await fetch(ASK_SERVER+'/save', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 10000);
+    const res = await fetch(ASK_SERVER+'/save', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data),
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
     const result = await res.json();
     if(result.slug){
       slug = result.slug;
@@ -171,12 +179,14 @@ window.addEventListener('load', async () => {
       localStorage.removeItem('ask_purchase_data');
       renderPlatformContent();
       if(data.email){
-        fetch('https://menoslabs-contact.thedobrien.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:data.name,email:data.email,subject:'Your Ask assistant is live — '+data.name,html:'<p>Hi '+data.name+',</p><p>Your AI assistant is live:</p><p><a href="'+shareUrl+'">'+shareUrl+'</a></p><p>Need help? <a href="https://ask.menoslabs.com/faq">Help & FAQ</a></p><p>The Menos Labs Team</p>'})}).catch(()=>{});
+        fetch('https://menoslabs-contact.thedobrien.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:data.name,email:data.email,subject:'Your Ask assistant is live — '+data.name,html:'<p>Hi '+data.name+',</p><p>Your AI assistant is live:</p><p><a href="'+shareUrl+'">'+shareUrl+'</a></p><p>The Menos Labs Team</p>'})}).catch(()=>{});
       }
     } else {
-      document.getElementById('shareUrl').textContent='Error — please contact hello@menoslabs.com';
+      document.getElementById('shareUrl').textContent='Save failed. Error: '+(result.error||'Unknown');
     }
-  } catch(e){ document.getElementById('shareUrl').textContent='Error — please contact hello@menoslabs.com'; }
+  } catch(e){
+    document.getElementById('shareUrl').textContent = e.name==='AbortError' ? 'Save timed out — please contact hello@menoslabs.com' : 'Error: '+e.message;
+  }
 });
 
 function gdprInit(){ const c=localStorage.getItem('gdpr_consent'); if(!c)setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},1500); if(c==='declined')window['ga-disable-G-Y6Y16FEG2H']=true; }
