@@ -311,7 +311,21 @@ let avatarDataUrl = null;
 document.getElementById('avatarInput').addEventListener('change', function(){
   const file = this.files[0]; if(!file) return;
   const r = new FileReader();
-  r.onload = e => { avatarDataUrl = e.target.result; document.getElementById('avatarCircle').innerHTML = `<img src="${avatarDataUrl}" alt="avatar">`; };
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200; canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width - size) / 2;
+      const sy = (img.height - size) / 2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
+      avatarDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      document.getElementById('avatarCircle').innerHTML = `<img src="${avatarDataUrl}" alt="avatar">`;
+    };
+    img.src = e.target.result;
+  };
   r.readAsDataURL(file);
 });
 
@@ -325,7 +339,7 @@ function updateInitials(){
 
 
 async function generate(){
-  const name = document.getElementById('iName').value.trim();
+  const name = document.getElementById('iName').value.trim().replace(/[^a-zA-Z0-9\s\-]/g, '').trim();
   const title = document.getElementById('iTitle').value.trim();
   const city = document.getElementById('iCity').value.trim();
   const email = document.getElementById('iEmail').value.trim();
