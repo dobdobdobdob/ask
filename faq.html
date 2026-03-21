@@ -1,387 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Help & FAQ — Ask by Menos Labs</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-      --white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;
-      --border:#E2DED8;--text1:#1A1A1A;--text2:#555550;
-      --text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;
-    }
-    html{scroll-behavior:smooth;}
-    body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text1);}
-
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-    .nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
-    .nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
-    .nav-back{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
-    .nav-back:hover{color:var(--text1);}
-
-    /* HERO */
-    .hero{background:var(--off-white);border-bottom:1px solid var(--border);padding:7rem 4rem 4rem;}
-    .hero-inner{max-width:760px;margin:0 auto;}
-    .hero-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
-    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.03em;line-height:1.08;margin-bottom:0.75rem;}
-    .hero-title em{font-style:italic;background:var(--accent);padding:0 8px;}
-    .hero-sub{font-size:0.95rem;color:var(--text2);line-height:1.8;font-weight:300;}
-
-    /* MAIN */
-    .main{max-width:760px;margin:0 auto;padding:4rem;}
-
-    /* TOC */
-    .toc{background:var(--off-white);border:1px solid var(--border);border-radius:4px;padding:1.75rem;margin-bottom:3rem;}
-    .toc-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
-    .toc-links{display:flex;flex-direction:column;gap:0.5rem;}
-    .toc-link{font-size:0.85rem;color:var(--accent-dark);text-decoration:none;font-weight:400;transition:color 0.2s;}
-    .toc-link:hover{color:var(--text1);}
-    .toc-link::before{content:'→ ';font-size:0.75rem;}
-
-    /* FAQ SECTIONS */
-    .faq-section{margin-bottom:3.5rem;}
-    .faq-section-tag{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
-    .faq-section-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
-
-    .faq-item{margin-bottom:1.5rem;}
-    .faq-q{font-size:0.92rem;font-weight:500;color:var(--text1);margin-bottom:0.5rem;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
-    .faq-q::after{content:'+';font-size:1.1rem;color:var(--text3);flex-shrink:0;transition:transform 0.2s;}
-    .faq-item.open .faq-q::after{transform:rotate(45deg);}
-    .faq-a{font-size:0.85rem;color:var(--text2);line-height:1.8;font-weight:300;display:none;padding-top:0.5rem;}
-    .faq-item.open .faq-a{display:block;}
-
-    /* CODE BLOCKS */
-    .code-block{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:1rem;font-family:'DM Sans',monospace;font-size:0.78rem;color:var(--text1);word-break:break-all;line-height:1.6;margin:0.75rem 0;white-space:pre-wrap;}
-    .copy-btn{font-size:0.65rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.85rem;background:var(--black);color:var(--white);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;margin-top:0.5rem;display:inline-block;}
-    .copy-btn:hover{background:var(--accent);color:var(--black);}
-    .copy-btn.copied{background:var(--accent-dark);color:var(--white);}
-
-    /* STEPS */
-    .steps{display:flex;flex-direction:column;gap:0.75rem;margin:0.75rem 0;}
-    .step{display:flex;gap:0.85rem;align-items:flex-start;}
-    .step-num{width:22px;height:22px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;color:var(--white);flex-shrink:0;margin-top:1px;}
-    .step-text{font-size:0.85rem;color:var(--text2);line-height:1.6;font-weight:300;}
-    .step-text strong{color:var(--text1);font-weight:500;}
-
-    /* PLATFORM TABS */
-    .platform-tabs{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
-    .ptab{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;padding:0.6rem 1.1rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;transition:all 0.2s;margin-bottom:-1px;}
-    .ptab.on{color:var(--text1);border-bottom-color:var(--black);}
-    .platform-panel{display:none;}
-    .platform-panel.on{display:block;}
-
-    /* TIP BOXES */
-    .tip{background:rgba(204,255,0,0.08);border:1px solid rgba(139,179,0,0.25);border-radius:2px;padding:0.85rem 1rem;font-size:0.82rem;color:var(--text2);line-height:1.65;margin:0.75rem 0;}
-    .tip strong{color:var(--accent-dark);}
-
-    /* CONTACT FORM */
-    .contact-section{background:var(--black);padding:4rem;margin-top:2rem;}
-    .contact-inner{max-width:760px;margin:0 auto;}
-    .contact-tag{font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.75rem;}
-    .contact-title{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;letter-spacing:-0.03em;color:var(--white);margin-bottom:0.5rem;}
-    .contact-sub{font-size:0.88rem;color:rgba(255,255,255,0.4);font-weight:300;line-height:1.7;margin-bottom:2rem;}
-    .contact-form{display:flex;flex-direction:column;gap:0.85rem;max-width:500px;}
-    .contact-input{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:300;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--white);padding:0.7rem 1rem;outline:none;border-radius:2px;transition:border-color 0.2s;}
-    .contact-input::placeholder{color:rgba(255,255,255,0.2);}
-    .contact-input:focus{border-color:rgba(204,255,0,0.4);}
-    textarea.contact-input{resize:vertical;min-height:110px;line-height:1.65;}
-    .contact-btn{background:var(--accent);color:var(--black);border:none;padding:0.9rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;cursor:pointer;border-radius:2px;transition:all 0.2s;width:100%;}
-    .contact-btn:hover{background:var(--white);}
-    .contact-success{display:none;font-size:0.82rem;color:rgba(204,255,0,0.8);margin-top:0.5rem;}
-
-    footer{background:var(--black);border-top:1px solid rgba(255,255,255,0.06);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;}
-    .footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
-    .footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
-    .footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.05em;}
-
-    @media(max-width:768px){
-      nav{padding:1.25rem 1.5rem;}
-      .hero,.main{padding:6rem 1.5rem 3rem;}
-      .contact-section{padding:3rem 1.5rem;}
-      footer{flex-direction:column;gap:1rem;padding:1.5rem;text-align:center;}
-    }
-  
-    /* GDPR Banner */
-    #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
-    #gdpr-banner.show{transform:translateY(0);}
-    .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
-    .gdpr-text a{color:rgba(255,255,255,0.4);text-decoration:underline;}
-    .gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
-    .gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:var(--accent);color:var(--black);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-    .gdpr-accept:hover{background:#fff;}
-    .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-    .gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
-    @media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help & FAQ — Ask by Menos Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text1);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
+.nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
+.nav-back{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
+.nav-back:hover{color:var(--text1);}
+.hero{background:var(--off-white);border-bottom:1px solid var(--border);padding:7rem 4rem 4rem;}
+.hero-inner{max-width:760px;margin:0 auto;}
+.hero-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.03em;line-height:1.08;margin-bottom:0.75rem;}
+.hero-title em{font-style:italic;background:var(--accent);padding:0 8px;}
+.hero-sub{font-size:0.95rem;color:var(--text2);line-height:1.8;font-weight:300;}
+.main{max-width:760px;margin:0 auto;padding:4rem;}
+.toc{background:var(--off-white);border:1px solid var(--border);border-radius:4px;padding:1.75rem;margin-bottom:3rem;}
+.toc-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
+.toc-links{display:flex;flex-direction:column;gap:0.5rem;}
+.toc-link{font-size:0.85rem;color:var(--accent-dark);text-decoration:none;font-weight:400;transition:color 0.2s;}
+.toc-link:hover{color:var(--text1);}
+.toc-link::before{content:'→ ';font-size:0.75rem;}
+.faq-section{margin-bottom:3.5rem;}
+.faq-section-tag{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
+.faq-section-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.faq-item{margin-bottom:1.5rem;}
+.faq-q{font-size:0.92rem;font-weight:500;color:var(--text1);margin-bottom:0.5rem;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.faq-q::after{content:'+';font-size:1.1rem;color:var(--text3);flex-shrink:0;transition:transform 0.2s;}
+.faq-item.open .faq-q::after{transform:rotate(45deg);}
+.faq-a{font-size:0.85rem;color:var(--text2);line-height:1.8;font-weight:300;display:none;padding-top:0.5rem;}
+.faq-item.open .faq-a{display:block;}
+.code-block{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:1rem;font-family:'DM Sans',monospace;font-size:0.78rem;color:var(--text1);word-break:break-all;line-height:1.6;margin:0.75rem 0;white-space:pre-wrap;}
+.copy-btn{font-size:0.65rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.85rem;background:var(--black);color:var(--white);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;margin-top:0.5rem;display:inline-block;}
+.copy-btn:hover{background:var(--accent);color:var(--black);}
+.copy-btn.copied{background:var(--accent-dark);color:var(--white);}
+.steps{display:flex;flex-direction:column;gap:0.75rem;margin:0.75rem 0;}
+.step{display:flex;gap:0.85rem;align-items:flex-start;}
+.step-num{width:22px;height:22px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;color:var(--white);flex-shrink:0;margin-top:1px;}
+.step-text{font-size:0.85rem;color:var(--text2);line-height:1.6;font-weight:300;}
+.step-text strong{color:var(--text1);font-weight:500;}
+.platform-tabs{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.ptab{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;padding:0.6rem 1.1rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;transition:all 0.2s;margin-bottom:-1px;}
+.ptab.on{color:var(--text1);border-bottom-color:var(--black);}
+.platform-panel{display:none;}
+.platform-panel.on{display:block;}
+.tip{background:rgba(204,255,0,0.08);border:1px solid rgba(139,179,0,0.25);border-radius:2px;padding:0.85rem 1rem;font-size:0.82rem;color:var(--text2);line-height:1.65;margin:0.75rem 0;}
+.tip strong{color:var(--accent-dark);}
+.contact-section{background:var(--black);padding:4rem;margin-top:2rem;}
+.contact-inner{max-width:760px;margin:0 auto;}
+.contact-tag{font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.75rem;}
+.contact-title{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;letter-spacing:-0.03em;color:var(--white);margin-bottom:0.5rem;}
+.contact-sub{font-size:0.88rem;color:rgba(255,255,255,0.4);font-weight:300;line-height:1.7;margin-bottom:2rem;}
+.contact-form{display:flex;flex-direction:column;gap:0.85rem;max-width:500px;}
+.contact-input{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:300;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--white);padding:0.7rem 1rem;outline:none;border-radius:2px;transition:border-color 0.2s;}
+.contact-input::placeholder{color:rgba(255,255,255,0.2);}
+.contact-input:focus{border-color:rgba(204,255,0,0.4);}
+textarea.contact-input{resize:vertical;min-height:110px;line-height:1.65;}
+.contact-btn{background:var(--accent);color:var(--black);border:none;padding:0.9rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;cursor:pointer;border-radius:2px;transition:all 0.2s;width:100%;}
+.contact-btn:hover{background:var(--white);}
+.contact-success{display:none;font-size:0.82rem;color:rgba(204,255,0,0.8);margin-top:0.5rem;}
+footer{background:var(--black);border-top:1px solid rgba(255,255,255,0.06);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;}
+.footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
+.footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.05em;}
+@media(max-width:768px){nav{padding:1.25rem 1.5rem;}.hero,.main{padding:6rem 1.5rem 3rem;}.contact-section{padding:3rem 1.5rem;}footer{flex-direction:column;gap:1rem;padding:1.5rem;text-align:center;}}
+#gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
+#gdpr-banner.show{transform:translateY(0);}
+.gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
+.gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
+.gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:var(--accent);color:var(--black);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.gdpr-accept:hover{background:#fff;}
+.gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
+@media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
+</style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-Y6Y16FEG2H');
-</script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-96XWYGNS49');
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-Y6Y16FEG2H');</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-96XWYGNS49');</script>
 </head>
 <body>
-
 <nav>
-  <a href="/" class="nav-logo">Ask<span>.</span></a>
-  <a href="/" class="nav-back">← Back to Ask</a>
+<a href="/" class="nav-logo">Ask<span>.</span></a>
+<a href="/" class="nav-back">← Back to Ask</a>
 </nav>
 
 <div class="hero">
-  <div class="hero-inner">
-    <p class="hero-eyebrow">Help Center</p>
-    <h1 class="hero-title">Answers to your <em>questions.</em></h1>
-    <p class="hero-sub">Everything you need to share your Ask assistant, embed it on your site, and get the most out of it.</p>
-  </div>
+<div class="hero-inner">
+<p class="hero-eyebrow">Help Center</p>
+<h1 class="hero-title">Answers to your <em>questions.</em></h1>
+<p class="hero-sub">Everything you need to share your Ask assistant, embed it on your site, and get the most out of it.</p>
+</div>
 </div>
 
 <div class="main">
+<div class="toc">
+<div class="toc-title">Jump to a section</div>
+<div class="toc-links">
+<a href="#your-link" class="toc-link">Your shareable link</a>
+<a href="#username" class="toc-link">Choosing your username</a>
+<a href="#custom-domain" class="toc-link">Point to your own domain</a>
+<a href="#embed" class="toc-link">Embed on Wix, Squarespace, WordPress</a>
+<a href="#chat-vs-full" class="toc-link">Chat button vs full page embed</a>
+<a href="#editing" class="toc-link">Editing your profile</a>
+<a href="#billing" class="toc-link">Billing & refunds</a>
+</div>
+</div>
 
-  <!-- TABLE OF CONTENTS -->
-  <div class="toc">
-    <div class="toc-title">Jump to a section</div>
-    <div class="toc-links">
-      <a href="#your-link" class="toc-link">Your shareable link</a>
-      <a href="#custom-domain" class="toc-link">Point to your own domain</a>
-      <a href="#embed" class="toc-link">Embed on Wix, Squarespace, WordPress</a>
-      <a href="#chat-vs-full" class="toc-link">Chat button vs full page embed</a>
-      <a href="#editing" class="toc-link">Editing your profile</a>
-      <a href="#billing" class="toc-link">Billing & refunds</a>
-    </div>
-  </div>
+<!-- YOUR LINK -->
+<div class="faq-section" id="your-link">
+<p class="faq-section-tag">Getting started</p>
+<h2 class="faq-section-title">Your shareable link</h2>
+<div class="faq-item open">
+<div class="faq-q" onclick="toggleFaq(this)">What is my Ask link?</div>
+<div class="faq-a">Your Ask link is a permanent public page that hosts your AI assistant. Anyone who visits it can ask questions about your professional background and get instant answers — even when you're not available. It looks like: <strong>ask.menoslabs.com/janesmith</strong></div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Where should I share my Ask link?</div>
+<div class="faq-a">The best places are:<br><br>
+• <strong>Email signature</strong> — add "Ask me anything: [your link]" at the bottom of every email<br>
+• <strong>LinkedIn profile</strong> — add it to your About section or as a featured link<br>
+• <strong>Resume</strong> — include it next to your contact details<br>
+• <strong>Portfolio site</strong> — embed the chat button or link directly<br>
+• <strong>Job applications</strong> — include it in cover letters so recruiters can learn more
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Will my link ever expire?</div>
+<div class="faq-a">No. Your Ask link is permanent. You paid once and it lives forever at your URL. We don't delete profiles or charge recurring fees.</div>
+</div>
+</div>
 
-  <!-- YOUR LINK -->
-  <div class="faq-section" id="your-link">
-    <p class="faq-section-tag">Getting started</p>
-    <h2 class="faq-section-title">Your shareable link</h2>
+<!-- USERNAME -->
+<div class="faq-section" id="username">
+<p class="faq-section-tag">Your URL</p>
+<h2 class="faq-section-title">Choosing your username</h2>
+<div class="faq-item open">
+<div class="faq-q" onclick="toggleFaq(this)">How do I choose my username?</div>
+<div class="faq-a">When you create your profile, the first step is choosing a username. This becomes your permanent URL — for example, if you choose <strong>janesmith</strong>, your link will be <strong>ask.menoslabs.com/janesmith</strong>. We check availability in real time as you type, and suggest alternatives if your first choice is taken.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">What characters can I use in my username?</div>
+<div class="faq-a">Usernames can contain letters (a–z), numbers (0–9), hyphens (-), and underscores (_). They must be at least 3 characters. Spaces and special characters are not allowed. Usernames are not case sensitive — <strong>JaneSmith</strong> and <strong>janesmith</strong> are the same.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">What if my username is already taken?</div>
+<div class="faq-a">We'll let you know immediately and suggest 3 available alternatives — like <strong>janesmith25</strong>, <strong>janesmith_pro</strong>, or a variation with numbers. You can pick one of the suggestions or type a completely different username and check again.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Can I change my username later?</div>
+<div class="faq-a">Your username is permanent and tied to your profile — it's the foundation of your shareable link. If you need a change (e.g. after a name change or rebrand), email us at <strong>hello@menoslabs.com</strong> and we'll set up a new username and redirect your old URL so nothing breaks for people who already have your link.</div>
+</div>
+</div>
 
-    <div class="faq-item open">
-      <div class="faq-q" onclick="toggleFaq(this)">What is my Ask link?</div>
-      <div class="faq-a">Your Ask link is a permanent public page that hosts your AI assistant. Anyone who visits it can ask questions about your professional background and get instant answers — even when you're not available. It looks like: <strong>ask.menoslabs.com/davidobrien-001</strong></div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Where should I share my Ask link?</div>
-      <div class="faq-a">The best places are:
-        <br><br>• <strong>Email signature</strong> — add "Ask me anything: [your link]" at the bottom of every email
-        <br>• <strong>LinkedIn profile</strong> — add it to your About section or as a featured link
-        <br>• <strong>Resume</strong> — include it next to your contact details
-        <br>• <strong>Portfolio site</strong> — embed the chat button or link directly
-        <br>• <strong>Job applications</strong> — include it in cover letters so recruiters can learn more
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Will my link ever expire?</div>
-      <div class="faq-a">No. Your Ask link is permanent. You paid once and it lives forever at your URL. We don't delete profiles or charge recurring fees.</div>
-    </div>
-  </div>
-
-  <!-- CUSTOM DOMAIN -->
-  <div class="faq-section" id="custom-domain">
-    <p class="faq-section-tag">Advanced setup</p>
-    <h2 class="faq-section-title">Point to your own domain</h2>
-
-    <div class="faq-item open">
-      <div class="faq-q" onclick="toggleFaq(this)">Can I use my own domain like ask.mysite.com?</div>
-      <div class="faq-a">Yes — you can point a subdomain of your own domain to your Ask profile. You'll need access to your domain's DNS settings. Here's how:
-        <br><br>Add a CNAME record in your DNS settings:
-        <div class="code-block">Type: CNAME
+<!-- CUSTOM DOMAIN -->
+<div class="faq-section" id="custom-domain">
+<p class="faq-section-tag">Advanced setup</p>
+<h2 class="faq-section-title">Point to your own domain</h2>
+<div class="faq-item open">
+<div class="faq-q" onclick="toggleFaq(this)">Can I use my own domain like ask.mysite.com?</div>
+<div class="faq-a">Yes — you can point a subdomain of your own domain to your Ask profile. Add a CNAME record in your DNS settings:
+<div class="code-block">Type: CNAME
 Name: ask (or any subdomain you want)
 Value: ask.menoslabs.com</div>
-        Then email us at <strong>hello@menoslabs.com</strong> with your domain and Ask URL and we'll configure the redirect.
-        <div class="tip"><strong>Note:</strong> DNS changes can take up to 48 hours to propagate globally.</div>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Which DNS providers does this work with?</div>
-      <div class="faq-a">It works with any DNS provider — Cloudflare, GoDaddy, Namecheap, Google Domains, Route 53, and others. The CNAME record process is the same on all of them.</div>
-    </div>
-  </div>
-
-  <!-- EMBED -->
-  <div class="faq-section" id="embed">
-    <p class="faq-section-tag">Adding to your website</p>
-    <h2 class="faq-section-title">Embed on your site</h2>
-
-    <div class="faq-item open">
-      <div class="faq-q" onclick="toggleFaq(this)">How do I add the chat button to my website?</div>
-      <div class="faq-a">
-        Add one line of code to your website and a floating "Ask Me" button will appear in the bottom right corner.
-        <div class="code-block" id="embedChatCode">&lt;script src="https://ask.menoslabs.com/embed.js" data-slug="YOUR-SLUG"&gt;&lt;/script&gt;</div>
-        <button class="copy-btn" onclick="copyCode('embedChatCode',this)">Copy Code</button>
-        <br><br>Replace <strong>YOUR-SLUG</strong> with your profile slug (the part after ask.menoslabs.com/ in your URL).
-
-        <br><br>
-        <div class="platform-tabs">
-          <button class="ptab on" onclick="switchPlatform('wix',this)">Wix</button>
-          <button class="ptab" onclick="switchPlatform('squarespace',this)">Squarespace</button>
-          <button class="ptab" onclick="switchPlatform('wordpress',this)">WordPress</button>
-          <button class="ptab" onclick="switchPlatform('other',this)">Any Site</button>
-        </div>
-
-        <div class="platform-panel on" id="platform-wix">
-          <div class="steps">
-            <div class="step"><div class="step-num">1</div><div class="step-text">In your Wix editor, click <strong>Add Elements</strong> in the left sidebar</div></div>
-            <div class="step"><div class="step-num">2</div><div class="step-text">Select <strong>Embed Code</strong> → <strong>HTML iframe</strong></div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-text">Paste the script tag above into the HTML box</div></div>
-            <div class="step"><div class="step-num">4</div><div class="step-text">Click <strong>Apply</strong> — the chat button will appear on your live site</div></div>
-            <div class="step"><div class="step-num">5</div><div class="step-text">Publish your site</div></div>
-          </div>
-        </div>
-
-        <div class="platform-panel" id="platform-squarespace">
-          <div class="steps">
-            <div class="step"><div class="step-num">1</div><div class="step-text">Go to the page where you want the chat button</div></div>
-            <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Edit</strong> → hover over a section → click <strong>+</strong></div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-text">Select a <strong>Code</strong> block</div></div>
-            <div class="step"><div class="step-num">4</div><div class="step-text">Paste the script tag above and click <strong>Apply</strong></div></div>
-            <div class="step"><div class="step-num">5</div><div class="step-text">Save and publish your page</div></div>
-          </div>
-        </div>
-
-        <div class="platform-panel" id="platform-wordpress">
-          <div class="steps">
-            <div class="step"><div class="step-num">1</div><div class="step-text">In WordPress, go to <strong>Appearance → Theme Editor</strong></div></div>
-            <div class="step"><div class="step-num">2</div><div class="step-text">Open <strong>footer.php</strong></div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-text">Paste the script tag just before the closing <strong>&lt;/body&gt;</strong> tag</div></div>
-            <div class="step"><div class="step-num">4</div><div class="step-text">Click <strong>Update File</strong> — the button appears on every page of your site</div></div>
-          </div>
-          <div class="tip"><strong>Tip:</strong> You can also use a plugin like "Insert Headers and Footers" to add the code without editing theme files.</div>
-        </div>
-
-        <div class="platform-panel" id="platform-other">
-          <div class="steps">
-            <div class="step"><div class="step-num">1</div><div class="step-text">Open your website's HTML file</div></div>
-            <div class="step"><div class="step-num">2</div><div class="step-text">Paste the script tag just before the closing <strong>&lt;/body&gt;</strong> tag</div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-text">Save and upload — the chat button will appear on every page</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How do I embed my full profile page?</div>
-      <div class="faq-a">Use an iframe to embed your complete profile page including experience, skills, and chat:
-        <div class="code-block" id="embedFullCode">&lt;iframe src="https://ask.menoslabs.com/YOUR-SLUG" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"&gt;&lt;/iframe&gt;</div>
-        <button class="copy-btn" onclick="copyCode('embedFullCode',this)">Copy Code</button>
-        <br><br>Replace <strong>YOUR-SLUG</strong> with your profile slug.
-      </div>
-    </div>
-  </div>
-
-  <!-- CHAT VS FULL -->
-  <div class="faq-section" id="chat-vs-full">
-    <p class="faq-section-tag">Embed options</p>
-    <h2 class="faq-section-title">Chat button vs full page</h2>
-
-    <div class="faq-item open">
-      <div class="faq-q" onclick="toggleFaq(this)">Which embed option should I use?</div>
-      <div class="faq-a">
-        <strong>Chat button (recommended for most sites)</strong> — A floating button appears in the corner of your existing site. It blends in cleanly without disrupting your design. Best for portfolios, personal websites, and agency sites.
-        <br><br>
-        <strong>Full profile page (iframe)</strong> — Embeds your complete Ask profile including your bio, experience timeline, skills, and chat. Best if you want to dedicate a full section or page to your profile.
-      </div>
-    </div>
-  </div>
-
-  <!-- EDITING -->
-  <div class="faq-section" id="editing">
-    <p class="faq-section-tag">Managing your profile</p>
-    <h2 class="faq-section-title">Editing your profile</h2>
-
-    <div class="faq-item open">
-      <div class="faq-q" onclick="toggleFaq(this)">How do I update my profile with a new job or resume?</div>
-      <div class="faq-a">Email us at <strong>hello@menoslabs.com</strong> with:
-        <br><br>• Your Ask profile URL
-        <br>• Your updated resume (paste as text for best results)
-        <br>• Any specific changes you'd like made
-        <br><br>We'll regenerate your profile and send you a confirmation. Your URL stays the same — nothing breaks for anyone who has your link.
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Can I change my profile theme?</div>
-      <div class="faq-a">Yes — just email us at <strong>hello@menoslabs.com</strong> with your profile URL and the theme you'd like (Classic, Dark, Bold, or Soft). We'll update it within 24 hours.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Can I change my URL?</div>
-      <div class="faq-a">Your URL is permanent and tied to your profile. If you need a different URL (e.g. after a name change), email us and we'll create a new one and set up a redirect from your old URL.</div>
-    </div>
-  </div>
-
-  <!-- BILLING -->
-  <div class="faq-section" id="billing">
-    <p class="faq-section-tag">Payments</p>
-    <h2 class="faq-section-title">Billing & refunds</h2>
-
-    <div class="faq-item open">
-      <div class="faq-q" onclick="toggleFaq(this)">Is this really a one-time payment?</div>
-      <div class="faq-a">Yes. $9.99 once, yours forever. No subscriptions, no renewals, no hidden fees. We believe in simple pricing.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is your refund policy?</div>
-      <div class="faq-a">We offer a full refund within 7 days of purchase, no questions asked. Just email <strong>hello@menoslabs.com</strong> with your purchase details and we'll process it within 24 hours.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What payment methods do you accept?</div>
-      <div class="faq-a">We accept all major credit and debit cards (Visa, Mastercard, Amex, Discover) through Stripe. We do not store your card details.</div>
-    </div>
-  </div>
-
+Then email us at <strong>hello@menoslabs.com</strong> with your domain and Ask URL and we'll configure the redirect.
+<div class="tip"><strong>Note:</strong> DNS changes can take up to 48 hours to propagate globally.</div>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Which DNS providers does this work with?</div>
+<div class="faq-a">It works with any DNS provider — Cloudflare, GoDaddy, Namecheap, Google Domains, Route 53, and others. The CNAME record process is the same on all of them.</div>
+</div>
 </div>
 
-<!-- CONTACT FORM -->
+<!-- EMBED -->
+<div class="faq-section" id="embed">
+<p class="faq-section-tag">Adding to your website</p>
+<h2 class="faq-section-title">Embed on your site</h2>
+<div class="faq-item open">
+<div class="faq-q" onclick="toggleFaq(this)">How do I add the chat button to my website?</div>
+<div class="faq-a">Add one line of code to your website and a floating "Ask Me" button will appear in the bottom right corner.
+<div class="code-block" id="embedChatCode">&lt;script src="https://ask.menoslabs.com/embed.js" data-slug="YOUR-USERNAME"&gt;&lt;/script&gt;</div>
+<button class="copy-btn" onclick="copyCode('embedChatCode',this)">Copy Code</button>
+<br><br>Replace <strong>YOUR-USERNAME</strong> with your username (the part after ask.menoslabs.com/ in your URL).<br><br>
+<div class="platform-tabs">
+<button class="ptab on" onclick="switchPlatform('wix',this)">Wix</button>
+<button class="ptab" onclick="switchPlatform('squarespace',this)">Squarespace</button>
+<button class="ptab" onclick="switchPlatform('wordpress',this)">WordPress</button>
+<button class="ptab" onclick="switchPlatform('other',this)">Any Site</button>
+</div>
+<div class="platform-panel on" id="platform-wix">
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-text">In your Wix editor, click <strong>Add Elements</strong> in the left sidebar</div></div>
+<div class="step"><div class="step-num">2</div><div class="step-text">Select <strong>Embed Code</strong> → <strong>HTML iframe</strong></div></div>
+<div class="step"><div class="step-num">3</div><div class="step-text">Paste the script tag above into the HTML box</div></div>
+<div class="step"><div class="step-num">4</div><div class="step-text">Click <strong>Apply</strong> — the chat button will appear on your live site</div></div>
+<div class="step"><div class="step-num">5</div><div class="step-text">Publish your site</div></div>
+</div>
+</div>
+<div class="platform-panel" id="platform-squarespace">
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-text">Go to the page where you want the chat button</div></div>
+<div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Edit</strong> → hover over a section → click <strong>+</strong></div></div>
+<div class="step"><div class="step-num">3</div><div class="step-text">Select a <strong>Code</strong> block</div></div>
+<div class="step"><div class="step-num">4</div><div class="step-text">Paste the script tag above and click <strong>Apply</strong></div></div>
+<div class="step"><div class="step-num">5</div><div class="step-text">Save and publish your page</div></div>
+</div>
+</div>
+<div class="platform-panel" id="platform-wordpress">
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-text">In WordPress, go to <strong>Appearance → Theme Editor</strong></div></div>
+<div class="step"><div class="step-num">2</div><div class="step-text">Open <strong>footer.php</strong></div></div>
+<div class="step"><div class="step-num">3</div><div class="step-text">Paste the script tag just before the closing <strong>&lt;/body&gt;</strong> tag</div></div>
+<div class="step"><div class="step-num">4</div><div class="step-text">Click <strong>Update File</strong> — the button appears on every page of your site</div></div>
+</div>
+<div class="tip"><strong>Tip:</strong> You can also use a plugin like "Insert Headers and Footers" to add the code without editing theme files.</div>
+</div>
+<div class="platform-panel" id="platform-other">
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-text">Open your website's HTML file</div></div>
+<div class="step"><div class="step-num">2</div><div class="step-text">Paste the script tag just before the closing <strong>&lt;/body&gt;</strong> tag</div></div>
+<div class="step"><div class="step-num">3</div><div class="step-text">Save and upload — the chat button will appear on every page</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">How do I embed my full profile page?</div>
+<div class="faq-a">Use an iframe to embed your complete profile page including experience, skills, and chat:
+<div class="code-block" id="embedFullCode">&lt;iframe src="https://ask.menoslabs.com/YOUR-USERNAME" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"&gt;&lt;/iframe&gt;</div>
+<button class="copy-btn" onclick="copyCode('embedFullCode',this)">Copy Code</button>
+<br><br>Replace <strong>YOUR-USERNAME</strong> with your username.
+</div>
+</div>
+</div>
+
+<!-- CHAT VS FULL -->
+<div class="faq-section" id="chat-vs-full">
+<p class="faq-section-tag">Embed options</p>
+<h2 class="faq-section-title">Chat button vs full page</h2>
+<div class="faq-item open">
+<div class="faq-q" onclick="toggleFaq(this)">Which embed option should I use?</div>
+<div class="faq-a"><strong>Chat button (recommended for most sites)</strong> — A floating button appears in the corner of your existing site. It blends in cleanly without disrupting your design. Best for portfolios, personal websites, and agency sites.<br><br>
+<strong>Full profile page (iframe)</strong> — Embeds your complete Ask profile including your bio, experience timeline, skills, and chat. Best if you want to dedicate a full section or page to your profile.</div>
+</div>
+</div>
+
+<!-- EDITING -->
+<div class="faq-section" id="editing">
+<p class="faq-section-tag">Managing your profile</p>
+<h2 class="faq-section-title">Editing your profile</h2>
+<div class="faq-item open">
+<div class="faq-q" onclick="toggleFaq(this)">How do I update my profile with a new job or resume?</div>
+<div class="faq-a">Email us at <strong>hello@menoslabs.com</strong> with:<br><br>
+• Your Ask profile URL<br>
+• Your updated resume (paste as text for best results)<br>
+• Any specific changes you'd like made<br><br>
+We'll regenerate your profile and send you a confirmation. Your URL stays the same — nothing breaks for anyone who has your link.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Can I change my profile theme?</div>
+<div class="faq-a">Yes — just email us at <strong>hello@menoslabs.com</strong> with your profile URL and the theme you'd like (Classic, Dark, Bold, or Soft). We'll update it within 24 hours.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Can I change my username?</div>
+<div class="faq-a">Your username is permanent and tied to your profile. If you need a different username (e.g. after a name change or rebrand), email us at <strong>hello@menoslabs.com</strong> and we'll create a new one and set up a redirect from your old URL so nothing breaks for people who already have your link.</div>
+</div>
+</div>
+
+<!-- BILLING -->
+<div class="faq-section" id="billing">
+<p class="faq-section-tag">Payments</p>
+<h2 class="faq-section-title">Billing & refunds</h2>
+<div class="faq-item open">
+<div class="faq-q" onclick="toggleFaq(this)">Is this really a one-time payment?</div>
+<div class="faq-a">Yes. $9.99 once, yours forever. No subscriptions, no renewals, no hidden fees. We believe in simple pricing.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">What is your refund policy?</div>
+<div class="faq-a">We offer a full refund within 7 days of purchase, no questions asked. Just email <strong>hello@menoslabs.com</strong> with your purchase details and we'll process it within 24 hours.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">What payment methods do you accept?</div>
+<div class="faq-a">We accept all major credit and debit cards (Visa, Mastercard, Amex, Discover) through Stripe. We do not store your card details.</div>
+</div>
+</div>
+</div>
+
+<!-- CONTACT -->
 <div class="contact-section">
-  <div class="contact-inner">
-    <p class="contact-tag">Still need help?</p>
-    <h2 class="contact-title">Get in touch.</h2>
-    <p class="contact-sub">Can't find what you're looking for? Send us a message and we'll get back to you within 24 hours.</p>
-    <form class="contact-form" onsubmit="submitContact(event)">
-      <input class="contact-input" type="text" id="cName" placeholder="Your name" required>
-      <input class="contact-input" type="email" id="cEmail" placeholder="Your email" required>
-      <input class="contact-input" type="text" id="cSubject" placeholder="Subject (e.g. Update my profile)">
-      <textarea class="contact-input" id="cMessage" placeholder="How can we help?" required></textarea>
-      <button type="submit" class="contact-btn" id="contactBtn">Send Message</button>
-      <div class="contact-success" id="contactSuccess">Message sent — we'll be in touch within 24 hours.</div>
-    </form>
-  </div>
+<div class="contact-inner">
+<p class="contact-tag">Still need help?</p>
+<h2 class="contact-title">Get in touch.</h2>
+<p class="contact-sub">Can't find what you're looking for? Send us a message and we'll get back to you within 24 hours.</p>
+<form class="contact-form" onsubmit="submitContact(event)">
+<input class="contact-input" type="text" id="cName" placeholder="Your name" required>
+<input class="contact-input" type="email" id="cEmail" placeholder="Your email" required>
+<input class="contact-input" type="text" id="cSubject" placeholder="Subject (e.g. Update my profile)">
+<textarea class="contact-input" id="cMessage" placeholder="How can we help?" required></textarea>
+<button type="submit" class="contact-btn" id="contactBtn">Send Message</button>
+<div class="contact-success" id="contactSuccess">Message sent — we'll be in touch within 24 hours.</div>
+</form>
+</div>
 </div>
 
-<!-- GDPR Banner -->
 <div id="gdpr-banner">
-  <div class="gdpr-text">We use cookies to understand how visitors use our site.</div>
-  <div class="gdpr-btns">
-    <button class="gdpr-decline" onclick="gdprDecline()">Decline</button>
-    <button class="gdpr-accept" onclick="gdprAccept()">Accept</button>
-  </div>
+<div class="gdpr-text">We use cookies to understand how visitors use our site.</div>
+<div class="gdpr-btns">
+<button class="gdpr-decline" onclick="gdprDecline()">Decline</button>
+<button class="gdpr-accept" onclick="gdprAccept()">Accept</button>
 </div>
+</div>
+
 <footer>
-  <a href="/" class="footer-logo">Ask<span>.</span></a>
-  <div class="footer-copy">Powered by Menos Labs · menoslabs.com · hello@menoslabs.com</div>
+<a href="/" class="footer-logo">Ask<span>.</span></a>
+<div class="footer-copy">Powered by Menos Labs · menoslabs.com · hello@menoslabs.com</div>
 </footer>
 
 <script>
-function toggleFaq(el){
-  const item = el.parentElement;
-  item.classList.toggle('open');
-}
+function toggleFaq(el){ el.parentElement.classList.toggle('open'); }
 
 function switchPlatform(name, btn){
   document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
@@ -417,7 +363,13 @@ async function submitContact(e){
   document.getElementById('contactSuccess').style.display='block';
 }
 
-// GDPR
+// Replace YOUR-USERNAME with actual slug if passed in URL
+const urlSlug = new URLSearchParams(window.location.search).get('slug');
+if(urlSlug){
+  document.querySelectorAll('.code-block').forEach(el=>{
+    el.textContent = el.textContent.replace(/YOUR-USERNAME/g, urlSlug);
+  });
+}
 
 function gdprInit(){
   const c=localStorage.getItem('gdpr_consent');
@@ -427,16 +379,6 @@ function gdprInit(){
 function gdprAccept(){localStorage.setItem('gdpr_consent','accepted');const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
 function gdprDecline(){localStorage.setItem('gdpr_consent','declined');window['ga-disable-G-Y6Y16FEG2H']=true;const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
 gdprInit();
-// Show real slug if passed in URL
-const urlSlug = new URLSearchParams(window.location.search).get('slug');
-if(urlSlug){
-  const el = document.getElementById('faq-slug-example');
-  if(el) el.textContent = 'ask.menoslabs.com/' + urlSlug;
-  // Also update embed codes
-  document.querySelectorAll('.code-block, .faq-modal-code').forEach(el=>{
-    el.textContent = el.textContent.replace('YOUR-SLUG', urlSlug);
-  });
-}
 </script>
 </body>
 </html>
