@@ -754,4 +754,17 @@ function switchFaqTab(name,btn){
 
 function gdprInit(){
   const c=localStorage.getItem('gdpr_consent');
-  if(!c) setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.
+  if(!c) setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},800);
+}
+function gdprAccept(){
+  localStorage.setItem('gdpr_consent','accepted');
+  const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');
+}
+function gdprDecline(){
+  localStorage.setItem('gdpr_consent','declined');
+  const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');
+}
+gdprInit();
+</script>
+</body>
+</html>
