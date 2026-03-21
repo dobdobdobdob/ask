@@ -160,6 +160,9 @@ window.addEventListener('load', async () => {
 
   const data = JSON.parse(raw);
 
+  // Pass the chosen username as the slug
+  if(data.chosenUsername) data.requestedSlug = data.chosenUsername;
+
   // Only use sessionStorage avatar if present; otherwise keep whatever is already in data.avatar
   const savedAvatar = sessionStorage.getItem('ask_avatar');
   if(savedAvatar && savedAvatar.length < 100000) {
