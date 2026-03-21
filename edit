@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Your Assistant — Ask</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text1);min-height:100vh;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
+.nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
+.nav-back{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
+.nav-back:hover{color:var(--text1);}
+.page{max-width:620px;margin:0 auto;padding:7rem 2rem 4rem;}
+.page-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
+.page-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem;}
+.page-sub{font-size:0.9rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:2.5rem;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2.5rem;}
+.step{display:none;}
+.step.active{display:block;}
+.flabel{font-size:0.62rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:0.4rem;}
+.finput{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:300;background:var(--off-white);border:1px solid var(--border);color:var(--text1);padding:0.7rem 1rem;outline:none;transition:border-color 0.2s;border-radius:2px;width:100%;}
+.finput:focus{border-color:var(--accent-dark);}
+.finput::placeholder{color:var(--text3);}
+textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
+.field{margin-bottom:1rem;}
+.fields-2{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;}
+.btn{background:var(--black);color:var(--white);padding:0.9rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;width:100%;margin-top:0.5rem;transition:all 0.2s;display:block;text-align:center;}
+.btn:hover{background:var(--accent);color:var(--black);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-secondary{background:none;color:var(--text3);border:1px solid var(--border);padding:0.7rem;font-size:0.78rem;font-weight:400;letter-spacing:0.05em;border-radius:2px;cursor:pointer;width:100%;margin-top:0.5rem;transition:all 0.2s;}
+.btn-secondary:hover{color:var(--text1);border-color:var(--text2);}
+.status{font-size:0.78rem;margin-top:0.5rem;min-height:1.2em;}
+.status.ok{color:var(--accent-dark);}
+.status.err{color:#e05c5c;}
+.profile-confirm{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:1rem;margin:1rem 0;}
+.profile-confirm-name{font-weight:500;font-size:0.95rem;margin-bottom:0.2rem;}
+.profile-confirm-meta{font-size:0.78rem;color:var(--text3);}
+.code-input{font-family:'DM Sans',monospace;font-size:1.5rem;font-weight:500;letter-spacing:0.4em;text-align:center;text-transform:uppercase;}
+.masked-email{font-size:0.82rem;color:var(--text2);margin:0.75rem 0;font-weight:300;}
+.form-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.socials-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;}
+.social-field{display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.6rem 0.9rem;transition:border-color 0.2s;}
+.social-field:focus-within{border-color:var(--accent-dark);}
+.social-icon{font-size:0.85rem;flex-shrink:0;width:18px;text-align:center;color:var(--text3);}
+.social-input{flex:1;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:300;background:none;border:none;color:var(--text1);outline:none;}
+.social-input::placeholder{color:var(--text3);}
+.avatar-row{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;}
+.avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:0.4rem;}
+.avatar-circle{width:72px;height:72px;border-radius:50%;border:1px solid var(--border);background:var(--off-white);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;transition:border-color 0.2s;}
+.avatar-circle:hover{border-color:var(--accent-dark);}
+.avatar-circle img{width:100%;height:100%;object-fit:cover;}
+.avatar-initials{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text3);}
+.avatar-hint{font-size:0.62rem;color:var(--text3);letter-spacing:0.08em;}
+.avatar-name-col{flex:1;display:flex;flex-direction:column;gap:0.75rem;}
+.processing{display:none;text-align:center;padding:2rem 0;}
+.proc-dots{display:flex;gap:6px;justify-content:center;margin-bottom:1rem;}
+.proc-dot{width:8px;height:8px;background:var(--accent-dark);border-radius:50%;animation:dotPulse 1.4s ease-in-out infinite;}
+.proc-dot:nth-child(2){animation-delay:0.2s;}
+.proc-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
+.proc-text{font-size:0.82rem;color:var(--text2);letter-spacing:0.05em;}
+.edit-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(138,179,0,0.1);border:1px solid rgba(138,179,0,0.3);border-radius:2px;padding:0.4rem 0.85rem;font-size:0.72rem;color:var(--accent-dark);font-weight:500;letter-spacing:0.05em;margin-bottom:1.5rem;}
+#avatarInput{display:none;}
+@media(max-width:640px){nav{padding:1.25rem 1.5rem;}.card{padding:1.75rem;}.fields-2,.socials-grid{grid-template-columns:1fr;}}
+#gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:#111;border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
+#gdpr-banner.show{transform:translateY(0);}
+.gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
+.gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
+.gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:#CCFF00;color:#000;border:none;border-radius:2px;cursor:pointer;}
+.gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-Y6Y16FEG2H');</script>
+</head>
+<body>
+<input type="file" id="avatarInput" accept="image/*">
+
+<nav>
+  <a href="/" class="nav-logo">Ask<span>.</span></a>
+  <a href="/" class="nav-back">← Back</a>
+</nav>
+
+<div class="page">
+  <p class="page-eyebrow">Edit Profile</p>
+  <h1 class="page-title">Update your assistant.</h1>
+  <p class="page-sub">Enter your username, verify your identity, and update your profile.</p>
+
+  <div class="card">
+
+    <!-- STEP 1: Enter username -->
+    <div class="step active" id="step1">
+      <p class="form-section-title">Step 1 — Your Username</p>
+      <div class="field">
+        <label class="flabel">Username</label>
+        <input class="finput" id="iSlug" type="text" placeholder="janesmith" oninput="onSlugInput()">
+        <div class="status" id="slugStatus"></div>
+      </div>
+      <div id="profileConfirm" style="display:none">
+        <div class="profile-confirm">
+          <div class="profile-confirm-name" id="confirmName"></div>
+          <div class="profile-confirm-meta" id="confirmMeta"></div>
+        </div>
+      </div>
+      <button class="btn" id="btnStep1" onclick="checkProfile()" disabled>Look Up My Profile →</button>
+    </div>
+
+    <!-- STEP 2: Request code -->
+    <div class="step" id="step2">
+      <p class="form-section-title">Step 2 — Verify Your Identity</p>
+      <p style="font-size:0.88rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:1rem;">We'll send a 6-digit verification code to the email address on your account.</p>
+      <div class="masked-email" id="maskedEmailDisplay"></div>
+      <button class="btn" id="btnRequestCode" onclick="requestCode()">Send Verification Code →</button>
+      <div class="status" id="codeRequestStatus"></div>
+      <button class="btn-secondary" onclick="goToStep(1)">← Use a different username</button>
+    </div>
+
+    <!-- STEP 3: Enter code -->
+    <div class="step" id="step3">
+      <p class="form-section-title">Step 3 — Enter Your Code</p>
+      <div class="masked-email" id="maskedEmailDisplay2"></div>
+      <div class="field" style="margin-top:1rem;">
+        <label class="flabel">Verification Code</label>
+        <input class="finput code-input" id="iCode" type="text" maxlength="6" placeholder="ABC123" oninput="onCodeInput()">
+        <div class="status" id="codeStatus"></div>
+      </div>
+      <button class="btn" id="btnVerify" onclick="verifyCode()" disabled>Verify & Edit Profile →</button>
+      <button class="btn-secondary" onclick="requestCode()">Resend code</button>
+    </div>
+
+    <!-- STEP 4: Edit form -->
+    <div class="step" id="step4">
+      <div class="edit-badge">✎ Editing ask.menoslabs.com/<span id="editSlugBadge"></span></div>
+
+      <p class="form-section-title">Profile</p>
+      <div class="avatar-row">
+        <div class="avatar-wrap">
+          <div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()">
+            <div class="avatar-initials" id="avatarInitials">?</div>
+          </div>
+          <div class="avatar-hint">Upload photo</div>
+        </div>
+        <div class="avatar-name-col">
+          <div class="field" style="margin-bottom:0">
+            <label class="flabel">Full Name *</label>
+            <input class="finput" id="iName" type="text" placeholder="Jane Smith" oninput="updateInitials()">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label class="flabel">Title / Role</label>
+            <input class="finput" id="iTitle" type="text" placeholder="Senior Product Manager">
+          </div>
+        </div>
+      </div>
+
+      <div class="fields-2">
+        <div class="field" style="margin-bottom:0">
+          <label class="flabel">City</label>
+          <input class="finput" id="iCity" type="text" placeholder="Chicago, IL">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label class="flabel">Email</label>
+          <input class="finput" id="iEmail" type="email" placeholder="jane@example.com">
+        </div>
+      </div>
+
+      <p class="form-section-title" style="margin-top:1.5rem;">Social Links</p>
+      <div class="socials-grid">
+        <div class="social-field"><span class="social-icon">in</span><input class="social-input" id="sLinkedIn" placeholder="LinkedIn URL"></div>
+        <div class="social-field"><span class="social-icon">⌂</span><input class="social-input" id="sPortfolio" placeholder="Portfolio URL"></div>
+        <div class="social-field"><span class="social-icon">gh</span><input class="social-input" id="sGithub" placeholder="GitHub URL"></div>
+        <div class="social-field"><span class="social-icon">𝕏</span><input class="social-input" id="sTwitter" placeholder="X / Twitter URL"></div>
+        <div class="social-field"><span class="social-icon">▶</span><input class="social-input" id="sTiktok" placeholder="TikTok URL"></div>
+        <div class="social-field"><span class="social-icon">◻</span><input class="social-input" id="sInstagram" placeholder="Instagram URL"></div>
+      </div>
+
+      <p class="form-section-title" style="margin-top:1.5rem;">Resume *</p>
+      <div class="field">
+        <textarea class="finput" id="iResume" placeholder="Paste your updated resume text — work experience, skills, education, achievements..."></textarea>
+      </div>
+
+      <div id="editActions">
+        <button class="btn" onclick="generateEdit()">Regenerate My Assistant →</button>
+      </div>
+      <div class="processing" id="processing">
+        <div class="proc-dots"><div class="proc-dot"></div><div class="proc-dot"></div><div class="proc-dot"></div></div>
+        <div class="proc-text" id="procText">Reading your resume...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="gdpr-banner">
+  <div class="gdpr-text">We use cookies to understand how visitors use our site.</div>
+  <div class="gdpr-btns">
+    <button class="gdpr-decline" onclick="gdprDecline()">Decline</button>
+    <button class="gdpr-accept" onclick="gdprAccept()">Accept</button>
+  </div>
+</div>
+
+<script>
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
+const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
+let currentSlug = '';
+let maskedEmail = '';
+let avatarDataUrl = null;
+
+// Pre-fill slug from URL param if present
+window.addEventListener('load', () => {
+  const urlSlug = new URLSearchParams(window.location.search).get('slug');
+  if(urlSlug){
+    document.getElementById('iSlug').value = urlSlug;
+    onSlugInput();
+    checkProfile();
+  }
+  gdprInit();
+});
+
+function onSlugInput(){
+  const val = document.getElementById('iSlug').value.trim().toLowerCase();
+  document.getElementById('btnStep1').disabled = val.length < 3;
+  document.getElementById('slugStatus').textContent = '';
+  document.getElementById('profileConfirm').style.display = 'none';
+}
+
+async function checkProfile(){
+  const slug = document.getElementById('iSlug').value.trim().toLowerCase();
+  if(!slug || slug.length < 3) return;
+  const status = document.getElementById('slugStatus');
+  status.textContent = 'Looking up profile...';
+  status.className = 'status';
+  try {
+    const res = await fetch(`${ASK_SERVER}/${slug}`);
+    if(res.status === 404){
+      status.textContent = '✗ No profile found for "' + slug + '". Check your username and try again.';
+      status.className = 'status err';
+      document.getElementById('profileConfirm').style.display = 'none';
+      return;
+    }
+    const profile = await res.json();
+    currentSlug = slug;
+    status.textContent = '';
+    document.getElementById('confirmName').textContent = profile.name || slug;
+    document.getElementById('confirmMeta').textContent = [profile.title, profile.city].filter(Boolean).join(' · ') || 'ask.menoslabs.com/' + slug;
+    document.getElementById('profileConfirm').style.display = 'block';
+
+    // Auto-advance to step 2
+    setTimeout(() => goToStep(2), 600);
+  } catch(e){
+    status.textContent = 'Connection error — please try again.';
+    status.className = 'status err';
+  }
+}
+
+async function requestCode(){
+  const btn = document.getElementById('btnRequestCode');
+  const status = document.getElementById('codeRequestStatus');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  status.textContent = '';
+  try {
+    const res = await fetch(`${ASK_SERVER}/request-code`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({slug: currentSlug})
+    });
+    const data = await res.json();
+    if(!res.ok){
+      status.textContent = '✗ ' + (data.error || 'Failed to send code.');
+      status.className = 'status err';
+      btn.disabled = false;
+      btn.textContent = 'Send Verification Code →';
+      return;
+    }
+    maskedEmail = data.maskedEmail || '';
+    document.getElementById('maskedEmailDisplay2').textContent = 'Code sent to ' + maskedEmail;
+    goToStep(3);
+  } catch(e){
+    status.textContent = 'Connection error — please try again.';
+    status.className = 'status err';
+    btn.disabled = false;
+    btn.textContent = 'Send Verification Code →';
+  }
+}
+
+function onCodeInput(){
+  const val = document.getElementById('iCode').value.trim();
+  document.getElementById('btnVerify').disabled = val.length < 6;
+}
+
+async function verifyCode(){
+  const code = document.getElementById('iCode').value.trim().toUpperCase();
+  const status = document.getElementById('codeStatus');
+  const btn = document.getElementById('btnVerify');
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+  status.textContent = '';
+  try {
+    const res = await fetch(`${ASK_SERVER}/verify-code`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({slug: currentSlug, code})
+    });
+    const data = await res.json();
+    if(!res.ok){
+      status.textContent = '✗ ' + (data.error || 'Invalid code.');
+      status.className = 'status err';
+      btn.disabled = false;
+      btn.textContent = 'Verify & Edit Profile →';
+      return;
+    }
+    // Pre-fill the edit form with existing profile data
+    prefillForm(data.profile);
+    goToStep(4);
+  } catch(e){
+    status.textContent = 'Connection error — please try again.';
+    status.className = 'status err';
+    btn.disabled = false;
+    btn.textContent = 'Verify & Edit Profile →';
+  }
+}
+
+function prefillForm(p){
+  document.getElementById('iName').value = p.name || '';
+  document.getElementById('iTitle').value = p.title || '';
+  document.getElementById('iCity').value = p.city || '';
+  document.getElementById('iEmail').value = p.email || '';
+  document.getElementById('iResume').value = p.resume || '';
+  document.getElementById('sLinkedIn').value = p.socials?.linkedin || '';
+  document.getElementById('sPortfolio').value = p.socials?.portfolio || '';
+  document.getElementById('sGithub').value = p.socials?.github || '';
+  document.getElementById('sTwitter').value = p.socials?.twitter || '';
+  document.getElementById('sTiktok').value = p.socials?.tiktok || '';
+  document.getElementById('sInstagram').value = p.socials?.instagram || '';
+  document.getElementById('editSlugBadge').textContent = currentSlug;
+
+  if(p.avatar){
+    avatarDataUrl = p.avatar;
+    document.getElementById('avatarCircle').innerHTML = `<img src="${p.avatar}" alt="avatar">`;
+  } else {
+    updateInitials();
+  }
+}
+
+function goToStep(n){
+  document.querySelectorAll('.step').forEach((s,i) => s.classList.toggle('active', i+1 === n));
+  if(n === 2){
+    const confirmName = document.getElementById('confirmName').textContent;
+    document.getElementById('maskedEmailDisplay').textContent = 'We\'ll send a code to the email on file for ' + confirmName + '.';
+    document.getElementById('btnRequestCode').disabled = false;
+    document.getElementById('btnRequestCode').textContent = 'Send Verification Code →';
+  }
+}
+
+// Avatar upload with compression
+document.getElementById('avatarInput').addEventListener('change', function(){
+  const file = this.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200; canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width - size) / 2;
+      const sy = (img.height - size) / 2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
+      avatarDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      document.getElementById('avatarCircle').innerHTML = `<img src="${avatarDataUrl}" alt="avatar">`;
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(file);
+});
+
+function updateInitials(){
+  const n = document.getElementById('iName').value.trim();
+  const p = n.split(' ').filter(Boolean);
+  const i = p.length>=2 ? p[0][0]+p[p.length-1][0] : p[0]?.[0]||'?';
+  document.getElementById('avatarInitials').textContent = i.toUpperCase();
+}
+
+async function generateEdit(){
+  const name = document.getElementById('iName').value.trim().replace(/[^a-zA-Z0-9\s\-]/g, '').trim();
+  const title = document.getElementById('iTitle').value.trim();
+  const city = document.getElementById('iCity').value.trim();
+  const email = document.getElementById('iEmail').value.trim();
+  const rawResume = document.getElementById('iResume').value.trim();
+  const resume = rawResume
+    .replace(/\+?[\d][\d\s\-().]{7,}[\d]/g, '[phone removed]')
+    .replace(/\d+\s+[A-Za-z0-9\s,\.]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Way|Place|Pl|Circle|Cir|Trail|Tr|Parkway|Pkwy|Highway|Hwy)[^\n]*/gi, '[address removed]')
+    .replace(/\b[A-Za-z\s]+,\s*[A-Z]{2}\s+\d{5}(?:-\d{4})?\b/g, '[address removed]')
+    .trim();
+
+  if(!name){ alert('Please enter your name.'); return; }
+  if(!resume){ alert('Please paste your resume text above.'); return; }
+  if(resume.length < 100){ alert('Resume content seems too short. Please paste your full resume text for best results.'); return; }
+
+  const socials = {
+    linkedin: document.getElementById('sLinkedIn').value.trim(),
+    portfolio: document.getElementById('sPortfolio').value.trim(),
+    github: document.getElementById('sGithub').value.trim(),
+    twitter: document.getElementById('sTwitter').value.trim(),
+    tiktok: document.getElementById('sTiktok').value.trim(),
+    instagram: document.getElementById('sInstagram').value.trim(),
+  };
+
+  document.getElementById('editActions').style.display='none';
+  document.getElementById('processing').style.display='block';
+
+  const texts = ['Reading your resume...','Extracting experience...','Building your assistant...','Almost ready...'];
+  let gi=0;
+  const iv = setInterval(()=>{ gi=(gi+1)%texts.length; document.getElementById('procText').textContent=texts[gi]; }, 1800);
+
+  try {
+    const res = await fetch(WORKER, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:8000,
+        messages:[{role:'user', content:
+`You are parsing a resume. CRITICAL RULES:
+- Only use information explicitly stated in the resume text below
+- Do NOT invent, assume, or hallucinate any companies, roles, dates, or achievements
+- If the resume text looks garbled or unreadable, return an error field instead
+- Only include companies and roles that are clearly named in the text
+- Do NOT include any physical addresses or phone numbers in any field
+
+Resume for ${name}:
+---
+${resume}
+---
+
+Respond with ONLY a valid JSON object (no markdown, no backticks):
+{
+  "bio": "2-3 sentence bio using ONLY facts from the resume above. Third person.",
+  "experience": [
+    {
+      "company": "EXACT company name from resume only",
+      "role": "EXACT job title from resume only",
+      "dates": "dates as written in resume",
+      "location": "city and state only, no street addresses",
+      "bullets": ["achievement or responsibility exactly as described in resume"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "EXACT school name from resume only",
+      "degree": "degree and field as written in resume",
+      "dates": "dates as written in resume",
+      "location": "city and state only if mentioned"
+    }
+  ],
+  "skills": ["only skills explicitly mentioned in the resume"],
+  "systemPrompt": "You are a professional AI assistant for ${name}. Only discuss what is in their resume. If asked about something not in their background, say you don't have that information. Background from resume: [paste all key facts from the resume here]"
+}`
+        }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '{}';
+    let parsed;
+    try { parsed = JSON.parse(raw); }
+    catch(e){ const m=raw.match(/\{[\s\S]*\}/); parsed=m?JSON.parse(m[0]):{bio:'',experience:[],education:[],skills:[],systemPrompt:`You are an AI assistant for ${name}.`}; }
+
+    clearInterval(iv);
+
+    const profileData = {
+      name, title, city, email, socials,
+      bio: parsed.bio,
+      experience: parsed.experience||[],
+      education: parsed.education||[],
+      skills: parsed.skills||[],
+      systemPrompt: parsed.systemPrompt,
+      avatar: avatarDataUrl,
+      resume,
+      isEdit: true,
+      editSlug: currentSlug
+    };
+
+    sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
+    if(avatarDataUrl) sessionStorage.setItem('ask_avatar', avatarDataUrl);
+    window.location.href = '/preview.html';
+
+  } catch(err){
+    clearInterval(iv);
+    document.getElementById('procText').textContent = 'Error: ' + err.message + ' — Please try again.';
+    document.getElementById('editActions').style.display='block';
+    document.getElementById('processing').style.display='none';
+  }
+}
+
+function gdprInit(){
+  const c=localStorage.getItem('gdpr_consent');
+  if(!c) setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},1500);
+  if(c==='declined') window['ga-disable-G-Y6Y16FEG2H']=true;
+}
+function gdprAccept(){localStorage.setItem('gdpr_consent','accepted');const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
+function gdprDecline(){localStorage.setItem('gdpr_consent','declined');window['ga-disable-G-Y6Y16FEG2H']=true;const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
+</script>
+</body>
+</html>
