@@ -440,10 +440,16 @@ gtag('config', 'G-96XWYGNS49');
 </div>
 </div>
 
-<!-- PURCHASE BANNER -->
-<div class="purchase-banner">
+<!-- PURCHASE BANNER (hidden in edit mode) -->
+<div class="purchase-banner" id="purchaseBanner">
 <div class="banner-text"><strong>Looking good?</strong> Unlock your permanent page for $9.99.</div>
 <button class="btn-buy" onclick="showPurchaseModal()">Unlock — $9.99 →</button>
+</div>
+
+<!-- EDIT SAVE BANNER (shown in edit mode) -->
+<div class="purchase-banner" id="editBanner" style="display:none;">
+<div class="banner-text"><strong>Looks good?</strong> Save your updated profile.</div>
+<button class="btn-buy" onclick="saveEdit()">Save Changes →</button>
 </div>
 
 <!-- CHAT TOGGLE -->
@@ -497,12 +503,26 @@ gtag('config', 'G-96XWYGNS49');
 <script>
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 const STRIPE_URL = 'https://buy.stripe.com/test_cNi28teANdLOgzgb75dby00';
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 let systemPrompt='', chatHistory=[], chatLoading=false, chatOpen=false, avatarDataUrl=null;
+let isEditMode = false, editSlug = '';
 
 window.addEventListener('load', () => {
   const raw = sessionStorage.getItem('ask_draft');
   if(!raw){ window.location.href='/create'; return; }
   const d = JSON.parse(raw);
+
+  isEditMode = !!d.isEdit;
+  editSlug = d.editSlug || '';
+
+  // Show correct banner
+  if(isEditMode){
+    document.getElementById('purchaseBanner').style.display = 'none';
+    document.getElementById('editBanner').style.display = 'flex';
+    document.getElementById('purchaseModal').style.display = 'none';
+    document.querySelector('.nav-badge').textContent = 'Edit Mode';
+    // Disable idle timer purchase modal in edit mode
+  }
 
   if(d.theme && d.theme !== 'classic'){
     document.documentElement.className = d.theme;
@@ -594,7 +614,7 @@ window.addEventListener('load', () => {
   } else { document.getElementById('skillsSection').style.display='none'; }
 
   addMessage('assistant',`Hi! I'm ${d.name}'s AI assistant. Try asking me anything about their background — this is a live preview!`);
-  resetIdleTimer();
+  if(!isEditMode) resetIdleTimer();
 });
 
 let idleTimer = null;
@@ -631,6 +651,40 @@ function handlePurchase(){
   const raw = sessionStorage.getItem('ask_draft');
   if(raw) localStorage.setItem('ask_purchase_data', raw);
   window.location.href = STRIPE_URL;
+}
+
+async function saveEdit(){
+  if(!editSlug){ alert('No profile slug found.'); return; }
+  saveEdits();
+  const raw = sessionStorage.getItem('ask_draft');
+  if(!raw){ alert('No profile data found.'); return; }
+  const d = JSON.parse(raw);
+
+  const btn = document.querySelector('#editBanner .btn-buy');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(ASK_SERVER + '/update', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({slug: editSlug, data: d})
+    });
+    const result = await res.json();
+    if(result.ok){
+      sessionStorage.removeItem('ask_draft');
+      sessionStorage.removeItem('ask_avatar');
+      window.location.href = 'https://ask.menoslabs.com/' + editSlug;
+    } else {
+      btn.textContent = 'Save Changes →';
+      btn.disabled = false;
+      alert('Save failed: ' + (result.error || 'Unknown error'));
+    }
+  } catch(e){
+    btn.textContent = 'Save Changes →';
+    btn.disabled = false;
+    alert('Connection error — please try again.');
+  }
 }
 
 function toggleChat(){

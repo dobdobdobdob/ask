@@ -284,6 +284,7 @@ gtag('config', 'G-96XWYGNS49');
 <footer>
 <a href="/" class="footer-logo">Ask<span>.</span></a>
 <div class="footer-copy">Powered by Menos Labs · menoslabs.com</div>
+<a id="editProfileLink" href="/edit" style="font-size:0.65rem;color:rgba(255,255,255,0.2);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">Edit my profile</a>
 </footer>
 
 <script>
@@ -358,6 +359,9 @@ window.addEventListener('load',async()=>{
     document.getElementById('profileHero').style.display='block';
     document.getElementById('mainContent').style.display='block';
     const toggle=document.getElementById('chat-toggle');toggle.style.display='flex';
+    // Update edit link with current slug
+    const editLink = document.getElementById('editProfileLink');
+    if(editLink) editLink.href = '/edit?slug=' + slug;
     addMsg('assistant',`Hi! I'm ${d.name}'s AI assistant. Ask me anything about their background, experience, or skills.`);
 
   }catch(e){document.getElementById('notFound').style.display='block';}
