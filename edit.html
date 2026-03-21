@@ -130,7 +130,8 @@ textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
         <div class="status" id="codeStatus"></div>
       </div>
       <button class="btn" id="btnVerify" onclick="verifyCode()" disabled>Verify & Edit Profile →</button>
-      <button class="btn-secondary" onclick="requestCode()">Resend code</button>
+      <button class="btn-secondary" id="btnResend" onclick="requestCode()">Resend code</button>
+      <div class="status" id="resendStatus"></div>
     </div>
 
     <!-- STEP 4: Edit form -->
@@ -258,11 +259,15 @@ async function checkProfile(){
 }
 
 async function requestCode(){
-  const btn = document.getElementById('btnRequestCode');
-  const status = document.getElementById('codeRequestStatus');
+  // Works from both step 2 (Send button) and step 3 (Resend button)
+  const isResend = document.getElementById('step3').classList.contains('active');
+  const btn = isResend ? document.getElementById('btnResend') : document.getElementById('btnRequestCode');
+  const status = isResend ? document.getElementById('resendStatus') : document.getElementById('codeRequestStatus');
+
   btn.disabled = true;
   btn.textContent = 'Sending...';
-  status.textContent = '';
+  if(status) { status.textContent = ''; status.className = 'status'; }
+
   try {
     const res = await fetch(`${ASK_SERVER}/request-code`, {
       method: 'POST',
@@ -271,20 +276,28 @@ async function requestCode(){
     });
     const data = await res.json();
     if(!res.ok){
-      status.textContent = '✗ ' + (data.error || 'Failed to send code.');
-      status.className = 'status err';
+      if(status){ status.textContent = '✗ ' + (data.error || 'Failed to send code.'); status.className = 'status err'; }
       btn.disabled = false;
-      btn.textContent = 'Send Verification Code →';
+      btn.textContent = isResend ? 'Resend code' : 'Send Verification Code →';
       return;
     }
     maskedEmail = data.maskedEmail || '';
-    document.getElementById('maskedEmailDisplay2').textContent = 'Code sent to ' + maskedEmail;
-    goToStep(3);
+    if(isResend){
+      // Already on step 3 — just show confirmation
+      if(status){ status.textContent = '✓ New code sent to ' + maskedEmail; status.className = 'status ok'; }
+      btn.disabled = false;
+      btn.textContent = 'Resend code';
+      // Clear the code input for the new code
+      document.getElementById('iCode').value = '';
+      document.getElementById('btnVerify').disabled = true;
+    } else {
+      document.getElementById('maskedEmailDisplay2').textContent = 'Code sent to ' + maskedEmail;
+      goToStep(3);
+    }
   } catch(e){
-    status.textContent = 'Connection error — please try again.';
-    status.className = 'status err';
+    if(status){ status.textContent = 'Connection error — please try again.'; status.className = 'status err'; }
     btn.disabled = false;
-    btn.textContent = 'Send Verification Code →';
+    btn.textContent = isResend ? 'Resend code' : 'Send Verification Code →';
   }
 }
 
