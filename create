@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T21:10:41.290541 -->
+<!-- v2026-03-19T12:19:09.646424 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -80,6 +80,19 @@
     @keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
     .proc-text{font-size:0.82rem;color:var(--text2);letter-spacing:0.05em;}
 
+    /* USERNAME */
+    .username-wrap{position:relative;}
+    .url-preview{font-size:0.78rem;color:var(--text2);margin-top:0.4rem;font-weight:300;}
+    .url-preview strong{color:var(--text1);font-weight:500;}
+    .username-status{font-size:0.72rem;margin-top:0.4rem;min-height:1.2em;}
+    .username-status.checking{color:var(--text3);}
+    .username-status.available{color:var(--accent-dark);}
+    .username-status.taken{color:#e05c5c;}
+    .username-suggestions{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;}
+    .username-sugg{font-size:0.75rem;padding:0.3rem 0.8rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;cursor:pointer;color:var(--text2);transition:all 0.2s;}
+    .username-sugg:hover{border-color:var(--accent-dark);color:var(--text1);}
+    .username-sugg.selected{border-color:var(--accent-dark);background:rgba(138,179,0,0.08);color:var(--text1);}
+
     #fileInput,#avatarInput{display:none;}
     .theme-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
     .theme-card{border:1px solid var(--border);border-radius:4px;padding:0.75rem;cursor:pointer;transition:all 0.2s;}
@@ -154,66 +167,7 @@
       .form-card{padding:1.75rem;}
       .fields-2,.socials-grid{grid-template-columns:1fr;}
     }
-  
-    /* FAQ Modal */
-    #faqModal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:none;align-items:flex-start;justify-content:center;backdrop-filter:blur(6px);padding:5rem 1.5rem 2rem;overflow-y:auto;}
-    #faqModal.show{display:flex;}
-    .faq-modal-card{background:var(--white);border:1px solid var(--border);border-radius:4px;width:100%;max-width:680px;position:relative;margin:auto;}
-    .faq-modal-header{padding:1.5rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1;border-radius:4px 4px 0 0;}
-    .faq-modal-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;letter-spacing:-0.02em;}
-    .faq-modal-close{background:none;border:none;font-size:1.2rem;color:var(--text3);cursor:pointer;transition:color 0.2s;line-height:1;}
-    .faq-modal-close:hover{color:var(--text1);}
-    .faq-modal-body{padding:2rem;}
-    .faq-modal-section{margin-bottom:2rem;}
-    .faq-modal-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
-    .faq-modal-item{margin-bottom:1rem;}
-    .faq-modal-q{font-size:0.88rem;font-weight:500;color:var(--text1);margin-bottom:0.3rem;cursor:pointer;display:flex;justify-content:space-between;gap:1rem;}
-    .faq-modal-q::after{content:'+';color:var(--text3);flex-shrink:0;transition:transform 0.2s;}
-    .faq-modal-item.open .faq-modal-q::after{transform:rotate(45deg);}
-    .faq-modal-a{font-size:0.82rem;color:var(--text2);line-height:1.75;font-weight:300;display:none;padding-top:0.35rem;}
-    .faq-modal-item.open .faq-modal-a{display:block;}
-    .faq-modal-code{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.75rem;font-family:monospace;font-size:0.72rem;color:var(--text1);word-break:break-all;line-height:1.5;margin:0.5rem 0;white-space:pre-wrap;}
-    .faq-modal-steps{display:flex;flex-direction:column;gap:0.5rem;margin:0.5rem 0;}
-    .faq-modal-step{display:flex;gap:0.75rem;align-items:flex-start;}
-    .faq-modal-step-num{width:20px;height:20px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:var(--white);flex-shrink:0;margin-top:1px;}
-    .faq-modal-step-text{font-size:0.82rem;color:var(--text2);line-height:1.6;font-weight:300;}
-    .faq-modal-step-text strong{color:var(--text1);font-weight:500;}
-    .faq-modal-ptabs{display:flex;gap:0;margin:0.75rem 0 0.5rem;border-bottom:1px solid var(--border);}
-    .faq-modal-ptab{font-size:0.68rem;font-weight:500;letter-spacing:0.08em;padding:0.45rem 0.9rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;margin-bottom:-1px;transition:all 0.2s;}
-    .faq-modal-ptab.on{color:var(--text1);border-bottom-color:var(--black);}
-    .faq-modal-panel{display:none;}
-    .faq-modal-panel.on{display:block;}
-    .faq-modal-tip{background:rgba(204,255,0,0.08);border:1px solid rgba(139,179,0,0.2);border-radius:2px;padding:0.65rem 0.85rem;font-size:0.78rem;color:var(--text2);line-height:1.6;margin:0.5rem 0;}
-    .faq-modal-footer{padding:1.25rem 2rem;border-top:1px solid var(--border);text-align:center;}
-    .faq-modal-footer a{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
-    .faq-modal-footer a:hover{color:var(--text1);}
-    
-    /* GDPR Banner */
-    #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
-    #gdpr-banner.show{transform:translateY(0);}
-    .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
-    .gdpr-text a{color:rgba(255,255,255,0.4);text-decoration:underline;}
-    .gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
-    .gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:var(--accent);color:var(--black);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-    .gdpr-accept:hover{background:#fff;}
-    .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-    .gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
-    @media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
-    </style>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-Y6Y16FEG2H');
-</script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-96XWYGNS49');
-</script>
+  </style>
 </head>
 <body>
 
@@ -221,102 +175,8 @@
 
 <nav>
   <a href="/" class="nav-logo">Ask<span>.</span></a>
-  <button onclick="openFaq()" style="font-size:0.78rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:1.5rem;transition:color 0.2s;padding:0;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">FAQ</button>
   <a href="/" class="nav-back">← Back</a>
 </nav>
-
-<!-- FAQ MODAL -->
-<div id="faqModal" onclick="if(event.target===this)closeFaq()">
-  <div class="faq-modal-card">
-    <div class="faq-modal-header">
-      <div class="faq-modal-title">Help & FAQ</div>
-      <button class="faq-modal-close" onclick="closeFaq()">✕</button>
-    </div>
-    <div class="faq-modal-body">
-
-      <div class="faq-modal-section">
-        <div class="faq-modal-section-title">Your shareable link</div>
-        <div class="faq-modal-item open">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">What is my Ask link?</div>
-          <div class="faq-modal-a">Your permanent public page where anyone can ask your AI assistant questions. Share it in your email signature, LinkedIn, or resume. Example: <strong>ask.menoslabs.com/davidobrien-001</strong></div>
-        </div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Will my link ever expire?</div>
-          <div class="faq-modal-a">No. One-time payment, yours forever. We never delete profiles or charge recurring fees.</div>
-        </div>
-      </div>
-
-      <div class="faq-modal-section">
-        <div class="faq-modal-section-title">Embed on your website</div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">How do I add the chat button to my site?</div>
-          <div class="faq-modal-a">Paste one line of code before your closing &lt;/body&gt; tag:
-            <div class="faq-modal-code">&lt;script src="https://ask.menoslabs.com/embed.js" data-slug="YOUR-SLUG"&gt;&lt;/script&gt;</div>
-            <div class="faq-modal-ptabs">
-              <button class="faq-modal-ptab on" onclick="switchFaqTab('wix',this)">Wix</button>
-              <button class="faq-modal-ptab" onclick="switchFaqTab('squarespace',this)">Squarespace</button>
-              <button class="faq-modal-ptab" onclick="switchFaqTab('wordpress',this)">WordPress</button>
-              <button class="faq-modal-ptab" onclick="switchFaqTab('any',this)">Any Site</button>
-            </div>
-            <div class="faq-modal-panel on" id="faq-wix">
-              <div class="faq-modal-steps">
-                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Click <strong>Add Elements</strong> → <strong>Embed Code</strong> → <strong>HTML iframe</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script tag above and click <strong>Apply</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Publish your site</div></div>
-              </div>
-            </div>
-            <div class="faq-modal-panel" id="faq-squarespace">
-              <div class="faq-modal-steps">
-                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Edit your page → click <strong>+</strong> → add a <strong>Code</strong> block</div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script tag and click <strong>Apply</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Save and publish</div></div>
-              </div>
-            </div>
-            <div class="faq-modal-panel" id="faq-wordpress">
-              <div class="faq-modal-steps">
-                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Go to <strong>Appearance → Theme Editor → footer.php</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script just before <strong>&lt;/body&gt;</strong></div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">3</div><div class="faq-modal-step-text">Click <strong>Update File</strong></div></div>
-              </div>
-            </div>
-            <div class="faq-modal-panel" id="faq-any">
-              <div class="faq-modal-steps">
-                <div class="faq-modal-step"><div class="faq-modal-step-num">1</div><div class="faq-modal-step-text">Open your HTML file</div></div>
-                <div class="faq-modal-step"><div class="faq-modal-step-num">2</div><div class="faq-modal-step-text">Paste the script just before <strong>&lt;/body&gt;</strong> and save</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Can I embed my full profile page?</div>
-          <div class="faq-modal-a">Yes — use an iframe:
-            <div class="faq-modal-code">&lt;iframe src="https://ask.menoslabs.com/YOUR-SLUG" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"&gt;&lt;/iframe&gt;</div>
-          </div>
-        </div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">Can I point my own domain to my Ask page?</div>
-          <div class="faq-modal-a">Yes. Add a CNAME record in your DNS pointing to <strong>ask.menoslabs.com</strong>, then email us at hello@menoslabs.com and we'll configure it.</div>
-        </div>
-      </div>
-
-      <div class="faq-modal-section">
-        <div class="faq-modal-section-title">Editing & billing</div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">How do I update my profile?</div>
-          <div class="faq-modal-a">Email <strong>hello@menoslabs.com</strong> with your Ask URL and updated resume. We'll regenerate and your URL stays the same.</div>
-        </div>
-        <div class="faq-modal-item">
-          <div class="faq-modal-q" onclick="toggleFaqModal(this)">What is your refund policy?</div>
-          <div class="faq-modal-a">Full refund within 7 days, no questions asked. Email hello@menoslabs.com with your purchase details.</div>
-        </div>
-      </div>
-
-    </div>
-    <div class="faq-modal-footer">
-      <a href="/faq.html" target="_blank">View full FAQ page →</a>
-    </div>
-  </div>
-</div>
 
 <div class="page">
   <p class="page-eyebrow">Step 1 of 2</p>
@@ -325,7 +185,18 @@
 
   <div class="form-card">
 
-    <p class="form-section-title">Profile</p>
+    <p class="form-section-title">Choose Your Username *</p>
+    <div class="field">
+      <label class="flabel">Username</label>
+      <div class="username-wrap">
+        <input class="finput" id="iUsername" type="text" placeholder="janesmith" oninput="onUsernameInput()" onblur="checkUsername()">
+      </div>
+      <div class="url-preview">Your URL: ask.menoslabs.com/<strong id="urlPreview">username</strong></div>
+      <div class="username-status" id="usernameStatus"></div>
+      <div class="username-suggestions" id="usernameSuggestions"></div>
+    </div>
+
+    <p class="form-section-title" style="margin-top:1.5rem;">Profile</p>
 
     <div class="avatar-row">
       <div class="avatar-wrap">
@@ -428,6 +299,9 @@
 
     <p class="form-section-title" style="margin-top:1.5rem;text-align:center;">Resume *</p>
 
+    <div class="tab-row">
+      <button class="rtab on" id="tab-paste" onclick="switchTab('paste')">Paste Resume Text</button>
+    </div>
     <div class="resume-panel on" id="panel-paste">
       <textarea class="finput" id="iResume" placeholder="Paste your resume text — work experience, skills, education, achievements..."></textarea>
     </div>
@@ -464,17 +338,14 @@ document.getElementById('avatarInput').addEventListener('change', function(){
   r.onload = e => {
     const img = new Image();
     img.onload = () => {
-      // Resize to 200x200 and compress
       const canvas = document.createElement('canvas');
       canvas.width = 200; canvas.height = 200;
       const ctx = canvas.getContext('2d');
-      // Crop to square from center
       const size = Math.min(img.width, img.height);
       const sx = (img.width - size) / 2;
       const sy = (img.height - size) / 2;
       ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
       avatarDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-      sessionStorage.setItem('ask_avatar', avatarDataUrl);
       document.getElementById('avatarCircle').innerHTML = `<img src="${avatarDataUrl}" alt="avatar">`;
     };
     img.src = e.target.result;
@@ -493,15 +364,108 @@ function updateInitials(){
 
 
 
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
+let chosenUsername = '';
+let usernameValid = false;
+let usernameCheckTimer = null;
+
+function sanitizeUsername(val){
+  return val.toLowerCase().replace(/[^a-z0-9\-_]/g, '').slice(0, 30);
+}
+
+function onUsernameInput(){
+  const raw = document.getElementById('iUsername').value;
+  const clean = sanitizeUsername(raw);
+  // Keep cursor position by only updating if changed
+  if(raw !== clean) document.getElementById('iUsername').value = clean;
+  document.getElementById('urlPreview').textContent = clean || 'username';
+  document.getElementById('usernameSuggestions').innerHTML = '';
+  usernameValid = false;
+  chosenUsername = '';
+  const status = document.getElementById('usernameStatus');
+  if(!clean){ status.textContent = ''; status.className = 'username-status'; return; }
+  if(clean.length < 3){ status.textContent = 'Must be at least 3 characters'; status.className = 'username-status taken'; return; }
+  status.textContent = 'Checking availability...';
+  status.className = 'username-status checking';
+  clearTimeout(usernameCheckTimer);
+  usernameCheckTimer = setTimeout(()=>checkUsername(), 600);
+}
+
+async function checkUsername(){
+  const val = document.getElementById('iUsername').value;
+  const clean = sanitizeUsername(val);
+  if(!clean || clean.length < 3) return;
+  const status = document.getElementById('usernameStatus');
+  const suggsEl = document.getElementById('usernameSuggestions');
+  status.textContent = 'Checking...';
+  status.className = 'username-status checking';
+  try {
+    const res = await fetch(`${ASK_SERVER}/${clean}`);
+    if(res.status === 404){
+      // Available
+      status.textContent = '✓ Available!';
+      status.className = 'username-status available';
+      suggsEl.innerHTML = '';
+      chosenUsername = clean;
+      usernameValid = true;
+    } else {
+      // Taken — show suggestions
+      status.textContent = '✗ Already taken. Try one of these:';
+      status.className = 'username-status taken';
+      usernameValid = false;
+      chosenUsername = '';
+      const suggestions = [
+        clean + new Date().getFullYear().toString().slice(2),
+        clean + Math.floor(Math.random()*900+100),
+        clean + '_pro',
+      ];
+      suggsEl.innerHTML = suggestions.map(s =>
+        `<button class="username-sugg" onclick="selectSuggestion('${s}')">${s}</button>`
+      ).join('');
+    }
+  } catch(e) {
+    status.textContent = 'Could not check — please try again.';
+    status.className = 'username-status taken';
+  }
+}
+
+async function selectSuggestion(slug){
+  document.getElementById('iUsername').value = slug;
+  document.getElementById('urlPreview').textContent = slug;
+  document.getElementById('usernameSuggestions').innerHTML = '';
+  const status = document.getElementById('usernameStatus');
+  status.textContent = 'Checking...';
+  status.className = 'username-status checking';
+  try {
+    const res = await fetch(`${ASK_SERVER}/${slug}`);
+    if(res.status === 404){
+      status.textContent = '✓ Available!';
+      status.className = 'username-status available';
+      chosenUsername = slug;
+      usernameValid = true;
+    } else {
+      status.textContent = '✗ Also taken — please try another.';
+      status.className = 'username-status taken';
+    }
+  } catch(e) {
+    status.textContent = 'Could not check — please try again.';
+    status.className = 'username-status taken';
+  }
+}
+
 async function generate(){
   const name = document.getElementById('iName').value.trim().replace(/[^a-zA-Z0-9\s\-]/g, '').trim();
   const title = document.getElementById('iTitle').value.trim();
   const city = document.getElementById('iCity').value.trim();
   const email = document.getElementById('iEmail').value.trim();
   const rawResume = document.getElementById('iResume').value.trim();
-  // Strip phone numbers for privacy
-  const resume = rawResume.replace(/\+?[\d][\d\s\-().]{7,}[\d]/g, '[phone removed]').trim();
+  const resume = rawResume
+    .replace(/\+?[\d][\d\s\-().]{7,}[\d]/g, '[phone removed]')
+    .replace(/\d+\s+[A-Za-z0-9\s,\.]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Way|Place|Pl|Circle|Cir|Trail|Tr|Parkway|Pkwy|Highway|Hwy)[^\n]*/gi, '[address removed]')
+    .replace(/\b[A-Za-z\s]+,\s*[A-Z]{2}\s+\d{5}(?:-\d{4})?\b/g, '[address removed]')
+    .trim();
 
+  if(!usernameValid || !chosenUsername){ alert('Please choose an available username above.'); return; }
   if(!name){ alert('Please enter your name.'); return; }
   if(!resume){ alert('Please paste your resume text above.'); return; }
   if(resume.length < 100){ alert('Resume content seems too short. Please paste your full resume text for best results.'); return; }
@@ -526,13 +490,14 @@ async function generate(){
     const res = await fetch(WORKER, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:4000,
+        model:'claude-sonnet-4-20250514', max_tokens:8000,
         messages:[{role:'user', content:
 `You are parsing a resume. CRITICAL RULES:
 - Only use information explicitly stated in the resume text below
 - Do NOT invent, assume, or hallucinate any companies, roles, dates, or achievements
 - If the resume text looks garbled or unreadable, return an error field instead
 - Only include companies and roles that are clearly named in the text
+- Do NOT include any physical addresses or phone numbers in any field
 
 Resume for ${name}:
 ---
@@ -547,8 +512,16 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
       "company": "EXACT company name from resume only",
       "role": "EXACT job title from resume only",
       "dates": "dates as written in resume",
-      "location": "location if mentioned",
+      "location": "city and state only, no street addresses",
       "bullets": ["achievement or responsibility exactly as described in resume"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "EXACT school name from resume only",
+      "degree": "degree and field as written in resume",
+      "dates": "dates as written in resume",
+      "location": "city and state only if mentioned"
     }
   ],
   "skills": ["only skills explicitly mentioned in the resume"],
@@ -560,7 +533,6 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
 
     const data = await res.json();
     const raw = data.content?.[0]?.text || '{}';
-    console.log('Claude raw response:', raw.substring(0,500));
     let parsed;
     try { parsed = JSON.parse(raw); }
     catch(e){ const m=raw.match(/\{[\s\S]*\}/); parsed=m?JSON.parse(m[0]):{bio:'',experience:[],skills:[],systemPrompt:`You are an AI assistant for ${name}.`}; }
@@ -568,51 +540,18 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     clearInterval(iv);
 
     // Save to sessionStorage and go to preview
-    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, theme:selectedTheme, resume:resume };
-    // Store avatar separately to avoid sessionStorage size limit
-    if(avatarDataUrl) sessionStorage.setItem('ask_avatar', avatarDataUrl);
-    else sessionStorage.removeItem('ask_avatar');
+    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], education:parsed.education||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl, chosenUsername, theme:selectedTheme, resume:resume };
+    profileData.theme = selectedTheme;
     sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
-    window.location.href = '/preview';
+    window.location.href = '/preview.html';
 
   } catch(err){
     clearInterval(iv);
-    console.error('Generate error:', err.message, err);
-    document.getElementById('procText').textContent='Error: ' + err.message + ' — Please try again.';
+    document.getElementById('procText').textContent='Something went wrong. Please try again.';
     document.getElementById('formActions').style.display='block';
     document.getElementById('processing').style.display='none';
   }
 }
-
-function openFaq(){ document.getElementById('faqModal').classList.add('show'); document.body.style.overflow='hidden'; }
-function closeFaq(){ document.getElementById('faqModal').classList.remove('show'); document.body.style.overflow=''; }
-function toggleFaqModal(el){ el.parentElement.classList.toggle('open'); }
-function switchFaqTab(name,btn){
-  btn.closest('.faq-modal-a').querySelectorAll('.faq-modal-ptab').forEach(t=>t.classList.remove('on'));
-  btn.classList.add('on');
-  btn.closest('.faq-modal-a').querySelectorAll('.faq-modal-panel').forEach(p=>p.classList.remove('on'));
-  btn.closest('.faq-modal-a').querySelector('#faq-'+name).classList.add('on');
-}
-
-// GDPR
-
-function gdprInit(){
-  const c=localStorage.getItem('gdpr_consent');
-  if(!c) setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},1500);
-  if(c==='declined') window['ga-disable-G-Y6Y16FEG2H']=true;
-}
-function gdprAccept(){localStorage.setItem('gdpr_consent','accepted');const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
-function gdprDecline(){localStorage.setItem('gdpr_consent','declined');window['ga-disable-G-Y6Y16FEG2H']=true;const b=document.getElementById('gdpr-banner');if(b)b.classList.remove('show');}
-gdprInit();
 </script>
-
-<!-- GDPR Banner -->
-<div id="gdpr-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:999;background:#111;border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;">
-  <div style="font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;">We use cookies to understand how visitors use our site.</div>
-  <div style="display:flex;gap:0.5rem;flex-shrink:0;">
-    <button onclick="gdprDecline()" style="font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;">Decline</button>
-    <button onclick="gdprAccept()" style="font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:#CCFF00;color:#000;border:none;border-radius:2px;cursor:pointer;">Accept</button>
-  </div>
-</div>
 </body>
 </html>

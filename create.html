@@ -354,10 +354,12 @@ document.getElementById('avatarInput').addEventListener('change', function(){
 });
 
 function updateInitials(){
+  const el = document.getElementById('avatarInitials');
+  if(!el) return;
   const n = document.getElementById('iName').value.trim();
   const p = n.split(' ').filter(Boolean);
   const i = p.length>=2 ? p[0][0]+p[p.length-1][0] : p[0]?.[0]||'?';
-  document.getElementById('avatarInitials').textContent = i.toUpperCase();
+  el.textContent = i.toUpperCase();
 }
 
 
