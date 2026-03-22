@@ -161,6 +161,43 @@
     .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
     .gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
     @media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
+
+    /* ── ASK CHAT WIDGET ── */
+    #ask-bubble{position:fixed;bottom:1.75rem;right:1.75rem;z-index:900;width:52px;height:52px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.18);transition:all 0.2s;border:none;}
+    #ask-bubble:hover{background:var(--accent);transform:scale(1.08);}
+    #ask-bubble:hover .bubble-icon{color:var(--black);}
+    #ask-bubble:hover .bubble-icon-close{color:var(--black);}
+    .bubble-icon,.bubble-icon-close{position:absolute;transition:all 0.2s;color:var(--white);}
+    .bubble-icon-close{opacity:0;transform:rotate(-90deg);}
+    #ask-bubble.open .bubble-icon{opacity:0;transform:rotate(90deg);}
+    #ask-bubble.open .bubble-icon-close{opacity:1;transform:rotate(0);}
+
+    #ask-chat-panel{position:fixed;bottom:5.5rem;right:1.75rem;z-index:900;width:360px;max-width:calc(100vw - 2rem);background:var(--white);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.12);display:flex;flex-direction:column;overflow:hidden;transform:translateY(12px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.34,1.2,0.64,1);}
+    #ask-chat-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all;}
+    .chat-panel-header{padding:1rem 1.25rem;background:var(--black);display:flex;align-items:center;gap:0.75rem;}
+    .chat-panel-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:var(--white);letter-spacing:-0.02em;}
+    .chat-panel-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
+    .chat-panel-sub{font-size:0.68rem;color:rgba(255,255,255,0.4);margin-left:auto;letter-spacing:0.05em;}
+    .chat-panel-msgs{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.65rem;min-height:220px;max-height:320px;}
+    .chat-msg{max-width:85%;padding:0.6rem 0.85rem;border-radius:4px;font-size:0.82rem;line-height:1.6;font-weight:300;}
+    .chat-msg.assistant{background:var(--off-white);color:var(--text1);align-self:flex-start;border:1px solid var(--border);}
+    .chat-msg.user{background:var(--black);color:var(--white);align-self:flex-end;}
+    .chat-typing{display:flex;gap:4px;align-items:center;padding:0.6rem 0.85rem;background:var(--off-white);border:1px solid var(--border);border-radius:4px;align-self:flex-start;}
+    .chat-typing span{width:6px;height:6px;background:var(--text3);border-radius:50%;animation:typingDot 1.2s infinite;}
+    .chat-typing span:nth-child(2){animation-delay:0.2s;}
+    .chat-typing span:nth-child(3){animation-delay:0.4s;}
+    @keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:0.4;}30%{transform:translateY(-4px);opacity:1;}}
+    .chat-suggestions{padding:0.75rem 1rem 0;display:flex;flex-wrap:wrap;gap:0.4rem;}
+    .chat-sugg{font-size:0.72rem;font-weight:500;padding:0.35rem 0.75rem;background:transparent;border:1px solid var(--border);border-radius:20px;cursor:pointer;color:var(--text2);transition:all 0.15s;font-family:'DM Sans',sans-serif;}
+    .chat-sugg:hover{background:var(--black);color:var(--white);border-color:var(--black);}
+    .chat-panel-input{padding:0.75rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;align-items:center;}
+    .chat-panel-input input{flex:1;font-size:0.82rem;font-family:'DM Sans',sans-serif;border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.75rem;outline:none;color:var(--text1);background:var(--white);}
+    .chat-panel-input input:focus{border-color:var(--text1);}
+    .chat-panel-input input::placeholder{color:var(--text3);}
+    .chat-send-btn{width:32px;height:32px;background:var(--black);border:none;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s;}
+    .chat-send-btn:hover{background:var(--accent);}
+    .chat-send-btn:hover svg{stroke:var(--black);}
+    .chat-send-btn svg{stroke:white;transition:stroke 0.15s;}
     </style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
@@ -458,5 +495,167 @@ function gdprDecline(){
 }
 gdprInit();
 </script>
+<!-- ASK CHAT WIDGET -->
+<button id="ask-bubble" onclick="toggleAskChat()" aria-label="Chat with Ask">
+  <svg class="bubble-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+  <svg class="bubble-icon-close" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+</button>
+
+<div id="ask-chat-panel">
+  <div class="chat-panel-header">
+    <div class="chat-panel-logo">Ask<span>.</span></div>
+    <div class="chat-panel-sub">Ask me anything</div>
+  </div>
+  <div class="chat-panel-msgs" id="askChatMsgs">
+    <div class="chat-msg assistant">Hi! I'm the Ask assistant. I can tell you everything about how Ask works, pricing, and how to get started. What would you like to know?</div>
+  </div>
+  <div class="chat-suggestions" id="askSuggestions">
+    <button class="chat-sugg" onclick="askSuggestion(this)">What is Ask?</button>
+    <button class="chat-sugg" onclick="askSuggestion(this)">Is Ask a subscription?</button>
+    <button class="chat-sugg" onclick="askSuggestion(this)">How do I embed it on my site?</button>
+    <button class="chat-sugg" onclick="askSuggestion(this)">What's your refund policy?</button>
+  </div>
+  <div class="chat-panel-input">
+    <input type="text" id="askChatInput" placeholder="Ask a question..." onkeydown="if(event.key==='Enter')sendAskChat()">
+    <button class="chat-send-btn" onclick="sendAskChat()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// ── ASK HOMEPAGE CHAT ──────────────────────────────────────────────
+const ASK_CHAT_WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev';
+const ASK_SYSTEM = `You are the Ask assistant on ask.menoslabs.com — a friendly, concise helper that answers questions about the Ask product made by Menos Labs.
+
+ABOUT ASK:
+Ask is a personal AI assistant page. You upload your resume and get a permanent, shareable URL (e.g. ask.menoslabs.com/janesmith) where anyone can ask an AI questions about your background, experience, and skills — powered by Claude AI.
+
+PRICING:
+- One-time payment of $9.99. No subscription, no monthly fees, permanent.
+- Full refund within 7 days, no questions asked. Email hello@menoslabs.com.
+
+HOW IT WORKS:
+1. Go to ask.menoslabs.com/create
+2. Choose a username (your personal URL)
+3. Add your name, title, city, photo, and social links
+4. Upload or paste your resume
+5. Hit Generate — AI creates your profile in ~30 seconds
+6. Preview and try the chat
+7. Pay $9.99 once — your page is live forever
+
+FEATURES:
+- Permanent shareable URL at ask.menoslabs.com/your-username
+- AI chat powered by Claude — answers questions about your background 24/7
+- Experience, education, and skills extracted from your resume
+- 4 profile themes: Classic, Dark, Bold, Soft
+- Embed a chat button on any website with one line of code
+- Embed your full profile page via iframe
+- LinkedIn, GitHub, portfolio, Instagram, X/Twitter links
+- Unlimited conversations — no token limits for visitors
+- Self-serve editing — request a code to your email and edit anytime
+
+EMBEDDING:
+Chat button — paste before </body>:
+<script src="https://ask.menoslabs.com/embed.js" data-slug="YOUR-USERNAME"><\/script>
+
+Full profile iframe:
+<iframe src="https://ask.menoslabs.com/YOUR-USERNAME" width="100%" height="700" frameborder="0"></iframe>
+
+Works on Wix, Squarespace, WordPress, or any HTML site.
+
+EDITING:
+Go to ask.menoslabs.com/edit, enter your username, request a verification code to your email, enter the code, and edit your profile. Your URL stays the same.
+
+TERMS & CONDITIONS:
+- One-time payment grants permanent access to your profile page
+- Menos Labs reserves the right to remove profiles that violate terms (spam, illegal content, impersonation)
+- No refunds after 7 days
+- AI responses are generated by Claude (Anthropic) — Menos Labs is not liable for inaccuracies
+- You own your profile data; Menos Labs stores it to power your page
+- Service provided as-is; uptime is best-effort but not guaranteed
+
+CONTACT:
+Email: hello@menoslabs.com
+Website: menoslabs.com
+
+Keep answers short, friendly, and helpful. If someone asks something you don't know, direct them to hello@menoslabs.com. Never make up information. Always encourage them to try Ask if it seems relevant.`;
+
+let askChatHistory = [];
+let askChatOpen = false;
+let askChatLoading = false;
+
+function toggleAskChat(){
+  askChatOpen = !askChatOpen;
+  document.getElementById('ask-bubble').classList.toggle('open', askChatOpen);
+  document.getElementById('ask-chat-panel').classList.toggle('open', askChatOpen);
+  if(askChatOpen) setTimeout(()=>document.getElementById('askChatInput').focus(), 250);
+}
+
+function askSuggestion(btn){
+  const text = btn.textContent;
+  document.getElementById('askSuggestions').style.display = 'none';
+  sendAskChat(text);
+}
+
+function addAskMsg(role, text){
+  const msgs = document.getElementById('askChatMsgs');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function showAskTyping(){
+  const msgs = document.getElementById('askChatMsgs');
+  const div = document.createElement('div');
+  div.className = 'chat-typing';
+  div.id = 'askTyping';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeAskTyping(){
+  const t = document.getElementById('askTyping');
+  if(t) t.remove();
+}
+
+async function sendAskChat(prefill){
+  if(askChatLoading) return;
+  const input = document.getElementById('askChatInput');
+  const text = prefill || input.value.trim();
+  if(!text) return;
+  input.value = '';
+  addAskMsg('user', text);
+  askChatHistory.push({role:'user', content:text});
+  askChatLoading = true;
+  showAskTyping();
+  try {
+    const res = await fetch(ASK_CHAT_WORKER, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        system: ASK_SYSTEM,
+        messages: askChatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || "Sorry, I'm having trouble connecting. Email hello@menoslabs.com for help.";
+    removeAskTyping();
+    addAskMsg('assistant', reply);
+    askChatHistory.push({role:'assistant', content:reply});
+  } catch(e){
+    removeAskTyping();
+    addAskMsg('assistant', 'Having trouble connecting right now. Email hello@menoslabs.com for help.');
+  }
+  askChatLoading = false;
+}
+</script>
+
 </body>
 </html>
