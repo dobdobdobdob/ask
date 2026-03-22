@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-03-20T20:37:03.892925 -->
+<!-- v2026-03-22T00:00:00.000000 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -156,11 +156,57 @@
     .gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
     .gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:#CCFF00;color:#000;border:none;border-radius:2px;cursor:pointer;}
     .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;}
+
+    /* TOASTS */
+    #toastContainer{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none;}
+    .toast{font-size:0.78rem;font-weight:500;padding:0.75rem 1.1rem;border-radius:3px;opacity:0;transform:translateY(6px);transition:all 0.25s ease;pointer-events:none;max-width:320px;line-height:1.4;}
+    .toast.show{opacity:1;transform:translateY(0);}
+    .toast-success{background:var(--black);color:var(--accent);border:1px solid rgba(204,255,0,0.25);}
+    .toast-error{background:#1a0a0a;color:#f87171;border:1px solid rgba(248,113,113,0.25);}
+    .toast-info{background:var(--black);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.1);}
+
+    /* CONFIRM MODAL */
+    #confirmModal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+    #confirmModal.open{display:flex;}
+    .confirm-box{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:1.75rem 2rem;width:360px;max-width:90%;}
+    .confirm-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:0.5rem;}
+    .confirm-msg{font-size:0.82rem;color:var(--text2);font-weight:300;margin-bottom:1.5rem;line-height:1.55;}
+    .confirm-btns{display:flex;gap:0.65rem;}
+    .confirm-ok{flex:1;background:#dc2626;color:#fff;border:none;border-radius:2px;padding:0.6rem;font-size:0.78rem;font-weight:500;cursor:pointer;transition:background 0.2s;}
+    .confirm-ok:hover{background:#b91c1c;}
+    .confirm-cancel{flex:1;background:none;color:var(--text2);border:1px solid var(--border);border-radius:2px;padding:0.6rem;font-size:0.78rem;cursor:pointer;transition:all 0.2s;}
+    .confirm-cancel:hover{border-color:var(--text3);}
+
+    /* SORT HEADERS */
+    th.sortable{cursor:pointer;user-select:none;}
+    th.sortable:hover{color:var(--text2);}
+    th .sort-arrow{margin-left:4px;opacity:0.4;font-size:0.55rem;}
+    th.sort-asc .sort-arrow::after{content:'▲';opacity:1;}
+    th.sort-desc .sort-arrow::after{content:'▼';opacity:1;}
+
+    /* SAVE INFO BUTTON */
+    .btn-save-info{background:var(--off-white);color:var(--text1);border:1px solid var(--border);padding:0.85rem;font-size:0.82rem;font-weight:500;letter-spacing:0.03em;border-radius:2px;cursor:pointer;width:100%;margin-top:0.65rem;transition:all 0.2s;}
+    .btn-save-info:hover{border-color:var(--accent-dark);background:var(--light);}
     </style>
 </head>
 <body>
 
 <input type="file" id="fileEditInput" accept=".pdf,.doc,.docx,.txt">
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<!-- Confirm Modal -->
+<div id="confirmModal">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirmTitle">Are you sure?</div>
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="confirm-ok" id="confirmOk">Delete</button>
+    </div>
+  </div>
+</div>
 
 <nav>
   <a href="/" class="nav-logo">Ask<span>.</span></a>
@@ -175,7 +221,7 @@
         <div class="profile-dropdown-av" id="profileDropdownAv" onclick="document.getElementById('profileAvatarInput').click()" title="Click to change photo">D</div>
         <div class="profile-dropdown-info">
           <div class="profile-dropdown-name" id="profileDropdownName">Admin</div>
-          <div class="profile-dropdown-email" id="profileDropdownEmail">menoslabs@proton.me</div>
+          <div class="profile-dropdown-email" id="profileDropdownEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2a474f444559464b48596a5a58455e454404474f">[email&#160;protected]</a></div>
         </div>
       </div>
       <input type="file" id="profileAvatarInput" accept="image/*">
@@ -256,7 +302,7 @@
 
   <div class="stats-row">
     <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total Profiles</div></div>
-    <div class="stat-card"><div class="stat-num" id="statToday">—</div><div class="stat-label">This Month</div></div>
+    <div class="stat-card"><div class="stat-num" id="statRevenue">—</div><div class="stat-label">Total Revenue</div></div>
     <div class="stat-card"><div class="stat-num">$9.99</div><div class="stat-label">Price Per Profile</div></div>
   </div>
 
@@ -325,6 +371,7 @@
     </div>
 
     <div id="editActions">
+      <button class="btn-save-info" onclick="saveInfo()">Save Info & Theme →</button>
       <button class="btn-regen" onclick="regenerate()">Regenerate Profile →</button>
     </div>
 
@@ -340,24 +387,40 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
-const PASS = '7f6fkEb0MCVcrz22';
+// Password is stored as a SHA-256 hash. On first login, the hash is auto-generated
+// from PASS_SEED and stored in localStorage. Then clear PASS_SEED from source.
+// To reset: clear localStorage key 'ask_pw_v1', set PASS_SEED to new password, login once, clear again.
+const PASS_SEED = '7f6fkEb0MCVcrz22'; // ← clear after first login
 let allProfiles = [], editUploadText = '', dashSelectedTheme = 'classic';
 function pickDashTheme(name,el){dashSelectedTheme=name;document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c===el));}
+
+// ── HASH UTIL ──
+async function hashPw(pw){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 // ── LOGIN ──
 const ADMIN_EMAIL = 'menoslabs@proton.me';
 
-function doLogin(){
+async function doLogin(){
   const email = document.getElementById('loginEmail').value.trim().toLowerCase();
   const pw = document.getElementById('loginPw').value;
-  const storedPw = sessionStorage.getItem('ask_dash_pw') || PASS;
-  if(email === ADMIN_EMAIL && pw === storedPw){
+  let storedHash = localStorage.getItem('ask_pw_v1');
+  // First-run migration: hash PASS_SEED and store it
+  if(!storedHash && PASS_SEED){
+    storedHash = await hashPw(PASS_SEED);
+    localStorage.setItem('ask_pw_v1', storedHash);
+  }
+  const enteredHash = await hashPw(pw);
+  if(email === ADMIN_EMAIL && enteredHash === storedHash){
     sessionStorage.setItem('ask_dash', '1');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashScreen').style.display = 'block';
+    initProfileManager();
     loadProfiles();
   } else {
     document.getElementById('loginError').style.display = 'block';
@@ -417,31 +480,32 @@ document.getElementById('profileAvatarInput').addEventListener('change', functio
   r.readAsDataURL(file);
 });
 
-function saveProfile(){
+async function saveProfile(){
   const name = document.getElementById('profileNameInput').value.trim();
   const email = document.getElementById('profileEmailInput').value.trim();
   const pw = document.getElementById('profilePwInput').value;
   if(name){ adminName = name; localStorage.setItem('dash_name', name); }
   if(email){ adminEmail = email; localStorage.setItem('dash_email', email); }
-  if(pw && pw.length >= 8){ currentPassword = pw; sessionStorage.setItem('ask_dash_pw', pw); }
-  else if(pw && pw.length > 0){ alert('Password must be at least 8 characters.'); return; }
+  if(pw && pw.length >= 8){
+    const hash = await hashPw(pw);
+    localStorage.setItem('ask_pw_v1', hash);
+  } else if(pw && pw.length > 0){ toast('Password must be at least 8 characters.','error'); return; }
   document.getElementById('profilePwInput').value = '';
   initProfileManager();
   document.getElementById('profileDropdown').classList.remove('open');
-  alert('Profile updated.');
+  toast('Profile updated.','success');
 }
 
 function forgotPassword(){
-  // Send password hint to admin email via contact worker
   fetch('https://menoslabs-contact.thedobrien.workers.dev', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({
       name: 'Dashboard System',
       email: 'thedobrien@gmail.com',
-      company: 'Password Reminder',
-      message: 'Dashboard password reminder requested. Current password: ' + (sessionStorage.getItem('ask_dash_pw') || PASS) + ' | Login: https://ask.menoslabs.com/dashboard | Email: ' + ADMIN_EMAIL
+      company: 'Password Reset Request',
+      message: 'A password reset was requested for the Ask dashboard.\n\nTo reset: open dashboard.html, set a new PASS_SEED value, clear localStorage key "ask_pw_v1", deploy, then log in once. After that, clear PASS_SEED again.\n\nLogin URL: https://ask.menoslabs.com/dashboard\nAdmin email: ' + ADMIN_EMAIL
     })
-  }).then(()=> alert('Password reminder sent to thedobrien@gmail.com')).catch(()=> alert('Could not send — check your internet connection.'));
+  }).then(()=> toast('Reset instructions sent to thedobrien@gmail.com','info')).catch(()=> toast('Could not send — check your connection.','error'));
 }
 
 function logout(){
@@ -467,10 +531,42 @@ async function loadProfiles(){
     const data = await res.json();
     allProfiles = data.profiles || [];
     document.getElementById('statTotal').textContent = allProfiles.length;
+    document.getElementById('statRevenue').textContent = '$' + (allProfiles.length * 9.99).toFixed(2);
     renderTable(allProfiles);
   } catch(e){
     document.getElementById('tableWrap').innerHTML = '<div class="empty-state">Could not load profiles. Check Worker is running.</div>';
   }
+}
+
+let sortCol = 'createdAt', sortDir = 'desc';
+
+function sortProfiles(col){
+  if(sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = col; sortDir = 'asc'; }
+  renderTable(getFilteredProfiles());
+}
+
+function updateSortHeaders(){
+  ['name','createdAt'].forEach(col => {
+    const th = document.getElementById('th-' + col);
+    if(!th) return;
+    th.classList.remove('sort-asc','sort-desc');
+    if(sortCol === col) th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+  });
+}
+
+function getFilteredProfiles(){
+  const q = document.getElementById('searchInput')?.value.toLowerCase() || '';
+  const filtered = q ? allProfiles.filter(p=>(p.name||'').toLowerCase().includes(q)||(p.slug||'').toLowerCase().includes(q)||(p.email||'').toLowerCase().includes(q)) : [...allProfiles];
+  filtered.sort((a,b)=>{
+    let av = a[sortCol]||'', bv = b[sortCol]||'';
+    if(sortCol==='createdAt'){ av=av?new Date(av).getTime():0; bv=bv?new Date(bv).getTime():0; }
+    else { av=av.toLowerCase(); bv=bv.toLowerCase(); }
+    if(av<bv) return sortDir==='asc'?-1:1;
+    if(av>bv) return sortDir==='asc'?1:-1;
+    return 0;
+  });
+  return filtered;
 }
 
 function renderTable(profiles){
@@ -485,25 +581,35 @@ function renderTable(profiles){
         <div class="profile-slug">${p.slug}</div>
       </td>
       <td>${p.meta||'—'}</td>
+      <td style="font-size:0.75rem;color:var(--text3);">${p.email||'—'}</td>
       <td><a href="https://ask.menoslabs.com/${p.slug}" target="_blank" style="color:var(--accent-dark);font-size:0.75rem;text-decoration:none;">${p.slug} →</a></td>
       <td style="font-size:0.75rem;color:var(--text3);">${p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-GB') : '—'}</td>
       <td><span class="status-badge">Active</span></td>
       <td>
+        <a href="https://ask.menoslabs.com/${p.slug}" target="_blank" class="btn-edit" style="text-decoration:none;display:inline-block;background:var(--off-white);color:var(--text1);border:1px solid var(--border);">View</a>
         <button class="btn-edit" onclick="openEdit('${p.slug}')">Edit</button>
-        <button class="btn-delete" data-slug="${p.slug}" data-name="${(p.name||'Profile').replace(/'/g,'').replace(/"/g,'')}" onclick="deleteProfile(this.dataset.slug,this.dataset.name)">Delete</button>
+        <button class="btn-delete" data-slug="${p.slug}" data-name="${(p.name||'Profile').replace(/'/g,'').replace(/"/g,'')}" onclick="confirmDelete(this.dataset.slug,this.dataset.name)">Delete</button>
       </td>
     </tr>
   `).join('');
   document.getElementById('tableWrap').innerHTML = `
     <table>
-      <thead><tr><th>Name</th><th>Title / City</th><th>URL</th><th>Created</th><th>Status</th><th>Actions</th></tr></thead>
+      <thead><tr>
+        <th class="sortable" id="th-name" onclick="sortProfiles('name')">Name<span class="sort-arrow"></span></th>
+        <th>Title / City</th>
+        <th>Email</th>
+        <th>URL</th>
+        <th class="sortable" id="th-createdAt" onclick="sortProfiles('createdAt')">Created<span class="sort-arrow"></span></th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
+  updateSortHeaders();
 }
 
 function filterProfiles(){
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  renderTable(allProfiles.filter(p=>(p.name||'').toLowerCase().includes(q)||(p.slug||'').toLowerCase().includes(q)));
+  renderTable(getFilteredProfiles());
 }
 
 // ── EDIT ──
@@ -564,7 +670,7 @@ async function regenerate(){
   const email = document.getElementById('editEmail').value.trim();
   const resume = document.getElementById('editResume').value.trim() || editUploadText;
 
-  if(!resume){ alert('Please paste or upload the updated resume.'); return; }
+  if(!resume){ toast('Please paste or upload the updated resume.','error'); return; }
 
   document.getElementById('editActions').style.display = 'none';
   document.getElementById('regenState').style.display = 'block';
@@ -674,47 +780,101 @@ ${resume}
   }
 }
 
+// ── TOAST ──
+function toast(msg, type='success'){
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=> t.classList.add('show')); });
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=> t.remove(), 300); }, 3200);
+}
+
+// ── CONFIRM MODAL ──
+let _confirmResolve = null;
+function showConfirm(title, msg, okLabel='Delete'){
+  return new Promise(resolve => {
+    _confirmResolve = resolve;
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMsg').textContent = msg;
+    document.getElementById('confirmOk').textContent = okLabel;
+    document.getElementById('confirmModal').classList.add('open');
+  });
+}
+function closeConfirm(val=false){
+  document.getElementById('confirmModal').classList.remove('open');
+  if(_confirmResolve){ _confirmResolve(val); _confirmResolve=null; }
+}
+document.getElementById('confirmOk').addEventListener('click',()=> closeConfirm(true));
+
 // ── DELETE ──
-async function deleteProfile(slug, name){
-  if(!window.confirm('Delete this profile? This cannot be undone.')) return;
+async function confirmDelete(slug, name){
+  const ok = await showConfirm('Delete Profile', `Delete "${name}"? This cannot be undone.`);
+  if(!ok) return;
   try {
-    console.log('Deleting slug:', slug);
     const res = await fetch(ASK_SERVER + '/delete', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ slug })
     });
-    console.log('Delete response status:', res.status);
     const result = await res.json();
-    console.log('Delete result:', result);
     if(result.ok){
-      // Remove from local array immediately (KV has eventual consistency)
       allProfiles = allProfiles.filter(p => p.slug !== slug);
       document.getElementById('statTotal').textContent = allProfiles.length;
-      renderTable(allProfiles);
-      // Also refresh after 2s to confirm
+      document.getElementById('statRevenue').textContent = '$' + (allProfiles.length * 9.99).toFixed(2);
+      renderTable(getFilteredProfiles());
+      toast(`"${name}" deleted.`, 'info');
       setTimeout(loadProfiles, 2000);
+    } else {
+      toast('Delete failed: ' + (result.error||'Unknown error'), 'error');
     }
-    else { alert('Delete failed: ' + (result.error||'Unknown error')); }
-  } catch(e){ 
-    console.error('Delete error:', e);
-    alert('Delete failed: ' + e.message); 
+  } catch(e){
+    toast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+// ── SAVE INFO (no regen) ──
+async function saveInfo(){
+  const slug = document.getElementById('editSlug').value;
+  if(slug === '__new__'){ toast('New profiles require a resume to generate. Use Regenerate.','info'); return; }
+  const name = document.getElementById('editName').value.trim();
+  const title = document.getElementById('editTitle').value.trim();
+  const city = document.getElementById('editCity').value.trim();
+  const email = document.getElementById('editEmail').value.trim();
+  try {
+    let existing = {};
+    try{ const er=await fetch(`${ASK_SERVER}/${slug}`); existing=await er.json(); }catch(e){}
+    const updated = { ...existing, name, title, city, email, theme: dashSelectedTheme, meta: [title,city].filter(Boolean).join(' · ') };
+    await fetch(`${ASK_SERVER}/update`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ slug, data: updated })
+    });
+    toast('Profile info saved.', 'success');
+    loadProfiles();
+  } catch(e){
+    toast('Save failed: ' + e.message, 'error');
   }
 }
 
 // Password change
-let currentPassword = PASS;
-function doChangePassword(){
+async function doChangePassword(){
   const current = document.getElementById('pwCurrent').value;
   const newPw = document.getElementById('pwNew').value;
   const confirm = document.getElementById('pwConfirm').value;
   const err = document.getElementById('pwError');
-  if(current !== currentPassword){ err.textContent='Current password incorrect.'; err.style.display='block'; return; }
+  err.style.display='none';
+  const storedHash = localStorage.getItem('ask_pw_v1');
+  const currentHash = await hashPw(current);
+  if(currentHash !== storedHash){ err.textContent='Current password incorrect.'; err.style.display='block'; return; }
   if(newPw.length < 8){ err.textContent='New password must be at least 8 characters.'; err.style.display='block'; return; }
   if(newPw !== confirm){ err.textContent='Passwords do not match.'; err.style.display='block'; return; }
-  currentPassword = newPw;
-  sessionStorage.setItem('ask_dash_pw', newPw);
+  const newHash = await hashPw(newPw);
+  localStorage.setItem('ask_pw_v1', newHash);
   document.getElementById('pwModal').style.display='none';
-  alert('Password updated for this session.');
+  document.getElementById('pwCurrent').value='';
+  document.getElementById('pwNew').value='';
+  document.getElementById('pwConfirm').value='';
+  toast('Password updated.','success');
 }
 
 // Create child profile
