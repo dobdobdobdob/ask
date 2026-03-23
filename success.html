@@ -121,6 +121,9 @@ footer{background:#111111;padding:2rem 4rem;display:flex;align-items:center;just
 </footer>
 <script>
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
+const BASE_URL = window.location.hostname.includes('ask-dev') 
+  ? 'https://' + window.location.hostname 
+  : 'https://ask.menoslabs.com';
 let shareUrl = '', slug = '', embedType = 'chat', currentPlatform = 'wix', rawEmbedCode = '';
 const INSTRUCTIONS = {
   wix:{chat:['In your Wix editor, click <strong>Add Elements</strong> in the left sidebar','Select <strong>Embed Code</strong> → <strong>HTML iframe</strong>','Paste the code below into the HTML box','Click <strong>Apply</strong> and position the element','Publish your site'],full:['In your Wix editor click <strong>Add Elements</strong> → <strong>Embed Code</strong>','Select <strong>HTML iframe</strong>','Paste the iframe code below and click <strong>Apply</strong>','Resize the element to fill the section','Publish your site']},
@@ -129,7 +132,7 @@ const INSTRUCTIONS = {
   any:{chat:['Open your website\'s HTML file or template','Paste the code below just before the closing <strong>&lt;/body&gt;</strong> tag','Save and upload — the chat button will appear on every page'],full:['Open the HTML file where you want the profile','Paste the iframe code below where you want it to appear','Save and upload']}
 };
 function getEmbedCode(type){
-  if(type==='chat') return '<'+'script src="https://ask.menoslabs.com/embed.js" data-slug="'+slug+'"><'+'/script>';
+  if(type==='chat') return '<'+'script src="'+BASE_URL+'/embed.js" data-slug="'+slug+'"><'+'/script>';
   return '<'+'iframe src="'+shareUrl+'" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;" title="Ask '+slug+'"><'+'/iframe>';
 }
 function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -262,7 +265,7 @@ window.addEventListener('load', async () => {
     const result = await res.json();
     if(result.slug){
       slug = result.slug;
-      shareUrl = 'https://ask.menoslabs.com/'+slug;
+      shareUrl = BASE_URL + '/' + slug;
       document.getElementById('shareUrl').textContent = shareUrl;
       document.getElementById('viewPageBtn').href = shareUrl;
       document.getElementById('faqLink').href = '/faq?slug='+slug;
