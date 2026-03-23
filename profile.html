@@ -7,12 +7,20 @@
 <title>Ask — Personal AI Assistant</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Lora:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
 html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text1);min-height:100vh;display:flex;flex-direction:column;}
+body.font-classic{--profile-font:'DM Sans',sans-serif;--profile-heading:'Playfair Display',serif;}
+body.font-editorial{--profile-font:'Lora',serif;--profile-heading:'Playfair Display',serif;}
+body.font-modern{--profile-font:'Plus Jakarta Sans',sans-serif;--profile-heading:'Plus Jakarta Sans',sans-serif;}
+body.font-minimal{--profile-font:'Inter Tight',sans-serif;--profile-heading:'Inter Tight',sans-serif;}
+body.font-bold{--profile-font:'Syne',sans-serif;--profile-heading:'Syne',sans-serif;}
+body.font-warm{--profile-font:'Nunito',sans-serif;--profile-heading:'Nunito',sans-serif;}
+.profile-name,.section-title{font-family:var(--profile-heading,'Playfair Display',serif)!important;}
+.profile-bio,.profile-meta,.exp-role,.exp-company,.exp-bullets li,.skill-pill,.social-pill{font-family:var(--profile-font,'DM Sans',sans-serif)!important;}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
 .nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
 .nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
@@ -203,7 +211,7 @@ gtag('config', 'G-96XWYGNS49');
 <body>
 <nav>
 <a href="/" class="nav-logo">Ask<span>.</span></a>
-<a href="/create.html" class="nav-create">Create yours →</a>
+<a href="https://ask.menoslabs.com/create" class="nav-create">Create yours →</a>
 </nav>
 
 <div id="profileHero" class="profile-hero" style="display:none;">
@@ -318,9 +326,17 @@ window.addEventListener('load',async()=>{
 
     if(d.theme && d.theme !== 'classic') document.documentElement.className = d.theme;
 
+    // Apply font
+    document.body.classList.add('font-' + (d.font || 'classic'));
+
     document.getElementById('profileName').textContent=d.name||'—';
     document.getElementById('profileMeta').textContent=d.meta||[d.title,d.city].filter(Boolean).join(' · ')||'';
     document.getElementById('profileBio').textContent=d.bio||'';
+
+    // Apply alignments
+    if(d.alignName) document.getElementById('profileName').style.textAlign = d.alignName;
+    if(d.alignMeta) document.getElementById('profileMeta').style.textAlign = d.alignMeta;
+    if(d.alignBio) document.getElementById('profileBio').style.textAlign = d.alignBio;
     document.title=`Ask ${d.name}`;
 
     const fn=d.name.split(' ')[0];

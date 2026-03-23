@@ -600,6 +600,7 @@ function setAlign(dir){
   ['left','center','right'].forEach(d => {
     document.getElementById('fmt-' + d).classList.toggle('on', d === dir);
   });
+  activeEditEl.focus();
   autoSave();
 }
 
@@ -609,23 +610,24 @@ function showToolbar(el){
   const toolbar = document.getElementById('fmt-toolbar');
   const rect = el.getBoundingClientRect();
   toolbar.classList.add('visible');
-  // Position above the element
   const top = Math.max(rect.top + window.scrollY - toolbar.offsetHeight - 8, window.scrollY + 60);
   const left = Math.min(rect.left + window.scrollX, window.innerWidth - toolbar.offsetWidth - 16);
   toolbar.style.top = top + 'px';
   toolbar.style.left = Math.max(left, 8) + 'px';
-  // Sync align buttons to current element alignment
   const align = el.dataset.align || el.style.textAlign || 'left';
   ['left','center','right'].forEach(d => document.getElementById('fmt-' + d).classList.toggle('on', d === align));
 }
 
 function hideToolbar(e){
-  // Don't hide if clicking inside the toolbar
   const toolbar = document.getElementById('fmt-toolbar');
-  if(toolbar.contains(e.relatedTarget)) return;
-  toolbar.classList.remove('visible');
-  activeEditEl = null;
-  autoSave();
+  if(e.relatedTarget && toolbar.contains(e.relatedTarget)) return;
+  setTimeout(() => {
+    if(!toolbar.matches(':focus-within') && document.activeElement !== activeEditEl){
+      toolbar.classList.remove('visible');
+      activeEditEl = null;
+      autoSave();
+    }
+  }, 100);
 }
 
 // ── AUTO SAVE ──
@@ -637,7 +639,6 @@ function autoSave(){
   d.meta = document.getElementById('profileMeta').textContent.trim();
   d.bio = document.getElementById('profileBio').textContent.trim();
   d.font = currentFont;
-  // Save per-field alignments
   d.alignName = document.getElementById('profileName').dataset.align || 'left';
   d.alignMeta = document.getElementById('profileMeta').dataset.align || 'left';
   d.alignBio = document.getElementById('profileBio').dataset.align || 'left';
@@ -647,6 +648,8 @@ function autoSave(){
 
 // Wire up contenteditable fields for toolbar
 function wireEditableFields(){
+  // Prevent toolbar buttons from stealing focus away from contenteditable
+  document.getElementById('fmt-toolbar').addEventListener('mousedown', e => e.preventDefault());
   document.querySelectorAll('[contenteditable="true"]').forEach(el => {
     el.addEventListener('focus', () => showToolbar(el));
     el.addEventListener('blur', hideToolbar);
