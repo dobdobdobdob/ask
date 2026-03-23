@@ -6,7 +6,7 @@
 <title>Edit Your Assistant — Ask</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Lora:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
@@ -53,7 +53,7 @@ textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
 .avatar-row{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;}
 .avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:0.4rem;}
 .avatar-circle{width:72px;height:72px;border-radius:50%;border:1px solid var(--border);background:var(--off-white);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;transition:border-color 0.2s;}
-.avatar-circle:hover{border-color:var(--accent-dark);}
+.avatar-circle:hover .avatar-cam-overlay{opacity:1;}
 .avatar-circle img{width:100%;height:100%;object-fit:cover;}
 .avatar-initials{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text3);}
 .avatar-hint{font-size:0.62rem;color:var(--text3);letter-spacing:0.08em;}
@@ -67,7 +67,24 @@ textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
 .proc-text{font-size:0.82rem;color:var(--text2);letter-spacing:0.05em;}
 .edit-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(138,179,0,0.1);border:1px solid rgba(138,179,0,0.3);border-radius:2px;padding:0.4rem 0.85rem;font-size:0.72rem;color:var(--accent-dark);font-weight:500;letter-spacing:0.05em;margin-bottom:1.5rem;}
 #avatarInput{display:none;}
-@media(max-width:640px){nav{padding:1.25rem 1.5rem;}.card{padding:1.75rem;}.fields-2,.socials-grid{grid-template-columns:1fr;}}
+.theme-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-bottom:1.5rem;}
+.theme-card{border:1px solid var(--border);border-radius:4px;padding:0.75rem;cursor:pointer;transition:all 0.2s;}
+.theme-card:hover{border-color:var(--accent-dark);}
+.theme-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+.theme-preview{width:100%;height:40px;border-radius:3px;padding:6px;display:flex;flex-direction:column;justify-content:center;margin-bottom:0.4rem;overflow:hidden;}
+.theme-label{font-size:0.75rem;font-weight:500;color:var(--text1);margin-bottom:1px;}
+.theme-desc{font-size:0.62rem;color:var(--text3);}
+.font-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;margin-bottom:1.5rem;}
+.font-card{border:1px solid var(--border);border-radius:4px;padding:0.85rem 1rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+.font-card:hover{border-color:var(--accent-dark);}
+.font-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+.font-card-name{font-size:1rem;font-weight:500;color:var(--text1);margin-bottom:2px;line-height:1.2;}
+.font-card-label{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.site-footer{background:var(--black);padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;margin-top:3rem;}
+.site-footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
+.site-footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
+.site-footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.03em;}
+@media(max-width:640px){nav{padding:1.25rem 1.5rem;}.card{padding:1.75rem;}.fields-2,.socials-grid{grid-template-columns:1fr;}.theme-picker{grid-template-columns:repeat(2,1fr);}.font-picker{grid-template-columns:repeat(2,1fr);}.site-footer{flex-direction:column;gap:0.75rem;padding:1.25rem 1.5rem;text-align:center;}}
 #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:#111;border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
 #gdpr-banner.show{transform:translateY(0);}
 .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
@@ -141,8 +158,11 @@ textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
       <p class="form-section-title">Profile</p>
       <div class="avatar-row">
         <div class="avatar-wrap">
-          <div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()">
+          <div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()" style="position:relative;">
             <div class="avatar-initials" id="avatarInitials">?</div>
+            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;" class="avatar-cam-overlay">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
           </div>
           <div class="avatar-hint">Upload photo</div>
         </div>
@@ -179,6 +199,70 @@ textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
         <div class="social-field"><span class="social-icon">◻</span><input class="social-input" id="sInstagram" placeholder="Instagram URL"></div>
       </div>
 
+      <p class="form-section-title" style="margin-top:1.5rem;">Profile Theme</p>
+      <div class="theme-picker" id="themePicker">
+        <div class="theme-card on" data-theme="classic" onclick="pickTheme('classic',this)">
+          <div class="theme-preview" style="background:#F7F6F3;border:1px solid #E2DED8;">
+            <div style="width:55%;height:6px;background:#1A1A1A;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="width:80%;height:2px;background:#E2DED8;border-radius:2px;"></div>
+          </div>
+          <div class="theme-label">Classic</div>
+          <div class="theme-desc">Clean & professional</div>
+        </div>
+        <div class="theme-card" data-theme="dark" onclick="pickTheme('dark',this)">
+          <div class="theme-preview" style="background:#111111;">
+            <div style="width:55%;height:6px;background:#ffffff;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="width:40%;height:4px;background:#CCFF00;border-radius:2px;"></div>
+          </div>
+          <div class="theme-label">Dark</div>
+          <div class="theme-desc">Bold & striking</div>
+        </div>
+        <div class="theme-card" data-theme="bold" onclick="pickTheme('bold',this)">
+          <div class="theme-preview" style="background:#ffffff;border:2px solid #000;">
+            <div style="width:55%;height:6px;background:#000000;margin-bottom:4px;"></div>
+            <div style="width:80%;height:2px;background:#000000;"></div>
+          </div>
+          <div class="theme-label">Bold</div>
+          <div class="theme-desc">Editorial & graphic</div>
+        </div>
+        <div class="theme-card" data-theme="soft" onclick="pickTheme('soft',this)">
+          <div class="theme-preview" style="background:#FDF8F3;border:1px solid #DDD0BB;">
+            <div style="width:55%;height:6px;background:#2D2318;border-radius:5px;margin-bottom:4px;"></div>
+            <div style="width:40%;height:4px;background:#D48B3A;border-radius:5px;"></div>
+          </div>
+          <div class="theme-label">Soft</div>
+          <div class="theme-desc">Warm & approachable</div>
+        </div>
+      </div>
+
+      <p class="form-section-title" style="margin-top:0.5rem;">Font Style</p>
+      <div class="font-picker" id="fontPicker">
+        <div class="font-card on" data-font="classic" onclick="pickFont('classic',this)">
+          <div class="font-card-name" style="font-family:'DM Sans',sans-serif;">Aa</div>
+          <div class="font-card-label">Classic</div>
+        </div>
+        <div class="font-card" data-font="editorial" onclick="pickFont('editorial',this)">
+          <div class="font-card-name" style="font-family:'Playfair Display',serif;font-style:italic;">Aa</div>
+          <div class="font-card-label">Editorial</div>
+        </div>
+        <div class="font-card" data-font="modern" onclick="pickFont('modern',this)">
+          <div class="font-card-name" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">Aa</div>
+          <div class="font-card-label">Modern</div>
+        </div>
+        <div class="font-card" data-font="minimal" onclick="pickFont('minimal',this)">
+          <div class="font-card-name" style="font-family:'Inter Tight',sans-serif;font-weight:300;">Aa</div>
+          <div class="font-card-label">Minimal</div>
+        </div>
+        <div class="font-card" data-font="bold" onclick="pickFont('bold',this)">
+          <div class="font-card-name" style="font-family:'Syne',sans-serif;font-weight:800;">Aa</div>
+          <div class="font-card-label">Bold</div>
+        </div>
+        <div class="font-card" data-font="warm" onclick="pickFont('warm',this)">
+          <div class="font-card-name" style="font-family:'Nunito',sans-serif;font-weight:600;">Aa</div>
+          <div class="font-card-label">Warm</div>
+        </div>
+      </div>
+
       <p class="form-section-title" style="margin-top:1.5rem;">Resume *</p>
       <div class="field">
         <textarea class="finput" id="iResume" placeholder="Paste your updated resume text — work experience, skills, education, achievements..."></textarea>
@@ -196,6 +280,11 @@ textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
   </div>
 </div>
 
+<footer class="site-footer">
+  <a href="/" class="site-footer-logo">Ask<span>.</span></a>
+  <div class="site-footer-copy">Made in Chicago &nbsp;|&nbsp; Menos Labs LLC 2026</div>
+</footer>
+
 <div id="gdpr-banner">
   <div class="gdpr-text">We use cookies to understand how visitors use our site.</div>
   <div class="gdpr-btns">
@@ -210,6 +299,18 @@ const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 let currentSlug = '';
 let maskedEmail = '';
 let avatarDataUrl = null;
+let selectedTheme = 'classic';
+let selectedFont = 'classic';
+
+function pickTheme(name, el){
+  selectedTheme = name;
+  document.querySelectorAll('.theme-card').forEach(c => c.classList.toggle('on', c === el));
+}
+
+function pickFont(name, el){
+  selectedFont = name;
+  document.querySelectorAll('.font-card').forEach(c => c.classList.toggle('on', c === el));
+}
 
 // Pre-fill slug from URL param if present
 window.addEventListener('load', () => {
@@ -352,6 +453,18 @@ function prefillForm(p){
   document.getElementById('sInstagram').value = p.socials?.instagram || '';
   document.getElementById('editSlugBadge').textContent = currentSlug;
 
+  // Restore theme
+  if(p.theme){
+    selectedTheme = p.theme;
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.toggle('on', c.dataset.theme === p.theme));
+  }
+
+  // Restore font
+  if(p.font){
+    selectedFont = p.font;
+    document.querySelectorAll('.font-card').forEach(c => c.classList.toggle('on', c.dataset.font === p.font));
+  }
+
   if(p.avatar){
     avatarDataUrl = p.avatar;
     document.getElementById('avatarCircle').innerHTML = `<img src="${p.avatar}" alt="avatar">`;
@@ -399,6 +512,12 @@ function updateInitials(){
   document.getElementById('avatarInitials').textContent = i.toUpperCase();
 }
 
+function showEditError(msg){
+  let el = document.getElementById('editError');
+  if(!el){ el = document.createElement('div'); el.id='editError'; el.style.cssText='font-size:0.78rem;color:#e05c5c;margin-top:0.5rem;'; document.getElementById('editActions').appendChild(el); }
+  el.textContent = msg;
+}
+
 async function generateEdit(){
   const name = document.getElementById('iName').value.trim().replace(/[^a-zA-Z0-9\s\-]/g, '').trim();
   const title = document.getElementById('iTitle').value.trim();
@@ -411,9 +530,9 @@ async function generateEdit(){
     .replace(/\b[A-Za-z\s]+,\s*[A-Z]{2}\s+\d{5}(?:-\d{4})?\b/g, '[address removed]')
     .trim();
 
-  if(!name){ alert('Please enter your name.'); return; }
-  if(!resume){ alert('Please paste your resume text above.'); return; }
-  if(resume.length < 100){ alert('Resume content seems too short. Please paste your full resume text for best results.'); return; }
+  if(!name){ showEditError('Please enter your name.'); return; }
+  if(!resume){ showEditError('Please paste your resume text above.'); return; }
+  if(resume.length < 100){ showEditError('Resume seems too short — paste your full resume for best results.'); return; }
 
   const socials = {
     linkedin: document.getElementById('sLinkedIn').value.trim(),
@@ -493,6 +612,8 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
       systemPrompt: parsed.systemPrompt,
       avatar: avatarDataUrl,
       resume,
+      theme: selectedTheme,
+      font: selectedFont,
       isEdit: true,
       editSlug: currentSlug
     };
