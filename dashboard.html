@@ -7,7 +7,7 @@
   <title>Dashboard — Ask</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Lora:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     :root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
@@ -136,6 +136,32 @@
     .tcard{border:1px solid var(--border);border-radius:4px;padding:0.6rem;cursor:pointer;transition:all 0.2s;text-align:center;}
     .tcard:hover{border-color:var(--accent-dark);}
     .tcard.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+
+    /* FONT PICKER */
+    .dash-font-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem;}
+    .dfont-card{border:1px solid var(--border);border-radius:4px;padding:0.65rem 0.5rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+    .dfont-card:hover{border-color:var(--accent-dark);}
+    .dfont-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+    .dfont-card-name{font-size:0.9rem;font-weight:500;color:var(--text1);margin-bottom:1px;line-height:1.2;}
+    .dfont-card-label{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+
+    /* AVATAR in edit panel */
+    .dash-avatar-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;}
+    .dash-avatar-circle{width:64px;height:64px;border-radius:50%;border:1px solid var(--border);background:var(--off-white);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;transition:border-color 0.2s;position:relative;}
+    .dash-avatar-circle:hover{border-color:var(--accent-dark);}
+    .dash-avatar-circle:hover .dash-avatar-cam{opacity:1;}
+    .dash-avatar-circle img{width:100%;height:100%;object-fit:cover;}
+    .dash-avatar-initials{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--text3);}
+    .dash-avatar-cam{position:absolute;inset:0;background:rgba(0,0,0,0.35);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;}
+    .dash-avatar-hint{font-size:0.62rem;color:var(--text3);}
+
+    /* SOCIAL LINKS in edit panel */
+    .dash-socials-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;}
+    .dash-social-field{display:flex;align-items:center;gap:0.4rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.75rem;transition:border-color 0.2s;}
+    .dash-social-field:focus-within{border-color:var(--accent-dark);}
+    .dash-social-icon{font-size:0.78rem;flex-shrink:0;width:16px;text-align:center;color:var(--text3);}
+    .dash-social-input{flex:1;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:300;background:none;border:none;color:var(--text1);outline:none;}
+    .dash-social-input::placeholder{color:var(--text3);}
     .tcard-preview{width:100%;height:32px;border-radius:2px;margin-bottom:0.35rem;}
     .tcard-label{font-size:0.65rem;font-weight:500;color:var(--text1);}
 
@@ -192,6 +218,7 @@
 <body>
 
 <input type="file" id="fileEditInput" accept=".pdf,.doc,.docx,.txt">
+<input type="file" id="dashAvatarInput" accept="image/*">
 
 <!-- Toast Container -->
 <div id="toastContainer"></div>
@@ -327,12 +354,36 @@
     <input type="hidden" id="editSlug">
 
     <p class="edit-section">Profile Info</p>
+
+    <div class="dash-avatar-row">
+      <div class="dash-avatar-circle" id="dashAvatarCircle" onclick="document.getElementById('dashAvatarInput').click()">
+        <div class="dash-avatar-initials" id="dashAvatarInitials">?</div>
+        <div class="dash-avatar-cam">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+      </div>
+      <div>
+        <div class="dash-avatar-hint">Click to update photo</div>
+        <div style="font-size:0.68rem;color:var(--text3);margin-top:2px;">Compressed to 200×200</div>
+      </div>
+    </div>
+
     <div class="field"><label class="flabel">Full Name</label><input class="finput" id="editName" type="text"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
       <div class="field"><label class="flabel">Title</label><input class="finput" id="editTitle" type="text"></div>
       <div class="field"><label class="flabel">City</label><input class="finput" id="editCity" type="text"></div>
     </div>
     <div class="field"><label class="flabel">Email (for notification)</label><input class="finput" id="editEmail" type="email" placeholder="user@email.com"></div>
+
+    <p class="edit-section" style="margin-top:1.5rem;">Social Links</p>
+    <div class="dash-socials-grid">
+      <div class="dash-social-field"><span class="dash-social-icon">in</span><input class="dash-social-input" id="editLinkedIn" placeholder="LinkedIn URL"></div>
+      <div class="dash-social-field"><span class="dash-social-icon">⌂</span><input class="dash-social-input" id="editPortfolio" placeholder="Portfolio URL"></div>
+      <div class="dash-social-field"><span class="dash-social-icon">gh</span><input class="dash-social-input" id="editGithub" placeholder="GitHub URL"></div>
+      <div class="dash-social-field"><span class="dash-social-icon">𝕏</span><input class="dash-social-input" id="editTwitter" placeholder="X / Twitter URL"></div>
+      <div class="dash-social-field"><span class="dash-social-icon">▶</span><input class="dash-social-input" id="editTiktok" placeholder="TikTok URL"></div>
+      <div class="dash-social-field"><span class="dash-social-icon">◻</span><input class="dash-social-input" id="editInstagram" placeholder="Instagram URL"></div>
+    </div>
 
     <p class="edit-section" style="margin-top:1.5rem;">Profile Theme</p>
     <div class="theme-picker-sm" id="dashThemePicker">
@@ -351,6 +402,34 @@
       <div class="tcard" data-theme="soft" onclick="pickDashTheme('soft',this)">
         <div class="tcard-preview" style="background:#FDF8F3;border:1px solid #DDD0BB;"></div>
         <div class="tcard-label">Soft</div>
+      </div>
+    </div>
+
+    <p class="edit-section" style="margin-top:1.5rem;">Font Style</p>
+    <div class="dash-font-picker" id="dashFontPicker">
+      <div class="dfont-card on" data-font="classic" onclick="pickDashFont('classic',this)">
+        <div class="dfont-card-name" style="font-family:'DM Sans',sans-serif;">Aa</div>
+        <div class="dfont-card-label">Classic</div>
+      </div>
+      <div class="dfont-card" data-font="editorial" onclick="pickDashFont('editorial',this)">
+        <div class="dfont-card-name" style="font-family:'Playfair Display',serif;font-style:italic;">Aa</div>
+        <div class="dfont-card-label">Editorial</div>
+      </div>
+      <div class="dfont-card" data-font="modern" onclick="pickDashFont('modern',this)">
+        <div class="dfont-card-name" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">Aa</div>
+        <div class="dfont-card-label">Modern</div>
+      </div>
+      <div class="dfont-card" data-font="minimal" onclick="pickDashFont('minimal',this)">
+        <div class="dfont-card-name" style="font-family:'Inter Tight',sans-serif;font-weight:300;">Aa</div>
+        <div class="dfont-card-label">Minimal</div>
+      </div>
+      <div class="dfont-card" data-font="bold" onclick="pickDashFont('bold',this)">
+        <div class="dfont-card-name" style="font-family:'Syne',sans-serif;font-weight:800;">Aa</div>
+        <div class="dfont-card-label">Bold</div>
+      </div>
+      <div class="dfont-card" data-font="warm" onclick="pickDashFont('warm',this)">
+        <div class="dfont-card-name" style="font-family:'Nunito',sans-serif;font-weight:600;">Aa</div>
+        <div class="dfont-card-label">Warm</div>
       </div>
     </div>
 
@@ -394,8 +473,34 @@ const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 // from PASS_SEED and stored in localStorage. Then clear PASS_SEED from source.
 // To reset: clear localStorage key 'ask_pw_v1', set PASS_SEED to new password, login once, clear again.
 const PASS_SEED = '7f6fkEb0MCVcrz22'; // ← clear after first login
-let allProfiles = [], editUploadText = '', dashSelectedTheme = 'classic';
+let allProfiles = [], editUploadText = '', dashSelectedTheme = 'classic', dashSelectedFont = 'classic', dashAvatarDataUrl = null;
 function pickDashTheme(name,el){dashSelectedTheme=name;document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c===el));}
+function pickDashFont(name,el){dashSelectedFont=name;document.querySelectorAll('.dfont-card').forEach(c=>c.classList.toggle('on',c===el));}
+
+// ── DASH AVATAR UPLOAD ──
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = document.getElementById('dashAvatarInput');
+  if(inp) inp.addEventListener('change', function(){
+    const file = this.files[0]; if(!file) return;
+    const r = new FileReader();
+    r.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 200; canvas.height = 200;
+        const ctx = canvas.getContext('2d');
+        const size = Math.min(img.width, img.height);
+        const sx = (img.width-size)/2, sy = (img.height-size)/2;
+        ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
+        dashAvatarDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        const circle = document.getElementById('dashAvatarCircle');
+        if(circle) circle.innerHTML = `<img src="${dashAvatarDataUrl}" alt="avatar"><div class="dash-avatar-cam"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
+      };
+      img.src = e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+});
 
 // ── HASH UTIL ──
 async function hashPw(pw){
@@ -623,6 +728,7 @@ async function openEdit(slug){
   document.getElementById('regenSuccess').style.display = 'none';
   document.getElementById('editResume').value = '';
   editUploadText = '';
+  dashAvatarDataUrl = null;
 
   try {
     const res = await fetch(`${ASK_SERVER}/${slug}`);
@@ -632,11 +738,35 @@ async function openEdit(slug){
     document.getElementById('editTitle').value = d.title||'';
     document.getElementById('editCity').value = d.city||'';
     document.getElementById('editEmail').value = d.email||'';
-    // Pre-fill resume if stored
     if(d.resume) document.getElementById('editResume').value = d.resume;
-    // Set theme picker
+
+    // Theme picker
     dashSelectedTheme = d.theme||'classic';
     document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c.dataset.theme===dashSelectedTheme));
+
+    // Font picker
+    dashSelectedFont = d.font||'classic';
+    document.querySelectorAll('.dfont-card').forEach(c=>c.classList.toggle('on',c.dataset.font===dashSelectedFont));
+
+    // Avatar
+    dashAvatarDataUrl = d.avatar||null;
+    const circle = document.getElementById('dashAvatarCircle');
+    if(d.avatar){
+      circle.innerHTML = `<img src="${d.avatar}" alt="avatar"><div class="dash-avatar-cam"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
+    } else {
+      const p=(d.name||'').split(' ').filter(Boolean);
+      const initials=(p.length>=2?p[0][0]+p[p.length-1][0]:p[0]?.[0]||'?').toUpperCase();
+      circle.innerHTML = `<div class="dash-avatar-initials">${initials}</div><div class="dash-avatar-cam"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
+    }
+
+    // Social links
+    document.getElementById('editLinkedIn').value = d.socials?.linkedin||'';
+    document.getElementById('editPortfolio').value = d.socials?.portfolio||'';
+    document.getElementById('editGithub').value = d.socials?.github||'';
+    document.getElementById('editTwitter').value = d.socials?.twitter||'';
+    document.getElementById('editTiktok').value = d.socials?.tiktok||'';
+    document.getElementById('editInstagram').value = d.socials?.instagram||'';
+
   } catch(e){
     document.getElementById('editPanelTitle').textContent = `Edit — ${slug}`;
   }
@@ -672,6 +802,14 @@ async function regenerate(){
   const city = document.getElementById('editCity').value.trim();
   const email = document.getElementById('editEmail').value.trim();
   const resume = document.getElementById('editResume').value.trim() || editUploadText;
+  const socials = {
+    linkedin: document.getElementById('editLinkedIn').value.trim(),
+    portfolio: document.getElementById('editPortfolio').value.trim(),
+    github: document.getElementById('editGithub').value.trim(),
+    twitter: document.getElementById('editTwitter').value.trim(),
+    tiktok: document.getElementById('editTiktok').value.trim(),
+    instagram: document.getElementById('editInstagram').value.trim(),
+  };
 
   if(!resume){ toast('Please paste or upload the updated resume.','error'); return; }
 
@@ -722,13 +860,15 @@ ${resume}
     // Save updated profile back to KV with same slug
     const updated = {
       ...existing,
-      name, title, city, email,
+      name, title, city, email, socials,
       theme: dashSelectedTheme,
+      font: dashSelectedFont,
       meta: [title, city].filter(Boolean).join(' · '),
       bio: parsed.bio,
       experience: parsed.experience||[],
       skills: parsed.skills||[],
       systemPrompt: parsed.systemPrompt,
+      ...(dashAvatarDataUrl ? {avatar: dashAvatarDataUrl} : {})
     };
 
     // If creating new profile, use /save endpoint
@@ -844,10 +984,24 @@ async function saveInfo(){
   const title = document.getElementById('editTitle').value.trim();
   const city = document.getElementById('editCity').value.trim();
   const email = document.getElementById('editEmail').value.trim();
+  const socials = {
+    linkedin: document.getElementById('editLinkedIn').value.trim(),
+    portfolio: document.getElementById('editPortfolio').value.trim(),
+    github: document.getElementById('editGithub').value.trim(),
+    twitter: document.getElementById('editTwitter').value.trim(),
+    tiktok: document.getElementById('editTiktok').value.trim(),
+    instagram: document.getElementById('editInstagram').value.trim(),
+  };
   try {
     let existing = {};
     try{ const er=await fetch(`${ASK_SERVER}/${slug}`); existing=await er.json(); }catch(e){}
-    const updated = { ...existing, name, title, city, email, theme: dashSelectedTheme, meta: [title,city].filter(Boolean).join(' · ') };
+    const updated = {
+      ...existing, name, title, city, email, socials,
+      theme: dashSelectedTheme,
+      font: dashSelectedFont,
+      meta: [title,city].filter(Boolean).join(' · '),
+      ...(dashAvatarDataUrl ? {avatar: dashAvatarDataUrl} : {})
+    };
     await fetch(`${ASK_SERVER}/update`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ slug, data: updated })
