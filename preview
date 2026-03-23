@@ -283,6 +283,21 @@ body.font-warm{--profile-font:'Nunito',sans-serif;--profile-heading:'Nunito',san
 /* FORMATTING TOOLBAR */
 #fmt-toolbar{position:fixed;z-index:400;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,0.12);padding:6px 8px;display:none;align-items:center;gap:6px;flex-wrap:wrap;max-width:320px;}
 #fmt-toolbar.visible{display:flex;}
+html.dark #fmt-toolbar{background:#1e1e1e;border-color:rgba(255,255,255,0.15);}
+html.dark .fmt-font-btn{background:none;border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);}
+html.dark .fmt-font-btn:hover{background:rgba(255,255,255,0.08);border-color:#CCFF00;color:#fff;}
+html.dark .fmt-font-btn.on{background:rgba(204,255,0,0.15);border-color:#CCFF00;color:#CCFF00;}
+html.dark .fmt-align-btn{background:none;border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);}
+html.dark .fmt-align-btn:hover{background:rgba(255,255,255,0.08);color:#fff;}
+html.dark .fmt-align-btn.on{background:rgba(204,255,0,0.15);border-color:#CCFF00;color:#CCFF00;}
+html.dark .fmt-sep{background:rgba(255,255,255,0.1);}
+html.dark .fmt-label{color:rgba(255,255,255,0.3);}
+html.bold #fmt-toolbar{background:#fff;border:2px solid #000;border-radius:0;}
+html.bold .fmt-font-btn{border-radius:0;border:2px solid #ccc;}
+html.bold .fmt-font-btn.on{border-color:#000;background:#f5f5f5;}
+html.soft #fmt-toolbar{background:#FFFAF5;border-color:#DDD0BB;}
+html.soft .fmt-font-btn.on{border-color:#D48B3A;background:rgba(212,139,58,0.1);color:#D48B3A;}
+html.soft .fmt-align-btn.on{border-color:#D48B3A;background:rgba(212,139,58,0.1);color:#D48B3A;}
 .fmt-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
 .fmt-font-btn{width:36px;height:28px;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:none;font-size:0.8rem;font-weight:600;color:var(--text2);transition:all 0.15s;display:flex;align-items:center;justify-content:center;padding:0;}
 .fmt-font-btn:hover{border-color:var(--accent-dark);background:var(--off-white);}
