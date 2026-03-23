@@ -375,7 +375,19 @@ window.addEventListener('load',async()=>{
 
 function toggleChat(){chatOpen=!chatOpen;document.getElementById('chat-panel').classList.toggle('open',chatOpen);if(chatOpen)setTimeout(()=>document.getElementById('cpInput').focus(),300);}
 function getInit(){const n=document.getElementById('profileName').textContent;const p=n.split(' ').filter(Boolean);return(p.length>=2?p[0][0]+p[p.length-1][0]:p[0]?.[0]||'?').toUpperCase();}
-function addMsg(role,text){const wrap=document.getElementById('cpMessages');const div=document.createElement('div');div.className='cmsg '+role;const av=document.createElement('div');av.className='cmsg-av';if(role==='assistant'){if(avatarDataUrl)av.innerHTML=`<img src="${avatarDataUrl}" alt="avatar">`;else av.textContent=getInit();}else{av.textContent='You';av.style.fontSize='0.5rem';av.style.color='var(--text3)';}const b=document.createElement('div');b.className='cmsg-bub';b.textContent=text;div.appendChild(av);div.appendChild(b);wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;}
+function stripMarkdown(t){
+  return t
+    .replace(/#{1,6}\s+/g,'')
+    .replace(/\*\*(.+?)\*\*/g,'$1')
+    .replace(/\*(.+?)\*/g,'$1')
+    .replace(/`{1,3}([^`]*)`{1,3}/g,'$1')
+    .replace(/^\s*[-*+]\s+/gm,'')
+    .replace(/^\s*\d+\.\s+/gm,'')
+    .replace(/\[(.+?)\]\(.+?\)/g,'$1')
+    .replace(/\n{3,}/g,'\n\n')
+    .trim();
+}
+function addMsg(role,text){const wrap=document.getElementById('cpMessages');const div=document.createElement('div');div.className='cmsg '+role;const av=document.createElement('div');av.className='cmsg-av';if(role==='assistant'){if(avatarDataUrl)av.innerHTML=`<img src="${avatarDataUrl}" alt="avatar">`;else av.textContent=getInit();}else{av.textContent='You';av.style.fontSize='0.5rem';av.style.color='var(--text3)';}const b=document.createElement('div');b.className='cmsg-bub';b.textContent=role==='assistant'?stripMarkdown(text):text;div.appendChild(av);div.appendChild(b);wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;}
 function showTyping(){const wrap=document.getElementById('cpMessages');const div=document.createElement('div');div.className='cmsg assistant';div.id='typingMsg';const av=document.createElement('div');av.className='cmsg-av';if(avatarDataUrl)av.innerHTML=`<img src="${avatarDataUrl}" alt="avatar">`;else av.textContent=getInit();div.appendChild(av);const t=document.createElement('div');t.className='cp-typing';t.innerHTML='<span></span><span></span><span></span>';div.appendChild(t);wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;}
 function askSugg(btn){document.getElementById('cpSuggs').style.display='none';document.getElementById('cpInput').value=btn.textContent;sendChat();}
 function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
