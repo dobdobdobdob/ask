@@ -291,7 +291,10 @@ gtag('config', 'G-96XWYGNS49');
 
 <footer>
 <a href="/" class="footer-logo">Ask<span>.</span></a>
-<div class="footer-copy">Powered by Menos Labs · menoslabs.com</div>
+<div style="display:flex;gap:1.5rem;align-items:center;">
+  <a href="/faq" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">FAQ</a>
+  <div class="footer-copy">Powered by Menos Labs LLC 2026 · <a href="https://www.menoslabs.com" style="color:rgba(255,255,255,0.25);text-decoration:none;">menoslabs.com</a></div>
+</div>
 <a id="editProfileLink" href="/edit" style="font-size:0.65rem;color:rgba(255,255,255,0.2);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">Edit my profile</a>
 </footer>
 
