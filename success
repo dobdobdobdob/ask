@@ -117,7 +117,7 @@ footer{background:#111111;padding:2rem 4rem;display:flex;align-items:center;just
 </div>
 <footer>
 <a href="/" class="footer-logo">Ask<span>.</span></a>
-<div class="footer-copy">Powered by Menos Labs · menoslabs.com</div>
+<div class="footer-copy">Made in Chicago &nbsp;|&nbsp; Menos Labs LLC 2026</div>
 </footer>
 <script>
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';

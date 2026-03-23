@@ -7,7 +7,7 @@
 <title>Preview Your Assistant — Ask</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Lora:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
@@ -269,6 +269,38 @@ html.soft .main-content{background:#FDF8F3!important;}
 .gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
 .gdpr-decline:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
 @media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
+
+/* FONT DEFINITIONS */
+body.font-classic{--profile-font:'DM Sans',sans-serif;--profile-heading:'Playfair Display',serif;}
+body.font-editorial{--profile-font:'Lora',serif;--profile-heading:'Playfair Display',serif;}
+body.font-modern{--profile-font:'Plus Jakarta Sans',sans-serif;--profile-heading:'Plus Jakarta Sans',sans-serif;}
+body.font-minimal{--profile-font:'Inter Tight',sans-serif;--profile-heading:'Inter Tight',sans-serif;}
+body.font-bold{--profile-font:'Syne',sans-serif;--profile-heading:'Syne',sans-serif;}
+body.font-warm{--profile-font:'Nunito',sans-serif;--profile-heading:'Nunito',sans-serif;}
+.profile-name,.section-title{font-family:var(--profile-heading,'Playfair Display',serif)!important;}
+.profile-bio,.profile-meta,.exp-role,.exp-company,.exp-bullets li,.skill-pill,.social-pill{font-family:var(--profile-font,'DM Sans',sans-serif)!important;}
+
+/* FORMATTING TOOLBAR */
+#fmt-toolbar{position:fixed;z-index:400;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,0.12);padding:6px 8px;display:none;align-items:center;gap:6px;flex-wrap:wrap;max-width:320px;}
+#fmt-toolbar.visible{display:flex;}
+.fmt-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
+.fmt-font-btn{width:36px;height:28px;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:none;font-size:0.8rem;font-weight:600;color:var(--text2);transition:all 0.15s;display:flex;align-items:center;justify-content:center;padding:0;}
+.fmt-font-btn:hover{border-color:var(--accent-dark);background:var(--off-white);}
+.fmt-font-btn.on{border-color:var(--accent-dark);background:rgba(139,179,0,0.1);color:var(--text1);}
+.fmt-align-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:none;color:var(--text3);transition:all 0.15s;display:flex;align-items:center;justify-content:center;padding:0;}
+.fmt-align-btn:first-child{border-radius:3px 0 0 3px;}
+.fmt-align-btn:last-child{border-radius:0 3px 3px 0;border-left:none;}
+.fmt-align-btn:not(:first-child):not(:last-child){border-left:none;}
+.fmt-align-btn:hover{background:var(--off-white);color:var(--text1);}
+.fmt-align-btn.on{background:var(--off-white);border-color:var(--accent-dark);color:var(--text1);}
+.fmt-align-btn svg{width:13px;height:13px;fill:currentColor;}
+.fmt-label{font-size:0.58rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+
+/* FOOTER */
+footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+.footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
+.footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.03em;}
 </style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
@@ -400,6 +432,30 @@ gtag('config', 'G-96XWYGNS49');
 </div>
 </div>
 
+<!-- FORMATTING TOOLBAR -->
+<div id="fmt-toolbar">
+  <span class="fmt-label">Font</span>
+  <button class="fmt-font-btn on" data-font="classic" style="font-family:'DM Sans',sans-serif;" onclick="setFont('classic')" title="Classic">Aa</button>
+  <button class="fmt-font-btn" data-font="editorial" style="font-family:'Playfair Display',serif;font-style:italic;" onclick="setFont('editorial')" title="Editorial">Aa</button>
+  <button class="fmt-font-btn" data-font="modern" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;" onclick="setFont('modern')" title="Modern">Aa</button>
+  <button class="fmt-font-btn" data-font="minimal" style="font-family:'Inter Tight',sans-serif;font-weight:300;" onclick="setFont('minimal')" title="Minimal">Aa</button>
+  <button class="fmt-font-btn" data-font="bold" style="font-family:'Syne',sans-serif;font-weight:800;" onclick="setFont('bold')" title="Bold">Aa</button>
+  <button class="fmt-font-btn" data-font="warm" style="font-family:'Nunito',sans-serif;" onclick="setFont('warm')" title="Warm">Aa</button>
+  <div class="fmt-sep"></div>
+  <span class="fmt-label">Align</span>
+  <div style="display:flex;">
+    <button class="fmt-align-btn on" id="fmt-left" onclick="setAlign('left')" title="Left">
+      <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="1" y="6" width="10" height="2"/><rect x="1" y="10" width="14" height="2"/><rect x="1" y="14" width="8" height="2"/></svg>
+    </button>
+    <button class="fmt-align-btn" id="fmt-center" onclick="setAlign('center')" title="Center">
+      <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="3" y="6" width="10" height="2"/><rect x="1" y="10" width="14" height="2"/><rect x="4" y="14" width="8" height="2"/></svg>
+    </button>
+    <button class="fmt-align-btn" id="fmt-right" onclick="setAlign('right')" title="Right">
+      <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="5" y="6" width="10" height="2"/><rect x="1" y="10" width="14" height="2"/><rect x="7" y="14" width="8" height="2"/></svg>
+    </button>
+  </div>
+</div>
+
 <div id="theme-switcher">
 <button class="ts-btn on" data-theme="classic" onclick="switchTheme('classic',this)">Classic</button>
 <button class="ts-btn" data-theme="dark" onclick="switchTheme('dark',this)">Dark</button>
@@ -497,15 +553,87 @@ gtag('config', 'G-96XWYGNS49');
 
 <footer>
 <a href="/" class="footer-logo">Ask<span>.</span></a>
-<div class="footer-copy">Powered by Menos Labs · menoslabs.com</div>
+<div class="footer-copy">Made in Chicago &nbsp;|&nbsp; Menos Labs LLC 2026</div>
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
-const STRIPE_URL = 'https://buy.stripe.com/aFa8wR9fo6Er9l87JSgEg00';
+const STRIPE_URL = 'https://buy.stripe.com/test_cNi28teANdLOgzgb75dby00';
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 let systemPrompt='', chatHistory=[], chatLoading=false, chatOpen=false, avatarDataUrl=null;
 let isEditMode = false, editSlug = '';
+let currentFont = 'classic';
+let activeEditEl = null;
+
+// ── FONT ──
+function setFont(name){
+  currentFont = name;
+  document.body.className = document.body.className.replace(/font-\w+/g,'').trim();
+  document.body.classList.add('font-' + name);
+  document.querySelectorAll('.fmt-font-btn').forEach(b => b.classList.toggle('on', b.dataset.font === name));
+  autoSave();
+}
+
+// ── ALIGNMENT ──
+function setAlign(dir){
+  if(!activeEditEl) return;
+  activeEditEl.style.textAlign = dir;
+  activeEditEl.dataset.align = dir;
+  ['left','center','right'].forEach(d => {
+    document.getElementById('fmt-' + d).classList.toggle('on', d === dir);
+  });
+  autoSave();
+}
+
+// ── TOOLBAR POSITIONING ──
+function showToolbar(el){
+  activeEditEl = el;
+  const toolbar = document.getElementById('fmt-toolbar');
+  const rect = el.getBoundingClientRect();
+  toolbar.classList.add('visible');
+  // Position above the element
+  const top = Math.max(rect.top + window.scrollY - toolbar.offsetHeight - 8, window.scrollY + 60);
+  const left = Math.min(rect.left + window.scrollX, window.innerWidth - toolbar.offsetWidth - 16);
+  toolbar.style.top = top + 'px';
+  toolbar.style.left = Math.max(left, 8) + 'px';
+  // Sync align buttons to current element alignment
+  const align = el.dataset.align || el.style.textAlign || 'left';
+  ['left','center','right'].forEach(d => document.getElementById('fmt-' + d).classList.toggle('on', d === align));
+}
+
+function hideToolbar(e){
+  // Don't hide if clicking inside the toolbar
+  const toolbar = document.getElementById('fmt-toolbar');
+  if(toolbar.contains(e.relatedTarget)) return;
+  toolbar.classList.remove('visible');
+  activeEditEl = null;
+  autoSave();
+}
+
+// ── AUTO SAVE ──
+function autoSave(){
+  const raw = sessionStorage.getItem('ask_draft');
+  if(!raw) return;
+  const d = JSON.parse(raw);
+  d.name = document.getElementById('profileName').textContent.trim();
+  d.meta = document.getElementById('profileMeta').textContent.trim();
+  d.bio = document.getElementById('profileBio').textContent.trim();
+  d.font = currentFont;
+  // Save per-field alignments
+  d.alignName = document.getElementById('profileName').dataset.align || 'left';
+  d.alignMeta = document.getElementById('profileMeta').dataset.align || 'left';
+  d.alignBio = document.getElementById('profileBio').dataset.align || 'left';
+  if(d.systemPrompt) d.systemPrompt = d.systemPrompt.replace(/Bio:[\s\S]*?\n/, 'Bio: ' + d.bio + '\n');
+  sessionStorage.setItem('ask_draft', JSON.stringify(d));
+}
+
+// Wire up contenteditable fields for toolbar
+function wireEditableFields(){
+  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+    el.addEventListener('focus', () => showToolbar(el));
+    el.addEventListener('blur', hideToolbar);
+  });
+}
 
 window.addEventListener('load', () => {
   const raw = sessionStorage.getItem('ask_draft');
@@ -529,6 +657,15 @@ window.addEventListener('load', () => {
     document.querySelectorAll('.ts-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===d.theme));
   }
 
+  // Apply font
+  if(d.font){
+    currentFont = d.font;
+    document.body.classList.add('font-' + d.font);
+    document.querySelectorAll('.fmt-font-btn').forEach(b => b.classList.toggle('on', b.dataset.font === d.font));
+  } else {
+    document.body.classList.add('font-classic');
+  }
+
   systemPrompt = d.systemPrompt;
   avatarDataUrl = d.avatar || sessionStorage.getItem('ask_avatar');
   if(d.avatar) { sessionStorage.setItem('ask_avatar', d.avatar); delete d.avatar; sessionStorage.setItem('ask_draft', JSON.stringify(d)); }
@@ -536,6 +673,11 @@ window.addEventListener('load', () => {
   document.getElementById('profileName').textContent = d.name||'—';
   document.getElementById('profileMeta').textContent = [d.title,d.city].filter(Boolean).join(' · ');
   document.getElementById('profileBio').textContent = d.bio||'';
+
+  // Apply saved alignments
+  if(d.alignName){ document.getElementById('profileName').style.textAlign = d.alignName; document.getElementById('profileName').dataset.align = d.alignName; }
+  if(d.alignMeta){ document.getElementById('profileMeta').style.textAlign = d.alignMeta; document.getElementById('profileMeta').dataset.align = d.alignMeta; }
+  if(d.alignBio){ document.getElementById('profileBio').style.textAlign = d.alignBio; document.getElementById('profileBio').dataset.align = d.alignBio; }
   document.title = `Preview — ${d.name}`;
 
   const firstName = d.name.split(' ')[0];
@@ -615,6 +757,7 @@ window.addEventListener('load', () => {
 
   addMessage('assistant',`Hi! I'm ${d.name}'s AI assistant. Try asking me anything about their background — this is a live preview!`);
   if(!isEditMode) resetIdleTimer();
+  wireEditableFields();
 });
 
 let idleTimer = null;
@@ -635,16 +778,7 @@ function switchTheme(name, el){
 
 function showPurchaseModal(){ document.getElementById('purchaseModal').classList.add('show'); }
 
-function saveEdits(){
-  const raw = sessionStorage.getItem('ask_draft');
-  if(!raw) return;
-  const d = JSON.parse(raw);
-  d.name = document.getElementById('profileName').textContent.trim();
-  d.meta = document.getElementById('profileMeta').textContent.trim();
-  d.bio = document.getElementById('profileBio').textContent.trim();
-  if(d.systemPrompt) d.systemPrompt = d.systemPrompt.replace(/Bio:[\s\S]*?\n/, 'Bio: ' + d.bio + '\n');
-  sessionStorage.setItem('ask_draft', JSON.stringify(d));
-}
+function saveEdits(){ autoSave(); }
 
 function handlePurchase(){
   saveEdits();
