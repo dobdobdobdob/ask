@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<!-- v2026-03-24 -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage My Account — Ask</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Lora:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6Y16FEG2H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-Y6Y16FEG2H');</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text1);min-height:100vh;display:flex;flex-direction:column;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
+.nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
+.nav-back{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
+.nav-back:hover{color:var(--text1);}
+
+/* PAGE */
+.page{max-width:680px;margin:0 auto;padding:7rem 2rem 4rem;flex:1;}
+.page-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
+.page-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem;}
+.page-sub{font-size:0.9rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:2rem;}
+
+/* AUTH STEPS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2.5rem;}
+.step{display:none;}
+.step.active{display:block;}
+.flabel{font-size:0.62rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:0.4rem;}
+.finput{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:300;background:var(--off-white);border:1px solid var(--border);color:var(--text1);padding:0.7rem 1rem;outline:none;transition:border-color 0.2s;border-radius:2px;width:100%;}
+.finput:focus{border-color:var(--accent-dark);}
+.finput::placeholder{color:var(--text3);}
+.field{margin-bottom:1rem;}
+.btn{background:var(--black);color:var(--white);padding:0.9rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;width:100%;margin-top:0.5rem;transition:all 0.2s;display:block;text-align:center;}
+.btn:hover{background:var(--accent);color:var(--black);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-secondary{background:none;color:var(--text3);border:1px solid var(--border);padding:0.7rem;font-size:0.78rem;font-weight:400;border-radius:2px;cursor:pointer;width:100%;margin-top:0.5rem;transition:all 0.2s;}
+.btn-secondary:hover{color:var(--text1);border-color:var(--text2);}
+.status{font-size:0.78rem;margin-top:0.5rem;min-height:1.2em;}
+.status.ok{color:var(--accent-dark);}
+.status.err{color:#e05c5c;}
+.profile-confirm{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:1rem;margin:1rem 0;}
+.profile-confirm-name{font-weight:500;font-size:0.95rem;margin-bottom:0.2rem;}
+.profile-confirm-meta{font-size:0.78rem;color:var(--text3);}
+.code-input{font-family:'DM Sans',monospace;font-size:1.5rem;font-weight:500;letter-spacing:0.4em;text-align:center;text-transform:uppercase;}
+.masked-email{font-size:0.82rem;color:var(--text2);margin:0.75rem 0;font-weight:300;}
+.form-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+
+/* TABS */
+.tab-nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:2rem;}
+.tab-btn{font-size:0.82rem;font-weight:500;padding:0.75rem 1.5rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;transition:all 0.2s;margin-bottom:-2px;font-family:'DM Sans',sans-serif;}
+.tab-btn:hover{color:var(--text1);}
+.tab-btn.on{color:var(--text1);border-bottom-color:var(--black);}
+.tab-panel{display:none;}
+.tab-panel.on{display:block;}
+
+/* MY PAGE TAB */
+.url-row{display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.75rem 1rem;margin-bottom:1rem;}
+.url-text{flex:1;font-size:0.85rem;color:var(--text1);font-family:'DM Sans',monospace;word-break:break-all;}
+.copy-btn{font-size:0.68rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:0.4rem 1rem;background:var(--black);color:var(--white);border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;}
+.copy-btn:hover{background:var(--accent);color:var(--black);}
+.copy-btn.copied{background:var(--accent-dark);color:var(--white);}
+.view-btn{display:block;text-align:center;background:var(--black);color:var(--white);padding:0.85rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;text-decoration:none;margin-bottom:1.5rem;}
+.view-btn:hover{background:var(--accent);color:var(--black);}
+.embed-options{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.embed-option{border:1px solid var(--border);border-radius:4px;padding:1.25rem;cursor:pointer;transition:all 0.2s;}
+.embed-option:hover{border-color:var(--accent-dark);}
+.embed-option.active{border-color:var(--accent-dark);background:var(--off-white);}
+.embed-option-title{font-size:0.88rem;font-weight:500;margin-bottom:0.2rem;}
+.embed-option-desc{font-size:0.75rem;color:var(--text2);font-weight:300;line-height:1.5;}
+.platform-tabs{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.ptab{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;padding:0.6rem 1.1rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;transition:all 0.2s;margin-bottom:-1px;}
+.ptab.on{color:var(--text1);border-bottom-color:var(--black);}
+.step-item{display:flex;gap:0.85rem;align-items:flex-start;margin-bottom:0.6rem;}
+.step-circle{width:22px;height:22px;background:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;color:var(--white);flex-shrink:0;margin-top:1px;}
+.step-text{font-size:0.82rem;color:var(--text2);line-height:1.6;font-weight:300;}
+.step-text strong{color:var(--text1);font-weight:500;}
+.code-block{background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:1rem;font-family:'DM Sans',monospace;font-size:0.75rem;color:var(--text1);word-break:break-all;line-height:1.6;margin-bottom:0.75rem;white-space:pre-wrap;}
+
+/* EDIT TAB */
+.fields-2{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;}
+.socials-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;}
+.social-field{display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.6rem 0.9rem;transition:border-color 0.2s;}
+.social-field:focus-within{border-color:var(--accent-dark);}
+.social-icon{font-size:0.85rem;flex-shrink:0;width:18px;text-align:center;color:var(--text3);}
+.social-input{flex:1;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:300;background:none;border:none;color:var(--text1);outline:none;}
+.social-input::placeholder{color:var(--text3);}
+.avatar-row{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;}
+.avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:0.4rem;}
+.avatar-circle{width:72px;height:72px;border-radius:50%;border:1px solid var(--border);background:var(--off-white);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;transition:border-color 0.2s;position:relative;}
+.avatar-circle:hover{border-color:var(--accent-dark);}
+.avatar-circle:hover .avatar-cam{opacity:1;}
+.avatar-circle img{width:100%;height:100%;object-fit:cover;}
+.avatar-initials{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text3);}
+.avatar-cam{position:absolute;inset:0;background:rgba(0,0,0,0.35);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;}
+.avatar-hint{font-size:0.62rem;color:var(--text3);letter-spacing:0.08em;}
+.avatar-name-col{flex:1;display:flex;flex-direction:column;gap:0.75rem;}
+.theme-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-bottom:1.5rem;}
+.theme-card{border:1px solid var(--border);border-radius:4px;padding:0.75rem;cursor:pointer;transition:all 0.2s;}
+.theme-card:hover{border-color:var(--accent-dark);}
+.theme-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+.theme-preview{width:100%;height:40px;border-radius:3px;padding:6px;display:flex;flex-direction:column;justify-content:center;margin-bottom:0.4rem;overflow:hidden;}
+.theme-label{font-size:0.75rem;font-weight:500;color:var(--text1);margin-bottom:1px;}
+.theme-desc{font-size:0.62rem;color:var(--text3);}
+.font-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;margin-bottom:1.5rem;}
+.font-card{border:1px solid var(--border);border-radius:4px;padding:0.85rem 1rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+.font-card:hover{border-color:var(--accent-dark);}
+.font-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+.font-card-name{font-size:1rem;font-weight:500;color:var(--text1);margin-bottom:2px;line-height:1.2;}
+.font-card-label{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.processing{display:none;text-align:center;padding:2rem 0;}
+.proc-dots{display:flex;gap:6px;justify-content:center;margin-bottom:1rem;}
+.proc-dot{width:8px;height:8px;background:var(--accent-dark);border-radius:50%;animation:dotPulse 1.4s ease-in-out infinite;}
+.proc-dot:nth-child(2){animation-delay:0.2s;}
+.proc-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
+.proc-text{font-size:0.82rem;color:var(--text2);letter-spacing:0.05em;}
+.edit-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(138,179,0,0.1);border:1px solid rgba(138,179,0,0.3);border-radius:2px;padding:0.4rem 0.85rem;font-size:0.72rem;color:var(--accent-dark);font-weight:500;letter-spacing:0.05em;margin-bottom:1.5rem;}
+
+/* FOOTER */
+footer{background:var(--black);padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-top:auto;}
+.footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
+.footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.03em;}
+
+/* GDPR */
+#gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:#111;border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
+#gdpr-banner.show{transform:translateY(0);}
+.gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
+.gdpr-btns{display:flex;gap:0.5rem;flex-shrink:0;}
+.gdpr-accept{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:#CCFF00;color:#000;border:none;border-radius:2px;cursor:pointer;}
+.gdpr-decline{font-size:0.72rem;font-weight:500;padding:0.45rem 1.1rem;background:none;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;}
+#avatarInput{display:none;}
+
+@media(max-width:640px){
+  nav{padding:1.25rem 1.5rem;}
+  .card{padding:1.75rem;}
+  .fields-2,.socials-grid,.embed-options,.theme-picker{grid-template-columns:1fr;}
+  .font-picker{grid-template-columns:repeat(2,1fr);}
+  footer{flex-direction:column;gap:0.5rem;padding:1.25rem 1.5rem;text-align:center;}
+}
+</style>
+</head>
+<body>
+<input type="file" id="avatarInput" accept="image/*">
+
+<nav>
+  <a href="/" class="nav-logo">Ask<span>.</span></a>
+  <a href="/" class="nav-back">← Back</a>
+</nav>
+
+<div class="page">
+  <p class="page-eyebrow">Your Account</p>
+  <h1 class="page-title">Manage My Account.</h1>
+  <p class="page-sub">Enter your username and verify your identity to manage your Ask page.</p>
+
+  <!-- STEP 1: Username -->
+  <div class="card">
+    <div class="step active" id="step1">
+      <p class="form-section-title">Step 1 — Your Username</p>
+      <div class="field">
+        <label class="flabel">Username</label>
+        <input class="finput" id="iSlug" type="text" placeholder="janesmith" oninput="onSlugInput()">
+        <div class="status" id="slugStatus"></div>
+      </div>
+      <div id="profileConfirm" style="display:none">
+        <div class="profile-confirm">
+          <div class="profile-confirm-name" id="confirmName"></div>
+          <div class="profile-confirm-meta" id="confirmMeta"></div>
+        </div>
+      </div>
+      <button class="btn" id="btnStep1" onclick="checkProfile()" disabled>Look Up My Profile →</button>
+    </div>
+
+    <!-- STEP 2: Request code -->
+    <div class="step" id="step2">
+      <p class="form-section-title">Step 2 — Verify Your Identity</p>
+      <p style="font-size:0.88rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:1rem;">We'll send a 6-digit verification code to the email address on your account.</p>
+      <div class="masked-email" id="maskedEmailDisplay"></div>
+      <button class="btn" id="btnRequestCode" onclick="requestCode()">Send Verification Code →</button>
+      <div class="status" id="codeRequestStatus"></div>
+      <button class="btn-secondary" onclick="goToStep(1)">← Use a different username</button>
+    </div>
+
+    <!-- STEP 3: Enter code -->
+    <div class="step" id="step3">
+      <p class="form-section-title">Step 3 — Enter Your Code</p>
+      <div class="masked-email" id="maskedEmailDisplay2"></div>
+      <div class="field" style="margin-top:1rem;">
+        <label class="flabel">Verification Code</label>
+        <input class="finput code-input" id="iCode" type="text" maxlength="6" placeholder="ABC123" oninput="onCodeInput()">
+        <div class="status" id="codeStatus"></div>
+      </div>
+      <button class="btn" id="btnVerify" onclick="verifyCode()" disabled>Verify & Manage My Account →</button>
+      <button class="btn-secondary" id="btnResend" onclick="requestCode()">Resend code</button>
+      <div class="status" id="resendStatus"></div>
+    </div>
+
+    <!-- STEP 4: Tabbed account management -->
+    <div class="step" id="step4">
+      <div class="edit-badge">✓ Verified — ask.menoslabs.com/<span id="editSlugBadge"></span></div>
+
+      <div class="tab-nav">
+        <button class="tab-btn on" onclick="switchTab('mypage', this)">My Page</button>
+        <button class="tab-btn" onclick="switchTab('edit', this)">Edit Profile</button>
+      </div>
+
+      <!-- MY PAGE TAB -->
+      <div class="tab-panel on" id="tab-mypage">
+        <p class="form-section-title">Your Shareable Page</p>
+        <div class="url-row">
+          <div class="url-text" id="shareUrl">—</div>
+          <button class="copy-btn" id="copyUrlBtn" onclick="copyUrl()">Copy</button>
+        </div>
+        <a class="view-btn" id="viewPageBtn" href="#" target="_blank">View My Page →</a>
+
+        <p class="form-section-title" style="margin-top:1.5rem;">Embed on Your Website</p>
+        <div class="embed-options">
+          <div class="embed-option active" id="opt-chat" onclick="selectEmbed('chat')">
+            <div class="embed-option-title">Chat Button Only</div>
+            <div class="embed-option-desc">Floating button on any page. Best for portfolios and personal sites.</div>
+          </div>
+          <div class="embed-option" id="opt-full" onclick="selectEmbed('full')">
+            <div class="embed-option-title">Full Profile Page</div>
+            <div class="embed-option-desc">Embed your complete profile with experience, skills, and chat.</div>
+          </div>
+        </div>
+        <div class="platform-tabs">
+          <button class="ptab on" onclick="selectPlatform('wix',this)">Wix</button>
+          <button class="ptab" onclick="selectPlatform('squarespace',this)">Squarespace</button>
+          <button class="ptab" onclick="selectPlatform('wordpress',this)">WordPress</button>
+          <button class="ptab" onclick="selectPlatform('any',this)">Any Site</button>
+        </div>
+        <div id="platform-content"></div>
+      </div>
+
+      <!-- EDIT TAB -->
+      <div class="tab-panel" id="tab-edit">
+        <p class="form-section-title">Profile Info</p>
+        <div class="avatar-row">
+          <div class="avatar-wrap">
+            <div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()">
+              <div class="avatar-initials" id="avatarInitials">?</div>
+              <div class="avatar-cam">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+            </div>
+            <div class="avatar-hint">Upload photo</div>
+          </div>
+          <div class="avatar-name-col">
+            <div class="field" style="margin-bottom:0">
+              <label class="flabel">Full Name *</label>
+              <input class="finput" id="iName" type="text" placeholder="Jane Smith" oninput="updateInitials()">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label class="flabel">Title / Role</label>
+              <input class="finput" id="iTitle" type="text" placeholder="Senior Product Manager">
+            </div>
+          </div>
+        </div>
+        <div class="fields-2">
+          <div class="field" style="margin-bottom:0"><label class="flabel">City</label><input class="finput" id="iCity" type="text" placeholder="Chicago, IL"></div>
+          <div class="field" style="margin-bottom:0"><label class="flabel">Email</label><input class="finput" id="iEmail" type="email" placeholder="jane@example.com"></div>
+        </div>
+
+        <p class="form-section-title" style="margin-top:1.5rem;">Social Links</p>
+        <div class="socials-grid">
+          <div class="social-field"><span class="social-icon">in</span><input class="social-input" id="sLinkedIn" placeholder="LinkedIn URL"></div>
+          <div class="social-field"><span class="social-icon">⌂</span><input class="social-input" id="sPortfolio" placeholder="Portfolio URL"></div>
+          <div class="social-field"><span class="social-icon">gh</span><input class="social-input" id="sGithub" placeholder="GitHub URL"></div>
+          <div class="social-field"><span class="social-icon">𝕏</span><input class="social-input" id="sTwitter" placeholder="X / Twitter URL"></div>
+          <div class="social-field"><span class="social-icon">▶</span><input class="social-input" id="sTiktok" placeholder="TikTok URL"></div>
+          <div class="social-field"><span class="social-icon">◻</span><input class="social-input" id="sInstagram" placeholder="Instagram URL"></div>
+        </div>
+
+        <p class="form-section-title" style="margin-top:1.5rem;">Profile Theme</p>
+        <div class="theme-picker">
+          <div class="theme-card on" data-theme="classic" onclick="pickTheme('classic',this)">
+            <div class="theme-preview" style="background:#F7F6F3;border:1px solid #E2DED8;"><div style="width:55%;height:6px;background:#1A1A1A;border-radius:2px;margin-bottom:4px;"></div><div style="width:80%;height:2px;background:#E2DED8;border-radius:2px;"></div></div>
+            <div class="theme-label">Classic</div><div class="theme-desc">Clean & professional</div>
+          </div>
+          <div class="theme-card" data-theme="dark" onclick="pickTheme('dark',this)">
+            <div class="theme-preview" style="background:#111111;"><div style="width:55%;height:6px;background:#ffffff;border-radius:2px;margin-bottom:4px;"></div><div style="width:40%;height:4px;background:#CCFF00;border-radius:2px;"></div></div>
+            <div class="theme-label">Dark</div><div class="theme-desc">Bold & striking</div>
+          </div>
+          <div class="theme-card" data-theme="bold" onclick="pickTheme('bold',this)">
+            <div class="theme-preview" style="background:#ffffff;border:2px solid #000;"><div style="width:55%;height:6px;background:#000000;margin-bottom:4px;"></div><div style="width:80%;height:2px;background:#000000;"></div></div>
+            <div class="theme-label">Bold</div><div class="theme-desc">Editorial & graphic</div>
+          </div>
+          <div class="theme-card" data-theme="soft" onclick="pickTheme('soft',this)">
+            <div class="theme-preview" style="background:#FDF8F3;border:1px solid #DDD0BB;"><div style="width:55%;height:6px;background:#2D2318;border-radius:5px;margin-bottom:4px;"></div><div style="width:40%;height:4px;background:#D48B3A;border-radius:5px;"></div></div>
+            <div class="theme-label">Soft</div><div class="theme-desc">Warm & approachable</div>
+          </div>
+        </div>
+
+        <p class="form-section-title">Font Style</p>
+        <div class="font-picker">
+          <div class="font-card on" data-font="classic" onclick="pickFont('classic',this)"><div class="font-card-name" style="font-family:'DM Sans',sans-serif;">Aa</div><div class="font-card-label">Classic</div></div>
+          <div class="font-card" data-font="editorial" onclick="pickFont('editorial',this)"><div class="font-card-name" style="font-family:'Playfair Display',serif;font-style:italic;">Aa</div><div class="font-card-label">Editorial</div></div>
+          <div class="font-card" data-font="modern" onclick="pickFont('modern',this)"><div class="font-card-name" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">Aa</div><div class="font-card-label">Modern</div></div>
+          <div class="font-card" data-font="minimal" onclick="pickFont('minimal',this)"><div class="font-card-name" style="font-family:'Inter Tight',sans-serif;font-weight:300;">Aa</div><div class="font-card-label">Minimal</div></div>
+          <div class="font-card" data-font="bold" onclick="pickFont('bold',this)"><div class="font-card-name" style="font-family:'Syne',sans-serif;font-weight:800;">Aa</div><div class="font-card-label">Bold</div></div>
+          <div class="font-card" data-font="warm" onclick="pickFont('warm',this)"><div class="font-card-name" style="font-family:'Nunito',sans-serif;font-weight:600;">Aa</div><div class="font-card-label">Warm</div></div>
+        </div>
+
+        <p class="form-section-title">Update Resume *</p>
+        <div class="field">
+          <textarea class="finput" id="iResume" placeholder="Paste your updated resume text — work experience, skills, education, achievements..." style="min-height:160px;"></textarea>
+        </div>
+
+        <div id="editActions">
+          <button class="btn" onclick="saveInfo()" style="background:var(--off-white);color:var(--text1);border:1px solid var(--border);margin-bottom:0.5rem;" onmouseover="this.style.background='var(--light)'" onmouseout="this.style.background='var(--off-white)'">Save Info & Theme →</button>
+          <button class="btn" onclick="generateEdit()">Regenerate My Assistant →</button>
+        </div>
+        <div class="processing" id="processing">
+          <div class="proc-dots"><div class="proc-dot"></div><div class="proc-dot"></div><div class="proc-dot"></div></div>
+          <div class="proc-text" id="procText">Reading your resume...</div>
+        </div>
+        <div id="saveSuccess" style="display:none;background:rgba(139,179,0,0.08);border:1px solid rgba(139,179,0,0.25);border-radius:2px;padding:1rem;text-align:center;margin-top:1rem;">
+          <div style="font-size:0.85rem;font-weight:500;color:var(--accent-dark);margin-bottom:0.25rem;">✓ Profile updated</div>
+          <div style="font-size:0.75rem;color:var(--text2);font-weight:300;" id="saveSuccessMsg">Changes saved successfully.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="gdpr-banner">
+  <div class="gdpr-text">We use cookies to understand how visitors use our site.</div>
+  <div class="gdpr-btns">
+    <button class="gdpr-decline" onclick="gdprDecline()">Decline</button>
+    <button class="gdpr-accept" onclick="gdprAccept()">Accept</button>
+  </div>
+</div>
+
+<footer>
+  <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+    <a href="/" class="footer-logo">Ask<span>.</span></a>
+    <a href="/faq" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">FAQ</a>
+    <span style="color:rgba(255,255,255,0.15);font-size:0.72rem;">&middot;</span>
+    <div class="footer-copy">Powered by Menos Labs LLC 2026 &middot; <a href="https://www.menoslabs.com" style="color:rgba(255,255,255,0.25);text-decoration:none;">menoslabs.com</a></div>
+    <span style="color:rgba(255,255,255,0.15);font-size:0.72rem;">|</span>
+    <a href="/account" style="font-size:0.72rem;font-weight:600;color:#CCFF00;text-decoration:none;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Already have an Ask page? Manage it here &#8594;</a>
+  </div>
+</footer>
+
+<script>
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
+const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
+let currentSlug = '', maskedEmail = '', avatarDataUrl = null;
+let selectedTheme = 'classic', selectedFont = 'classic';
+let embedType = 'chat', currentPlatform = 'wix', rawEmbedCode = '';
+let shareUrl = '';
+
+// ── PRE-FILL FROM URL PARAM ──
+window.addEventListener('load', () => {
+  const urlSlug = new URLSearchParams(window.location.search).get('slug');
+  if(urlSlug){
+    document.getElementById('iSlug').value = urlSlug;
+    onSlugInput();
+    checkProfile();
+  }
+  gdprInit();
+});
+
+// ── STEP NAVIGATION ──
+function onSlugInput(){
+  const val = document.getElementById('iSlug').value.trim().toLowerCase();
+  document.getElementById('btnStep1').disabled = val.length < 3;
+  document.getElementById('slugStatus').textContent = '';
+  document.getElementById('profileConfirm').style.display = 'none';
+}
+
+async function checkProfile(){
+  const slug = document.getElementById('iSlug').value.trim().toLowerCase();
+  if(!slug || slug.length < 3) return;
+  const status = document.getElementById('slugStatus');
+  status.textContent = 'Looking up profile...'; status.className = 'status';
+  try {
+    const res = await fetch(`${ASK_SERVER}/${slug}`);
+    if(res.status === 404){
+      status.textContent = '✗ No profile found for "' + slug + '". Check your username and try again.';
+      status.className = 'status err';
+      document.getElementById('profileConfirm').style.display = 'none';
+      return;
+    }
+    const profile = await res.json();
+    currentSlug = slug;
+    status.textContent = '';
+    document.getElementById('confirmName').textContent = profile.name || slug;
+    document.getElementById('confirmMeta').textContent = [profile.title, profile.city].filter(Boolean).join(' · ') || 'ask.menoslabs.com/' + slug;
+    document.getElementById('profileConfirm').style.display = 'block';
+    setTimeout(() => goToStep(2), 600);
+  } catch(e){
+    status.textContent = 'Connection error — please try again.';
+    status.className = 'status err';
+  }
+}
+
+async function requestCode(){
+  const isResend = document.getElementById('step3').classList.contains('active');
+  const btn = isResend ? document.getElementById('btnResend') : document.getElementById('btnRequestCode');
+  const status = isResend ? document.getElementById('resendStatus') : document.getElementById('codeRequestStatus');
+  btn.disabled = true; btn.textContent = 'Sending...';
+  if(status){ status.textContent = ''; status.className = 'status'; }
+  try {
+    const res = await fetch(`${ASK_SERVER}/request-code`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({slug: currentSlug})
+    });
+    const data = await res.json();
+    if(!res.ok){
+      if(status){ status.textContent = '✗ ' + (data.error || 'Failed to send code.'); status.className = 'status err'; }
+      btn.disabled = false;
+      btn.textContent = isResend ? 'Resend code' : 'Send Verification Code →';
+      return;
+    }
+    maskedEmail = data.maskedEmail || '';
+    if(isResend){
+      if(status){ status.textContent = '✓ New code sent to ' + maskedEmail; status.className = 'status ok'; }
+      btn.disabled = false; btn.textContent = 'Resend code';
+      document.getElementById('iCode').value = '';
+      document.getElementById('btnVerify').disabled = true;
+    } else {
+      document.getElementById('maskedEmailDisplay2').textContent = 'Code sent to ' + maskedEmail;
+      goToStep(3);
+    }
+  } catch(e){
+    if(status){ status.textContent = 'Connection error — please try again.'; status.className = 'status err'; }
+    btn.disabled = false;
+    btn.textContent = isResend ? 'Resend code' : 'Send Verification Code →';
+  }
+}
+
+function onCodeInput(){
+  document.getElementById('btnVerify').disabled = document.getElementById('iCode').value.trim().length < 6;
+}
+
+async function verifyCode(){
+  const code = document.getElementById('iCode').value.trim().toUpperCase();
+  const status = document.getElementById('codeStatus');
+  const btn = document.getElementById('btnVerify');
+  btn.disabled = true; btn.textContent = 'Verifying...'; status.textContent = '';
+  try {
+    const res = await fetch(`${ASK_SERVER}/verify-code`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({slug: currentSlug, code})
+    });
+    const data = await res.json();
+    if(!res.ok){
+      status.textContent = '✗ ' + (data.error || 'Invalid code.');
+      status.className = 'status err';
+      btn.disabled = false; btn.textContent = 'Verify & Manage My Account →';
+      return;
+    }
+    prefillForm(data.profile);
+    goToStep(4);
+  } catch(e){
+    status.textContent = 'Connection error — please try again.';
+    status.className = 'status err';
+    btn.disabled = false; btn.textContent = 'Verify & Manage My Account →';
+  }
+}
+
+function goToStep(n){
+  document.querySelectorAll('.step').forEach((s,i) => s.classList.toggle('active', i+1 === n));
+  if(n === 2){
+    const confirmName = document.getElementById('confirmName').textContent;
+    document.getElementById('maskedEmailDisplay').textContent = 'We\'ll send a code to the email on file for ' + confirmName + '.';
+    document.getElementById('btnRequestCode').disabled = false;
+    document.getElementById('btnRequestCode').textContent = 'Send Verification Code →';
+  }
+}
+
+// ── PREFILL FORM ──
+function prefillForm(p){
+  document.getElementById('iName').value = p.name || '';
+  document.getElementById('iTitle').value = p.title || '';
+  document.getElementById('iCity').value = p.city || '';
+  document.getElementById('iEmail').value = p.email || '';
+  document.getElementById('iResume').value = p.resume || '';
+  document.getElementById('sLinkedIn').value = p.socials?.linkedin || '';
+  document.getElementById('sPortfolio').value = p.socials?.portfolio || '';
+  document.getElementById('sGithub').value = p.socials?.github || '';
+  document.getElementById('sTwitter').value = p.socials?.twitter || '';
+  document.getElementById('sTiktok').value = p.socials?.tiktok || '';
+  document.getElementById('sInstagram').value = p.socials?.instagram || '';
+  document.getElementById('editSlugBadge').textContent = currentSlug;
+
+  // Share URL
+  shareUrl = 'https://ask.menoslabs.com/' + currentSlug;
+  document.getElementById('shareUrl').textContent = shareUrl;
+  document.getElementById('viewPageBtn').href = shareUrl;
+  renderPlatformContent();
+
+  // Theme
+  if(p.theme){ selectedTheme = p.theme; document.querySelectorAll('.theme-card').forEach(c => c.classList.toggle('on', c.dataset.theme === p.theme)); }
+
+  // Font
+  if(p.font){ selectedFont = p.font; document.querySelectorAll('.font-card').forEach(c => c.classList.toggle('on', c.dataset.font === p.font)); }
+
+  // Avatar
+  avatarDataUrl = p.avatar || null;
+  if(p.avatar){
+    document.getElementById('avatarCircle').innerHTML = `<img src="${p.avatar}" alt="avatar"><div class="avatar-cam"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
+  } else { updateInitials(); }
+}
+
+// ── TAB SWITCHING ──
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  document.getElementById('tab-' + name).classList.add('on');
+}
+
+// ── EMBED / MY PAGE ──
+const INSTRUCTIONS = {
+  wix:{chat:['In your Wix editor, click <strong>Add Elements</strong> in the left sidebar','Select <strong>Embed Code</strong> → <strong>HTML iframe</strong>','Paste the code below into the HTML box','Click <strong>Apply</strong> and position the element','Publish your site'],full:['In your Wix editor click <strong>Add Elements</strong> → <strong>Embed Code</strong>','Select <strong>HTML iframe</strong>','Paste the iframe code below and click <strong>Apply</strong>','Resize the element to fill the section','Publish your site']},
+  squarespace:{chat:['Go to the page where you want the chat button','Click <strong>Edit</strong> → hover over a section → click <strong>+</strong>','Select <strong>Code</strong> block','Paste the code below and click <strong>Apply</strong>','Save and publish'],full:['Go to your page and click <strong>Edit</strong>','Add a <strong>Code</strong> block where you want the profile','Paste the iframe code below','Adjust the height as needed and publish']},
+  wordpress:{chat:['In WordPress go to <strong>Appearance → Theme Editor</strong>','Open your theme\'s <strong>footer.php</strong> file','Paste the code just before the <strong>&lt;/body&gt;</strong> tag','Save — the chat button will appear on every page'],full:['Create or edit a page in WordPress','Click <strong>+</strong> to add a block → search for <strong>Custom HTML</strong>','Paste the iframe code below','Save and preview']},
+  any:{chat:['Open your website\'s HTML file or template','Paste the code below just before the closing <strong>&lt;/body&gt;</strong> tag','Save and upload — the chat button will appear on every page'],full:['Open the HTML file where you want the profile','Paste the iframe code below where you want it to appear','Save and upload']}
+};
+function getEmbedCode(type){
+  if(type==='chat') return '<'+'script src="https://ask.menoslabs.com/embed.js" data-slug="'+currentSlug+'"><'+'/script>';
+  return '<'+'iframe src="'+shareUrl+'" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;" title="Ask '+currentSlug+'"><'+'/iframe>';
+}
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function renderPlatformContent(){
+  if(!currentSlug){ return; }
+  const steps = INSTRUCTIONS[currentPlatform][embedType];
+  rawEmbedCode = getEmbedCode(embedType);
+  const stepsHtml = steps.map((s,i)=>'<div class="step-item"><div class="step-circle">'+(i+1)+'</div><div class="step-text">'+s+'</div></div>').join('');
+  document.getElementById('platform-content').innerHTML =
+    '<div style="margin-bottom:1rem;">'+stepsHtml+'</div>'+
+    '<div class="code-block">'+escapeHtml(rawEmbedCode)+'</div>'+
+    '<button class="copy-btn" onclick="copyEmbed()" style="margin-bottom:0.5rem;">Copy Code</button>';
+}
+function selectEmbed(type){ embedType=type; document.getElementById('opt-chat').classList.toggle('active',type==='chat'); document.getElementById('opt-full').classList.toggle('active',type==='full'); renderPlatformContent(); }
+function selectPlatform(p,btn){ currentPlatform=p; document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on')); btn.classList.add('on'); renderPlatformContent(); }
+function copyUrl(){ navigator.clipboard.writeText(shareUrl).then(()=>{ const b=document.getElementById('copyUrlBtn'); b.textContent='Copied!'; b.classList.add('copied'); setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied');},2000); }); }
+function copyEmbed(){ navigator.clipboard.writeText(rawEmbedCode).then(()=>{ const b=document.querySelector('#platform-content .copy-btn'); if(b){b.textContent='Copied!';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy Code';b.classList.remove('copied');},2000);} }); }
+
+// ── THEME & FONT ──
+function pickTheme(name,el){ selectedTheme=name; document.querySelectorAll('.theme-card').forEach(c=>c.classList.toggle('on',c===el)); }
+function pickFont(name,el){ selectedFont=name; document.querySelectorAll('.font-card').forEach(c=>c.classList.toggle('on',c===el)); }
+
+// ── AVATAR ──
+document.getElementById('avatarInput').addEventListener('change', function(){
+  const file = this.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200; canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width-size)/2, sy = (img.height-size)/2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
+      avatarDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      document.getElementById('avatarCircle').innerHTML = `<img src="${avatarDataUrl}" alt="avatar"><div class="avatar-cam"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(file);
+});
+
+function updateInitials(){
+  const n = document.getElementById('iName').value.trim();
+  const p = n.split(' ').filter(Boolean);
+  const i = p.length>=2 ? p[0][0]+p[p.length-1][0] : p[0]?.[0]||'?';
+  document.getElementById('avatarInitials').textContent = i.toUpperCase();
+}
+
+// ── SAVE INFO (no regen) ──
+async function saveInfo(){
+  const name = document.getElementById('iName').value.trim();
+  const title = document.getElementById('iTitle').value.trim();
+  const city = document.getElementById('iCity').value.trim();
+  const email = document.getElementById('iEmail').value.trim();
+  const socials = {
+    linkedin: document.getElementById('sLinkedIn').value.trim(),
+    portfolio: document.getElementById('sPortfolio').value.trim(),
+    github: document.getElementById('sGithub').value.trim(),
+    twitter: document.getElementById('sTwitter').value.trim(),
+    tiktok: document.getElementById('sTiktok').value.trim(),
+    instagram: document.getElementById('sInstagram').value.trim(),
+  };
+  try {
+    let existing = {};
+    try{ const er=await fetch(`${ASK_SERVER}/${currentSlug}`); existing=await er.json(); }catch(e){}
+    const updated = {
+      ...existing, name, title, city, email, socials,
+      theme: selectedTheme, font: selectedFont,
+      meta: [title,city].filter(Boolean).join(' · '),
+      ...(avatarDataUrl ? {avatar: avatarDataUrl} : {})
+    };
+    await fetch(`${ASK_SERVER}/update`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ slug: currentSlug, data: updated })
+    });
+    showSaveSuccess('Profile info saved successfully.');
+  } catch(e){
+    alert('Save failed: ' + e.message);
+  }
+}
+
+// ── REGENERATE ──
+async function generateEdit(){
+  const name = document.getElementById('iName').value.trim().replace(/[^a-zA-Z0-9\s\-]/g,'').trim();
+  const title = document.getElementById('iTitle').value.trim();
+  const city = document.getElementById('iCity').value.trim();
+  const email = document.getElementById('iEmail').value.trim();
+  const rawResume = document.getElementById('iResume').value.trim();
+  const resume = rawResume
+    .replace(/\+?[\d][\d\s\-().]{7,}[\d]/g,'[phone removed]')
+    .replace(/\d+\s+[A-Za-z0-9\s,\.]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Way|Place|Pl|Circle|Cir|Trail|Tr|Parkway|Pkwy|Highway|Hwy)[^\n]*/gi,'[address removed]')
+    .replace(/\b[A-Za-z\s]+,\s*[A-Z]{2}\s+\d{5}(?:-\d{4})?\b/g,'[address removed]')
+    .trim();
+  if(!name){ alert('Please enter your name.'); return; }
+  if(!resume){ alert('Please paste your resume text above.'); return; }
+  if(resume.length < 100){ alert('Resume seems too short — paste your full resume for best results.'); return; }
+  const socials = {
+    linkedin: document.getElementById('sLinkedIn').value.trim(),
+    portfolio: document.getElementById('sPortfolio').value.trim(),
+    github: document.getElementById('sGithub').value.trim(),
+    twitter: document.getElementById('sTwitter').value.trim(),
+    tiktok: document.getElementById('sTiktok').value.trim(),
+    instagram: document.getElementById('sInstagram').value.trim(),
+  };
+  document.getElementById('editActions').style.display='none';
+  document.getElementById('processing').style.display='block';
+  document.getElementById('saveSuccess').style.display='none';
+  const texts = ['Reading your resume...','Extracting experience...','Building your assistant...','Almost ready...'];
+  let gi=0;
+  const iv = setInterval(()=>{ gi=(gi+1)%texts.length; document.getElementById('procText').textContent=texts[gi]; }, 1800);
+  try {
+    const res = await fetch(WORKER, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:8000,
+        messages:[{role:'user', content:
+`You are parsing a resume. CRITICAL RULES:
+- Only use information explicitly stated in the resume text below
+- Do NOT invent, assume, or hallucinate any companies, roles, dates, or achievements
+- If the resume text looks garbled or unreadable, return an error field instead
+- Only include companies and roles that are clearly named in the text
+- Do NOT include any physical addresses or phone numbers in any field
+
+Resume for ${name}:
+---
+${resume}
+---
+
+Respond with ONLY a valid JSON object (no markdown, no backticks):
+{
+  "bio": "2-3 sentence bio using ONLY facts from the resume above. Third person.",
+  "experience": [{"company":"EXACT company name from resume only","role":"EXACT job title from resume only","dates":"dates as written in resume","location":"city and state only, no street addresses","bullets":["achievement or responsibility exactly as described in resume"]}],
+  "education": [{"institution":"EXACT school name from resume only","degree":"degree and field as written in resume","dates":"dates as written in resume","location":"city and state only if mentioned"}],
+  "skills": ["only skills explicitly mentioned in the resume"],
+  "systemPrompt": "You are a professional AI assistant for ${name}. Only discuss what is in their resume. If asked about something not in their background, say you don't have that information. Background from resume: [paste all key facts from the resume here]"
+}`
+        }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '{}';
+    let parsed;
+    try { parsed = JSON.parse(raw); }
+    catch(e){ const m=raw.match(/\{[\s\S]*\}/); parsed=m?JSON.parse(m[0]):{bio:'',experience:[],education:[],skills:[],systemPrompt:`You are an AI assistant for ${name}.`}; }
+    clearInterval(iv);
+    let existing = {};
+    try{ const er=await fetch(`${ASK_SERVER}/${currentSlug}`); existing=await er.json(); }catch(e){}
+    const updated = {
+      ...existing, name, title, city, email, socials,
+      theme: selectedTheme, font: selectedFont,
+      meta: [title,city].filter(Boolean).join(' · '),
+      bio: parsed.bio, experience: parsed.experience||[], education: parsed.education||[],
+      skills: parsed.skills||[], systemPrompt: parsed.systemPrompt, resume,
+      ...(avatarDataUrl ? {avatar: avatarDataUrl} : {})
+    };
+    await fetch(`${ASK_SERVER}/update`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ slug: currentSlug, data: updated })
+    });
+    document.getElementById('processing').style.display='none';
+    document.getElementById('editActions').style.display='block';
+    showSaveSuccess('Profile regenerated and saved. <a href="'+shareUrl+'" target="_blank" style="color:var(--accent-dark);">View your page →</a>');
+  } catch(err){
+    clearInterval(iv);
+    document.getElementById('procText').textContent='Something went wrong. Please try again.';
+    document.getElementById('processing').style.display='none';
+    document.getElementById('editActions').style.display='block';
+  }
+}
+
+function showSaveSuccess(msg){
+  const el = document.getElementById('saveSuccess');
+  document.getElementById('saveSuccessMsg').innerHTML = msg;
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ── GDPR ──
+function gdprInit(){ const c=localStorage.getItem('gdpr_consent'); if(!c)setTimeout(()=>{const b=document.getElementById('gdpr-banner');if(b)b.classList.add('show');},1500); if(c==='declined')window['ga-disable-G-Y6Y16FEG2H']=true; }
+function gdprAccept(){ localStorage.setItem('gdpr_consent','accepted'); const b=document.getElementById('gdpr-banner'); if(b)b.classList.remove('show'); }
+function gdprDecline(){ localStorage.setItem('gdpr_consent','declined'); window['ga-disable-G-Y6Y16FEG2H']=true; const b=document.getElementById('gdpr-banner'); if(b)b.classList.remove('show'); }
+</script>
+</body>
+</html>

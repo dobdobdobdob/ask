@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ask — Your Personal AI Assistant</title>
   <!-- Open Graph / Link Preview -->
-  <meta name="google-site-verification" content="yaktHgIxZO_tL8OwDggwkWRf9rtd1HlMKCodHM9UY4M" />
   <meta name="description" content="Your resume as a personal AI page. Upload once, share forever. $9.99.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ask.menoslabs.com/">
@@ -222,6 +221,7 @@
 
 <nav>
   <a href="/" class="nav-logo">Ask<span>.</span></a>
+  <button onclick="openFaq()" style="font-size:0.78rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:1.5rem;transition:color 0.2s;padding:0;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">FAQ</button>
   <a href="/create.html" class="nav-cta">Create My Assistant</a>
 </nav>
 
@@ -450,7 +450,7 @@
     </div>
   </div>
   <div style="max-width:860px;margin:2rem auto 0;text-align:center;">
-    <p style="font-size:0.82rem;color:var(--text3);font-weight:300;">Already have an assistant? <a href="/edit" style="color:var(--accent-dark);font-weight:500;text-decoration:none;">Manage or edit your profile →</a></p>
+    <p style="font-size:0.82rem;color:var(--text3);font-weight:300;">Already have an assistant? <a href="/account" style="color:var(--accent-dark);font-weight:500;text-decoration:none;">Manage My Account →</a></p>
   </div>
 </section>
 
@@ -463,10 +463,13 @@
   </div>
 </div>
 <footer>
-  <a href="/" class="footer-logo">Ask<span>.</span></a>
-  <div style="display:flex;align-items:center;gap:1.5rem;">
-    <a href="/faq" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">FAQ</a>
-    <div class="footer-copy">Powered by Menos Labs LLC 2026 · <a href="https://www.menoslabs.com" style="color:rgba(255,255,255,0.25);text-decoration:none;">menoslabs.com</a></div>
+  <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+    <a href="/" class="footer-logo">Ask<span>.</span></a>
+    <a href="/faq" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">FAQ</a>
+    <span style="color:rgba(255,255,255,0.15);font-size:0.72rem;">&middot;</span>
+    <div class="footer-copy">Powered by Menos Labs LLC 2026 &middot; <a href="https://www.menoslabs.com" style="color:rgba(255,255,255,0.25);text-decoration:none;">menoslabs.com</a></div>
+    <span style="color:rgba(255,255,255,0.15);font-size:0.72rem;">|</span>
+    <a href="/account" style="font-size:0.72rem;font-weight:600;color:#CCFF00;text-decoration:none;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Already have an Ask page? Manage it here &#8594;</a>
   </div>
 </footer>
 
