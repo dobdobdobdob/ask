@@ -610,21 +610,32 @@ function applyBrandColor(){
   const bg = document.getElementById('fmt-color-bg').value;
   const button = document.getElementById('fmt-color-button').value;
   const accentDark = darkenHex(accent, 0.3);
-  const bgAlt = lightenHex(bg, 0.5);
   const buttonText = getLuminance(button) > 0.4 ? '#111111' : '#ffffff';
 
-  // Apply live to the page
+  const defaults = { accent:'#ccff00', bg:'#f7f6f3', button:'#111111' };
+  const hasCustom = accent.toLowerCase() !== defaults.accent ||
+                    bg.toLowerCase() !== defaults.bg ||
+                    button.toLowerCase() !== defaults.button;
+
   let styleEl = document.getElementById('brand-color-override');
   if(!styleEl){ styleEl = document.createElement('style'); styleEl.id='brand-color-override'; document.head.appendChild(styleEl); }
-  styleEl.textContent = `:root {
-    --accent:${accent}; --accent-dark:${accentDark};
-    --white:${bg}; --off-white:${bgAlt}; --black:${button};
+
+  if(!hasCustom){
+    styleEl.textContent = '';
+    return;
   }
-  #chat-toggle { background:${button}!important; color:${buttonText}!important; }
-  #chat-toggle:hover { background:${accent}!important; color:#111!important; }
-  .chat-send { background:${button}!important; }
-  .btn-buy { background:${button}!important; color:${buttonText}!important; }
-  .btn-buy:hover { background:${accent}!important; color:#111!important; }`;
+
+  styleEl.textContent = `
+    :root { --accent:${accent}; --accent-dark:${accentDark}; }
+    ${bg.toLowerCase() !== defaults.bg ? `:root { --white:${bg}; --off-white:${darkenHex(bg, 0.02)}; }` : ''}
+    ${button.toLowerCase() !== defaults.button ? `
+      :root { --black:${button}; }
+      #chat-toggle { background:${button}!important; color:${buttonText}!important; }
+      #chat-toggle:hover { background:${accent}!important; color:#111!important; }
+      .chat-send { background:${button}!important; }
+      .btn-buy { background:${button}!important; color:${buttonText}!important; }
+      .btn-buy:hover { background:${accent}!important; color:#111!important; }
+    ` : ''}`;
 
   autoSave();
 }
@@ -652,7 +663,12 @@ function prefillBrandColorPickers(customColors){
   if(customColors.accent) document.getElementById('fmt-color-accent').value = customColors.accent;
   if(customColors.bg) document.getElementById('fmt-color-bg').value = customColors.bg;
   if(customColors.buttonBg) document.getElementById('fmt-color-button').value = customColors.buttonBg;
-  if(customColors.accent || customColors.bg || customColors.buttonBg) applyBrandColor();
+  // Only apply if at least one is non-default
+  const defaults = { accent:'#ccff00', bg:'#f7f6f3', button:'#111111' };
+  const hasCustom = (customColors.accent||'').toLowerCase() !== defaults.accent ||
+                    (customColors.bg||'').toLowerCase() !== defaults.bg ||
+                    (customColors.buttonBg||'').toLowerCase() !== defaults.button;
+  if(hasCustom) applyBrandColor();
 }
 
 // ── FONT ──
