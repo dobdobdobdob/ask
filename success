@@ -159,6 +159,10 @@ function copyUrl(){ navigator.clipboard.writeText(shareUrl).then(()=>{ const b=d
 function copyEmbed(){ navigator.clipboard.writeText(rawEmbedCode).then(()=>{ const b=document.querySelector('#platform-content .copy-btn'); if(b){b.textContent='Copied!';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy Code';b.classList.remove('copied');},2000);} }); }
 
 function buildConfirmationEmail(name, url, slug) {
+  const chatCode = '<script src="https://ask.menoslabs.com/embed.js" data-slug="' + slug + '"><\/script>';
+  const iframeCode = '<iframe src="' + url + '" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;" title="Ask ' + slug + '"><\/iframe>';
+  const accountUrl = 'https://ask.menoslabs.com/account?slug=' + slug;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Your Ask assistant is live</title></head>
@@ -171,12 +175,8 @@ function buildConfirmationEmail(name, url, slug) {
         <tr><td style="background:#111111;padding:28px 40px;border-radius:4px 4px 0 0;">
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-              <td style="font-family:Georgia,serif;font-size:1.2rem;font-weight:700;color:#ffffff;letter-spacing:-0.02em;">
-                Ask<span style="background:#CCFF00;color:#111111;padding:0 5px;font-style:italic;">.</span>
-              </td>
-              <td align="right" style="font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.12em;text-transform:uppercase;">
-                by Menos Labs
-              </td>
+              <td style="font-family:Georgia,serif;font-size:1.2rem;font-weight:700;color:#ffffff;letter-spacing:-0.02em;">Ask<span style="background:#CCFF00;color:#111111;padding:0 5px;font-style:italic;">.</span></td>
+              <td align="right" style="font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.12em;text-transform:uppercase;">by Menos Labs</td>
             </tr>
           </table>
         </td></tr>
@@ -192,7 +192,7 @@ function buildConfirmationEmail(name, url, slug) {
           <p style="font-size:0.95rem;color:#555550;font-weight:300;line-height:1.7;margin:0 0 28px;">Your AI assistant page is live and ready to share. Anyone who visits your link can ask questions about your background, experience, and skills — just like talking to you.</p>
 
           <!-- URL box -->
-          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
             <tr><td style="background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:14px 18px;">
               <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#999990;margin:0 0 4px;">Your page</p>
               <a href="${url}" style="font-size:0.9rem;color:#1A1A1A;text-decoration:none;font-family:monospace;">${url}</a>
@@ -217,13 +217,45 @@ function buildConfirmationEmail(name, url, slug) {
                 </tr>
                 <tr>
                   <td width="28" valign="top" style="padding-top:1px;"><span style="display:inline-block;width:20px;height:20px;background:#111;border-radius:50%;text-align:center;line-height:20px;font-size:0.6rem;font-weight:700;color:#CCFF00;">2</span></td>
-                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;padding-bottom:10px;"><strong style="color:#1A1A1A;font-weight:500;">Embed on your site</strong> — add a floating chat button or full profile to any website.</td>
+                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;padding-bottom:10px;"><strong style="color:#1A1A1A;font-weight:500;">Embed on your site</strong> — add a floating chat button or full profile to any website using the codes below.</td>
                 </tr>
                 <tr>
                   <td width="28" valign="top" style="padding-top:1px;"><span style="display:inline-block;width:20px;height:20px;background:#111;border-radius:50%;text-align:center;line-height:20px;font-size:0.6rem;font-weight:700;color:#CCFF00;">3</span></td>
-                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;"><strong style="color:#1A1A1A;font-weight:500;">Manage anytime</strong> — visit <a href="https://ask.menoslabs.com/manage?slug=${slug}" style="color:#8AB300;text-decoration:none;">ask.menoslabs.com/manage</a> to update your profile.</td>
+                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;"><strong style="color:#1A1A1A;font-weight:500;">Manage your account</strong> — visit <a href="${accountUrl}" style="color:#8AB300;text-decoration:none;">ask.menoslabs.com/account</a> to update your profile anytime.</td>
                 </tr>
               </table>
+            </td></tr>
+          </table>
+
+          <!-- Embed codes -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;border-top:1px solid #E2DED8;padding-top:28px;">
+            <tr><td>
+              <p style="font-size:0.72rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:#999990;margin:0 0 16px;">Embed your assistant</p>
+
+              <p style="font-size:0.82rem;font-weight:500;color:#1A1A1A;margin:0 0 6px;">Chat Button</p>
+              <p style="font-size:0.78rem;color:#555550;font-weight:300;margin:0 0 8px;">Paste before your closing &lt;/body&gt; tag for a floating chat button on any page.</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+                <tr><td style="background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:12px 16px;font-family:monospace;font-size:0.72rem;color:#1A1A1A;word-break:break-all;line-height:1.6;">
+                  &lt;script src="https://ask.menoslabs.com/embed.js" data-slug="${slug}"&gt;&lt;/script&gt;
+                </td></tr>
+              </table>
+
+              <p style="font-size:0.82rem;font-weight:500;color:#1A1A1A;margin:0 0 6px;">Full Profile Page</p>
+              <p style="font-size:0.78rem;color:#555550;font-weight:300;margin:0 0 8px;">Embed your complete profile with experience, skills, and chat.</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
+                <tr><td style="background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:12px 16px;font-family:monospace;font-size:0.72rem;color:#1A1A1A;word-break:break-all;line-height:1.6;">
+                  &lt;iframe src="${url}" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"&gt;&lt;/iframe&gt;
+                </td></tr>
+              </table>
+              <p style="font-size:0.75rem;color:#999990;font-weight:300;margin:0;">💡 Save these codes — paste them into a Google Doc or Notes app so you always have them handy.</p>
+            </td></tr>
+          </table>
+
+          <!-- Manage account CTA -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;border-top:1px solid #E2DED8;padding-top:28px;">
+            <tr><td align="center">
+              <p style="font-size:0.82rem;color:#555550;font-weight:300;margin:0 0 16px;">Need to update your profile, change your theme, or edit your details?</p>
+              <a href="${accountUrl}" style="display:inline-block;background:#CCFF00;color:#111111;font-size:0.85rem;font-weight:600;letter-spacing:0.05em;padding:14px 32px;border-radius:2px;text-decoration:none;">Manage My Account →</a>
             </td></tr>
           </table>
 
