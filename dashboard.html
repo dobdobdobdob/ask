@@ -175,7 +175,7 @@
       .stats-row{grid-template-columns:1fr;}
       #editPanel{max-width:100%;}
     }
-  
+
     #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
     #gdpr-banner.show{transform:translateY(0);}
     .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
@@ -472,7 +472,7 @@ const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 // Password is stored as a SHA-256 hash. On first login, the hash is auto-generated
 // from PASS_SEED and stored in localStorage. Then clear PASS_SEED from source.
 // To reset: clear localStorage key 'ask_pw_v1', set PASS_SEED to new password, login once, clear again.
-const PASS_SEED = '7f6fkEb0MCVcrz22'; // ← clear after first login
+const PASS_SEED = ''; // ← clear after first login
 let allProfiles = [], editUploadText = '', dashSelectedTheme = 'classic', dashSelectedFont = 'classic', dashAvatarDataUrl = null;
 function pickDashTheme(name,el){dashSelectedTheme=name;document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c===el));}
 function pickDashFont(name,el){dashSelectedFont=name;document.querySelectorAll('.dfont-card').forEach(c=>c.classList.toggle('on',c===el));}
