@@ -372,6 +372,7 @@
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 let selectedTheme = 'classic';
 let selectedFont = 'classic';
+const SELECTED_PLAN = new URLSearchParams(window.location.search).get('plan') || 'basic';
 
 function pickTheme(name,el){
   selectedTheme=name;
@@ -591,7 +592,7 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     clearInterval(iv);
 
     // Save to sessionStorage and go to preview
-    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], education:parsed.education||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl, chosenUsername, theme:selectedTheme, font:selectedFont, resume:resume };
+    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], education:parsed.education||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl, chosenUsername, theme:selectedTheme, font:selectedFont, resume:resume, plan:SELECTED_PLAN };
     profileData.theme = selectedTheme;
     sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
     window.location.href = '/preview.html';

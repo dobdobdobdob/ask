@@ -350,7 +350,7 @@ gtag('config', 'G-96XWYGNS49');
 <li>Unlimited AI conversations</li>
 <li>Chat button for existing sites</li>
 </ul>
-<button class="btn-purchase" onclick="handlePurchase()">Unlock My Assistant →</button>
+<button class="btn-purchase" id="btnPurchase" onclick="handlePurchase()">Unlock My Assistant →</button>
 <button class="btn-restart" onclick="window.location.href='/create.html'">Start over</button>
 </div>
 </div>
@@ -577,6 +577,7 @@ gtag('config', 'G-96XWYGNS49');
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 const STRIPE_URL = 'https://buy.stripe.com/aFa8wR9fo6Er9l87JSgEg00';
+const STRIPE_URL_CUSTOM = 'STRIPE_CUSTOM_LINK_HERE'; // ← swap in live custom Stripe link
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 let systemPrompt='', chatHistory=[], chatLoading=false, chatOpen=false, avatarDataUrl=null;
 let isEditMode = false, editSlug = '';
@@ -663,6 +664,14 @@ window.addEventListener('load', () => {
 
   isEditMode = !!d.isEdit;
   editSlug = d.editSlug || '';
+
+  // Update purchase button label based on plan
+  if(d.plan === 'custom'){
+    const btn = document.getElementById('btnPurchase');
+    if(btn) btn.textContent = 'Unlock My Assistant — $15.99 →';
+    const modalBtn = document.querySelector('.btn-buy');
+    if(modalBtn) modalBtn.textContent = 'Unlock — $15.99 →';
+  }
 
   // Show correct banner
   if(isEditMode){
@@ -805,7 +814,9 @@ function handlePurchase(){
   saveEdits();
   const raw = sessionStorage.getItem('ask_draft');
   if(raw) localStorage.setItem('ask_purchase_data', raw);
-  window.location.href = STRIPE_URL;
+  const plan = raw ? (JSON.parse(raw).plan || 'basic') : 'basic';
+  const url = plan === 'custom' ? STRIPE_URL_CUSTOM : STRIPE_URL;
+  window.location.href = url;
 }
 
 async function saveEdit(){

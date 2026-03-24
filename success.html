@@ -107,6 +107,49 @@ footer{background:#111111;padding:2rem 4rem;display:flex;align-items:center;just
 </div>
 <div id="platform-content"><div style="font-size:0.82rem;color:var(--text3);padding:1rem 0;">Loading your embed code...</div></div>
 </div>
+
+<!-- CUSTOM DOMAIN CARD — shown only for plan=custom -->
+<div class="card" id="customDomainCard" style="display:none;">
+  <div class="embed-title">Set up your custom domain.</div>
+  <p class="embed-sub">You're on the Custom plan. Follow these 2 steps to activate your personal URL — we'll have it live within a few hours.</p>
+
+  <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:1.5rem;">
+    <div style="display:flex;gap:1rem;align-items:flex-start;padding:1.25rem;background:var(--off-white);border:1px solid var(--border);border-radius:4px;">
+      <span style="display:inline-flex;width:24px;height:24px;background:var(--black);border-radius:50%;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:#CCFF00;flex-shrink:0;margin-top:1px;">1</span>
+      <div>
+        <div style="font-size:0.88rem;font-weight:500;color:var(--text1);margin-bottom:0.4rem;">Add a CNAME record in your DNS</div>
+        <div style="font-size:0.78rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:0.75rem;">Log into your domain provider (GoDaddy, Namecheap, Cloudflare, etc.) and add this record:</div>
+        <table style="width:100%;font-size:0.75rem;border-collapse:collapse;">
+          <tr>
+            <td style="padding:0.5rem 0.75rem;background:var(--light);border:1px solid var(--border);font-weight:500;color:var(--text3);width:80px;">Type</td>
+            <td style="padding:0.5rem 0.75rem;background:var(--light);border:1px solid var(--border);font-weight:500;color:var(--text3);">Name</td>
+            <td style="padding:0.5rem 0.75rem;background:var(--light);border:1px solid var(--border);font-weight:500;color:var(--text3);">Value</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 0.75rem;border:1px solid var(--border);font-family:monospace;color:var(--text1);">CNAME</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid var(--border);font-family:monospace;color:var(--text1);">ask</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid var(--border);font-family:monospace;color:var(--text1);font-size:0.68rem;">ask-custom-domains.thedobrien.workers.dev</td>
+          </tr>
+        </table>
+        <p style="font-size:0.72rem;color:var(--text3);margin-top:0.5rem;">This creates <strong>ask.yourdomain.com</strong>. If you want a different subdomain (e.g. <em>me.</em> or <em>cv.</em>) use that instead of <em>ask</em>.</p>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:1rem;align-items:flex-start;padding:1.25rem;background:var(--off-white);border:1px solid var(--border);border-radius:4px;">
+      <span style="display:inline-flex;width:24px;height:24px;background:var(--black);border-radius:50%;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:#CCFF00;flex-shrink:0;margin-top:1px;">2</span>
+      <div>
+        <div style="font-size:0.88rem;font-weight:500;color:var(--text1);margin-bottom:0.4rem;">Email us your subdomain</div>
+        <div style="font-size:0.78rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:0.75rem;">Once your CNAME is set, email us and we'll activate your custom URL within a few hours.</div>
+        <a href="mailto:hello@menoslabs.com?subject=Custom Domain Setup&body=Hi, I just purchased the Custom plan. My Ask username is: [YOUR-USERNAME]%0AMy custom subdomain is: ask.[YOUR-DOMAIN.COM]%0AThank you!" style="display:inline-block;background:var(--black);color:var(--white);font-size:0.78rem;font-weight:500;padding:0.6rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='var(--accent);this.style.color='var(--black)'" onmouseout="this.style.background='var(--black)';this.style.color='var(--white)'">Email hello@menoslabs.com →</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:rgba(204,255,0,0.06);border:1px solid rgba(139,179,0,0.2);border-radius:4px;padding:1rem 1.25rem;font-size:0.78rem;color:var(--text2);line-height:1.7;">
+    💡 <strong style="color:var(--text1);">While you wait</strong> — your Ask page is already live at <span id="customTempUrl" style="font-family:monospace;color:var(--text1);"></span>. Share it now and update your links once your custom domain is active.
+  </div>
+</div>
+
 </div>
 <div id="gdpr-banner">
 <div class="gdpr-text">We use cookies to understand how visitors use our site.</div>
@@ -130,6 +173,7 @@ const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 const BASE_URL = window.location.hostname.includes('ask-dev') 
   ? 'https://' + window.location.hostname 
   : 'https://ask.menoslabs.com';
+const IS_CUSTOM_PLAN = new URLSearchParams(window.location.search).get('plan') === 'custom';
 let shareUrl = '', slug = '', embedType = 'chat', currentPlatform = 'wix', rawEmbedCode = '';
 const INSTRUCTIONS = {
   wix:{chat:['In your Wix editor, click <strong>Add Elements</strong> in the left sidebar','Select <strong>Embed Code</strong> → <strong>HTML iframe</strong>','Paste the code below into the HTML box','Click <strong>Apply</strong> and position the element','Publish your site'],full:['In your Wix editor click <strong>Add Elements</strong> → <strong>Embed Code</strong>','Select <strong>HTML iframe</strong>','Paste the iframe code below and click <strong>Apply</strong>','Resize the element to fill the section','Publish your site']},
@@ -158,7 +202,7 @@ function selectPlatform(p,btn){ currentPlatform=p; document.querySelectorAll('.p
 function copyUrl(){ navigator.clipboard.writeText(shareUrl).then(()=>{ const b=document.getElementById('copyUrlBtn'); b.textContent='Copied!'; b.classList.add('copied'); setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied');},2000); }); }
 function copyEmbed(){ navigator.clipboard.writeText(rawEmbedCode).then(()=>{ const b=document.querySelector('#platform-content .copy-btn'); if(b){b.textContent='Copied!';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy Code';b.classList.remove('copied');},2000);} }); }
 
-function buildConfirmationEmail(name, url, slug) {
+function buildConfirmationEmail(name, url, slug, plan) {
   const chatCode = '<script src="https://ask.menoslabs.com/embed.js" data-slug="' + slug + '"><\/script>';
   const iframeCode = '<iframe src="' + url + '" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;" title="Ask ' + slug + '"><\/iframe>';
   const accountUrl = 'https://ask.menoslabs.com/account?slug=' + slug;
@@ -262,6 +306,51 @@ function buildConfirmationEmail(name, url, slug) {
           <p style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.7;margin:0;">Questions? Reply to this email or visit our <a href="https://ask.menoslabs.com/faq" style="color:#8AB300;text-decoration:none;">FAQ</a>.</p>
           <p style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.7;margin:8px 0 0;">— The Menos Labs Team</p>
 
+          ${plan === 'custom' ? `
+          <!-- Custom Domain Section -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E2DED8;padding-top:28px;">
+            <tr><td>
+              <p style="font-size:0.72rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:#999990;margin:0 0 16px;">Custom Domain Setup</p>
+              <p style="font-size:0.88rem;font-weight:500;color:#1A1A1A;margin:0 0 8px;">You're on the Custom plan 🎉</p>
+              <p style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.7;margin:0 0 20px;">Follow these 2 steps to activate your personal URL. We'll have it live within a few hours of receiving your email.</p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+                <tr>
+                  <td width="32" valign="top"><span style="display:inline-block;width:22px;height:22px;background:#111;border-radius:50%;text-align:center;line-height:22px;font-size:0.6rem;font-weight:700;color:#CCFF00;">1</span></td>
+                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;padding-bottom:16px;">
+                    <strong style="color:#1A1A1A;font-weight:500;">Add a CNAME record in your DNS</strong><br>
+                    Log into your domain provider and add:<br>
+                    <table style="margin-top:8px;border-collapse:collapse;font-size:0.72rem;font-family:monospace;">
+                      <tr style="background:#F7F6F3;">
+                        <td style="padding:4px 10px;border:1px solid #E2DED8;font-weight:500;color:#999990;">Type</td>
+                        <td style="padding:4px 10px;border:1px solid #E2DED8;font-weight:500;color:#999990;">Name</td>
+                        <td style="padding:4px 10px;border:1px solid #E2DED8;font-weight:500;color:#999990;">Value</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:4px 10px;border:1px solid #E2DED8;">CNAME</td>
+                        <td style="padding:4px 10px;border:1px solid #E2DED8;">ask</td>
+                        <td style="padding:4px 10px;border:1px solid #E2DED8;">ask-custom-domains.thedobrien.workers.dev</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="32" valign="top"><span style="display:inline-block;width:22px;height:22px;background:#111;border-radius:50%;text-align:center;line-height:22px;font-size:0.6rem;font-weight:700;color:#CCFF00;">2</span></td>
+                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;">
+                    <strong style="color:#1A1A1A;font-weight:500;">Email us your subdomain</strong><br>
+                    Reply to this email with your custom subdomain (e.g. <em>ask.yourdomain.com</em>) and we'll activate it within a few hours.
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr><td style="background:rgba(204,255,0,0.06);border:1px solid rgba(139,179,0,0.2);border-radius:4px;padding:12px 16px;">
+                  <p style="font-size:0.78rem;color:#555550;font-weight:300;line-height:1.7;margin:0;">💡 <strong style="color:#1A1A1A;">While you wait</strong> — your Ask page is already live at <a href="${url}" style="color:#8AB300;text-decoration:none;font-family:monospace;">${url}</a>. Share it now and update your links once your custom domain is active.</p>
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>` : ''}
+
         </td></tr>
 
         <!-- Footer -->
@@ -309,6 +398,12 @@ window.addEventListener('load', async () => {
       document.getElementById('faqLink').href = '/faq?slug='+slug;
       localStorage.removeItem('ask_purchase_data');
       renderPlatformContent();
+
+      // Show custom domain card if on custom plan
+      if(IS_CUSTOM_PLAN){
+        document.getElementById('customDomainCard').style.display = 'block';
+        document.getElementById('customTempUrl').textContent = shareUrl;
+      }
       if(data.email){
         fetch('https://menoslabs-contact.thedobrien.workers.dev',{
           method:'POST',
@@ -317,7 +412,7 @@ window.addEventListener('load', async () => {
             name: data.name,
             email: data.email,
             subject: 'Your Ask assistant is live — ' + data.name,
-            html: buildConfirmationEmail(data.name, shareUrl, slug)
+            html: buildConfirmationEmail(data.name, shareUrl, slug, IS_CUSTOM_PLAN ? 'custom' : 'basic')
           })
         }).catch(()=>{});
       }

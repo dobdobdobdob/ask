@@ -428,29 +428,52 @@
 </section>
 
 <!-- PRICING -->
-<section class="pricing">
-  <div class="pricing-inner">
-    <div class="pricing-left">
-      <p class="section-tag">Simple pricing</p>
-      <h2 class="section-title">One price.<br>Forever yours.</h2>
-      <p>No subscription. No monthly fees. Pay once and your assistant page lives permanently at your personal URL.</p>
+<section class="pricing" id="pricing">
+  <div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+    <div style="text-align:center;margin-bottom:2.5rem;">
+      <p class="section-tag" style="text-align:center;">Simple pricing</p>
+      <h2 class="section-title" style="text-align:center;">Two plans.<br>One-time payment.</h2>
+      <p style="font-size:0.9rem;color:var(--text2);font-weight:300;max-width:480px;margin:0.75rem auto 0;line-height:1.7;">No subscriptions, no monthly fees. Pay once and your assistant page lives permanently at your URL.</p>
     </div>
-    <div class="pricing-card">
-      <div class="price">$9<span>.99</span></div>
-      <div class="price-label">One-time · Permanent</div>
-      <ul class="price-features">
-        <li>Permanent shareable URL</li>
-        <li>AI chat powered by Claude</li>
-        <li>Experience & skills extracted from resume</li>
-        <li>Embed on any website</li>
-        <li>LinkedIn, GitHub, portfolio links</li>
-        <li>Unlimited conversations</li>
-      </ul>
-      <a href="/create.html" class="btn-dark" style="width:100%;display:block;text-align:center;">Get Started →</a>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
+
+      <!-- BASIC -->
+      <div class="pricing-card">
+        <p style="font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;">Basic</p>
+        <div class="price">$9<span>.99</span></div>
+        <div class="price-label">One-time · Permanent</div>
+        <ul class="price-features">
+          <li>Permanent URL — <em>ask.menoslabs.com/you</em></li>
+          <li>AI chat powered by Claude</li>
+          <li>Experience & skills from resume</li>
+          <li>Embed on any website</li>
+          <li>LinkedIn, GitHub, portfolio links</li>
+          <li>Unlimited conversations</li>
+        </ul>
+        <a href="/create.html" class="btn-dark" style="width:100%;display:block;text-align:center;">Get Started →</a>
+      </div>
+
+      <!-- CUSTOM -->
+      <div class="pricing-card" style="border-color:var(--accent-dark);position:relative;box-shadow:0 0 0 1px var(--accent-dark);">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--black);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.9rem;border-radius:100px;white-space:nowrap;">Most Professional</div>
+        <p style="font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;">Custom</p>
+        <div class="price">$15<span>.99</span></div>
+        <div class="price-label">One-time · Permanent</div>
+        <ul class="price-features">
+          <li>Everything in Basic</li>
+          <li style="font-weight:500;color:var(--text1);">Your own domain — <em>ask.yourname.com</em></li>
+          <li>No Menos Labs branding in URL</li>
+          <li>Looks like your own product</li>
+          <li>Perfect for LinkedIn, business cards</li>
+          <li>Setup within a few hours</li>
+        </ul>
+        <a href="/create.html?plan=custom" class="btn-dark" style="width:100%;display:block;text-align:center;background:var(--accent-dark);">Get Custom →</a>
+      </div>
+
     </div>
-  </div>
-  <div style="max-width:860px;margin:2rem auto 0;text-align:center;">
-    <p style="font-size:0.82rem;color:var(--text3);font-weight:300;">Already have an assistant? <a href="/account" style="color:var(--accent-dark);font-weight:500;text-decoration:none;">Manage My Account →</a></p>
+    <div style="margin:2rem auto 0;text-align:center;">
+      <p style="font-size:0.82rem;color:var(--text3);font-weight:300;">Already have an assistant? <a href="/account" style="color:var(--accent-dark);font-weight:500;text-decoration:none;">Manage My Account →</a></p>
+    </div>
   </div>
 </section>
 
