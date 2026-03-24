@@ -290,12 +290,14 @@ gtag('config', 'G-96XWYGNS49');
 </div>
 
 <footer>
-<a href="/" class="footer-logo">Ask<span>.</span></a>
-<div style="display:flex;gap:1.5rem;align-items:center;">
-  <a href="/faq" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">FAQ</a>
-  <div class="footer-copy">Powered by Menos Labs LLC 2026 · <a href="https://www.menoslabs.com" style="color:rgba(255,255,255,0.25);text-decoration:none;">menoslabs.com</a></div>
-</div>
-<a id="editProfileLink" href="/edit" style="font-size:0.65rem;color:rgba(255,255,255,0.2);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">Edit my profile</a>
+  <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+    <a href="/" class="footer-logo">Ask<span>.</span></a>
+    <a href="/faq" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">FAQ</a>
+    <span style="color:rgba(255,255,255,0.15);font-size:0.72rem;">&middot;</span>
+    <div class="footer-copy">Powered by Menos Labs LLC 2026 &middot; <a href="https://www.menoslabs.com" style="color:rgba(255,255,255,0.25);text-decoration:none;">menoslabs.com</a></div>
+    <span style="color:rgba(255,255,255,0.15);font-size:0.72rem;">|</span>
+    <a href="/account" style="font-size:0.72rem;font-weight:600;color:#CCFF00;text-decoration:none;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Already have an Ask page? Manage it here &#8594;</a>
+  </div>
 </footer>
 
 <script>
