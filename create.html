@@ -336,26 +336,29 @@
       <div class="field" style="margin-bottom:0;">
         <label class="flabel">Accent</label>
         <div style="display:flex;align-items:center;gap:0.5rem;background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:0.5rem 0.75rem;">
-          <input type="color" id="cAccent" value="#CCFF00" oninput="document.getElementById('cAccentHex').value=this.value;applyCreateColors()" style="width:28px;height:28px;border:none;background:none;cursor:pointer;padding:0;border-radius:2px;">
-          <input type="text" id="cAccentHex" value="#CCFF00" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.78rem;width:60px;color:#1A1A1A;outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cAccent').value=this.value;applyCreateColors();}">
+          <div id="swatch-accent" style="width:22px;height:22px;border-radius:3px;background:#CCFF00;border:1px solid #E2DED8;flex-shrink:0;cursor:pointer;" onclick="document.getElementById('cAccent').click()" title="Click to open color picker"></div>
+          <input type="color" id="cAccent" value="#CCFF00" oninput="document.getElementById('cAccentHex').value=this.value;document.getElementById('swatch-accent').style.background=this.value;applyCreateColors()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+          <input type="text" id="cAccentHex" value="#CCFF00" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.82rem;width:70px;color:#1A1A1A;outline:none;" placeholder="#CCFF00" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cAccent').value=this.value;document.getElementById('swatch-accent').style.background=this.value;applyCreateColors();}">
         </div>
       </div>
       <div class="field" style="margin-bottom:0;">
         <label class="flabel">Background</label>
         <div style="display:flex;align-items:center;gap:0.5rem;background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:0.5rem 0.75rem;">
-          <input type="color" id="cBg" value="#F7F6F3" oninput="document.getElementById('cBgHex').value=this.value;applyCreateColors()" style="width:28px;height:28px;border:none;background:none;cursor:pointer;padding:0;border-radius:2px;">
-          <input type="text" id="cBgHex" value="#F7F6F3" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.78rem;width:60px;color:#1A1A1A;outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cBg').value=this.value;applyCreateColors();}">
+          <div id="swatch-bg" style="width:22px;height:22px;border-radius:3px;background:#F7F6F3;border:1px solid #E2DED8;flex-shrink:0;cursor:pointer;" onclick="document.getElementById('cBg').click()" title="Click to open color picker"></div>
+          <input type="color" id="cBg" value="#F7F6F3" oninput="document.getElementById('cBgHex').value=this.value;document.getElementById('swatch-bg').style.background=this.value;applyCreateColors()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+          <input type="text" id="cBgHex" value="#F7F6F3" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.82rem;width:70px;color:#1A1A1A;outline:none;" placeholder="#F7F6F3" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cBg').value=this.value;document.getElementById('swatch-bg').style.background=this.value;applyCreateColors();}">
         </div>
       </div>
       <div class="field" style="margin-bottom:0;">
         <label class="flabel">Button / Nav</label>
         <div style="display:flex;align-items:center;gap:0.5rem;background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:0.5rem 0.75rem;">
-          <input type="color" id="cButton" value="#111111" oninput="document.getElementById('cButtonHex').value=this.value;applyCreateColors()" style="width:28px;height:28px;border:none;background:none;cursor:pointer;padding:0;border-radius:2px;">
-          <input type="text" id="cButtonHex" value="#111111" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.78rem;width:60px;color:#1A1A1A;outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cButton').value=this.value;applyCreateColors();}">
+          <div id="swatch-button" style="width:22px;height:22px;border-radius:3px;background:#111111;border:1px solid #E2DED8;flex-shrink:0;cursor:pointer;" onclick="document.getElementById('cButton').click()" title="Click to open color picker"></div>
+          <input type="color" id="cButton" value="#111111" oninput="document.getElementById('cButtonHex').value=this.value;document.getElementById('swatch-button').style.background=this.value;applyCreateColors()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+          <input type="text" id="cButtonHex" value="#111111" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.82rem;width:70px;color:#1A1A1A;outline:none;" placeholder="#111111" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cButton').value=this.value;document.getElementById('swatch-button').style.background=this.value;applyCreateColors();}">
         </div>
       </div>
     </div>
-    <p style="font-size:0.72rem;color:var(--text3);margin-bottom:1.5rem;">You can also fine-tune colors in the preview step.</p>
+    <p style="font-size:0.72rem;color:var(--text3);margin-bottom:1.5rem;">Type a hex code or click the swatch to pick a color. Fine-tune in the preview step.</p>
 
     <p class="form-section-title" style="margin-top:0.5rem;text-align:center;">Resume *</p>
 

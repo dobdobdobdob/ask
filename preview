@@ -475,19 +475,31 @@ gtag('config', 'G-96XWYGNS49');
   <div class="fmt-sep"></div>
   <span class="fmt-label">Colors</span>
   <div style="display:flex;align-items:center;gap:4px;">
-    <div title="Accent color" style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-      <input type="color" id="fmt-color-accent" value="#CCFF00" onchange="applyBrandColor()" style="width:24px;height:24px;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:1px;background:none;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+      <div style="display:flex;align-items:center;gap:2px;">
+        <div id="fmt-swatch-accent" style="width:20px;height:20px;border-radius:3px;background:#CCFF00;border:1px solid var(--border);cursor:pointer;flex-shrink:0;" onclick="document.getElementById('fmt-color-accent').click()" title="Accent"></div>
+        <input type="color" id="fmt-color-accent" value="#CCFF00" oninput="document.getElementById('fmt-swatch-accent').style.background=this.value;applyBrandColor()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+        <input type="text" value="#CCFF00" maxlength="7" style="width:58px;font-family:monospace;font-size:0.62rem;border:1px solid var(--border);border-radius:2px;padding:2px 4px;background:none;color:var(--text1);outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-color-accent').value=this.value;document.getElementById('fmt-swatch-accent').style.background=this.value;applyBrandColor();}">
+      </div>
       <span style="font-size:0.5rem;color:var(--text3);letter-spacing:0.05em;">ACCENT</span>
     </div>
-    <div title="Background color" style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-      <input type="color" id="fmt-color-bg" value="#F7F6F3" onchange="applyBrandColor()" style="width:24px;height:24px;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:1px;background:none;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+      <div style="display:flex;align-items:center;gap:2px;">
+        <div id="fmt-swatch-bg" style="width:20px;height:20px;border-radius:3px;background:#F7F6F3;border:1px solid var(--border);cursor:pointer;flex-shrink:0;" onclick="document.getElementById('fmt-color-bg').click()" title="Background"></div>
+        <input type="color" id="fmt-color-bg" value="#F7F6F3" oninput="document.getElementById('fmt-swatch-bg').style.background=this.value;applyBrandColor()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+        <input type="text" value="#F7F6F3" maxlength="7" style="width:58px;font-family:monospace;font-size:0.62rem;border:1px solid var(--border);border-radius:2px;padding:2px 4px;background:none;color:var(--text1);outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-color-bg').value=this.value;document.getElementById('fmt-swatch-bg').style.background=this.value;applyBrandColor();}">
+      </div>
       <span style="font-size:0.5rem;color:var(--text3);letter-spacing:0.05em;">BG</span>
     </div>
-    <div title="Button / nav color" style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-      <input type="color" id="fmt-color-button" value="#111111" onchange="applyBrandColor()" style="width:24px;height:24px;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:1px;background:none;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+      <div style="display:flex;align-items:center;gap:2px;">
+        <div id="fmt-swatch-btn" style="width:20px;height:20px;border-radius:3px;background:#111111;border:1px solid var(--border);cursor:pointer;flex-shrink:0;" onclick="document.getElementById('fmt-color-button').click()" title="Button"></div>
+        <input type="color" id="fmt-color-button" value="#111111" oninput="document.getElementById('fmt-swatch-btn').style.background=this.value;applyBrandColor()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+        <input type="text" value="#111111" maxlength="7" style="width:58px;font-family:monospace;font-size:0.62rem;border:1px solid var(--border);border-radius:2px;padding:2px 4px;background:none;color:var(--text1);outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-color-button').value=this.value;document.getElementById('fmt-swatch-btn').style.background=this.value;applyBrandColor();}">
+      </div>
       <span style="font-size:0.5rem;color:var(--text3);letter-spacing:0.05em;">BTN</span>
     </div>
-    <button onclick="resetBrandColors()" title="Reset colors" style="width:24px;height:24px;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:none;color:var(--text3);font-size:0.7rem;display:flex;align-items:center;justify-content:center;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent-dark)'" onmouseout="this.style.borderColor='var(--border)'">↺</button>
+    <button onclick="resetBrandColors()" title="Reset" style="width:20px;height:20px;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:none;color:var(--text3);font-size:0.7rem;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.borderColor='var(--accent-dark)'" onmouseout="this.style.borderColor='var(--border)'">↺</button>
   </div>
 
 <div id="theme-switcher">
@@ -620,22 +632,25 @@ function applyBrandColor(){
   let styleEl = document.getElementById('brand-color-override');
   if(!styleEl){ styleEl = document.createElement('style'); styleEl.id='brand-color-override'; document.head.appendChild(styleEl); }
 
-  if(!hasCustom){
-    styleEl.textContent = '';
-    return;
-  }
+  if(!hasCustom){ styleEl.textContent = ''; return; }
 
+  // Only override specific elements — never override --white or --black globally
+  // as they control backgrounds and text across the whole page
   styleEl.textContent = `
     :root { --accent:${accent}; --accent-dark:${accentDark}; }
-    ${bg.toLowerCase() !== defaults.bg ? `:root { --white:${bg}; --off-white:${darkenHex(bg, 0.02)}; }` : ''}
-    ${button.toLowerCase() !== defaults.button ? `
-      :root { --black:${button}; }
-      #chat-toggle { background:${button}!important; color:${buttonText}!important; }
-      #chat-toggle:hover { background:${accent}!important; color:#111!important; }
-      .chat-send { background:${button}!important; }
-      .btn-buy { background:${button}!important; color:${buttonText}!important; }
-      .btn-buy:hover { background:${accent}!important; color:#111!important; }
-    ` : ''}`;
+    .profile-hero { background:${bg}!important; }
+    .exp-card:hover::before { background:${accent}!important; }
+    .exp-company { color:${accentDark}!important; }
+    .exp-bullets li::before { color:${accentDark}!important; }
+    .nav-logo span { background:${accent}!important; }
+    .footer-logo span { background:${accent}!important; }
+    #chat-toggle { background:${button}!important; color:${buttonText}!important; }
+    #chat-toggle:hover { background:${accent}!important; color:#111!important; }
+    .chat-send { background:${button}!important; }
+    .btn-buy { background:${button}!important; color:${buttonText}!important; }
+    .btn-buy:hover { background:${accent}!important; color:#111!important; }
+    .btn-purchase { background:${button}!important; color:${buttonText}!important; }
+  `;
 
   autoSave();
 }
@@ -660,15 +675,24 @@ function getBrandColors(){
 
 function prefillBrandColorPickers(customColors){
   if(!customColors) return;
-  if(customColors.accent) document.getElementById('fmt-color-accent').value = customColors.accent;
-  if(customColors.bg) document.getElementById('fmt-color-bg').value = customColors.bg;
-  if(customColors.buttonBg) document.getElementById('fmt-color-button').value = customColors.buttonBg;
-  // Only apply if at least one is non-default
   const defaults = { accent:'#ccff00', bg:'#f7f6f3', button:'#111111' };
   const hasCustom = (customColors.accent||'').toLowerCase() !== defaults.accent ||
                     (customColors.bg||'').toLowerCase() !== defaults.bg ||
                     (customColors.buttonBg||'').toLowerCase() !== defaults.button;
-  if(hasCustom) applyBrandColor();
+  if(!hasCustom) return;
+  if(customColors.accent){
+    document.getElementById('fmt-color-accent').value = customColors.accent;
+    document.getElementById('fmt-swatch-accent').style.background = customColors.accent;
+  }
+  if(customColors.bg){
+    document.getElementById('fmt-color-bg').value = customColors.bg;
+    document.getElementById('fmt-swatch-bg').style.background = customColors.bg;
+  }
+  if(customColors.buttonBg){
+    document.getElementById('fmt-color-button').value = customColors.buttonBg;
+    document.getElementById('fmt-swatch-btn').style.background = customColors.buttonBg;
+  }
+  applyBrandColor();
 }
 
 // ── FONT ──
