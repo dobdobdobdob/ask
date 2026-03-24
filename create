@@ -196,6 +196,7 @@
 <body>
 
 <input type="file" id="avatarInput" accept="image/*">
+<input type="file" id="pdfInput" accept=".pdf" style="display:none">
 
 <nav>
   <a href="/" class="nav-logo">Ask<span>.</span></a>
@@ -333,9 +334,19 @@
     <p class="form-section-title" style="margin-top:1.5rem;text-align:center;">Resume *</p>
 
     <div class="tab-row">
-      <button class="rtab on" id="tab-paste" onclick="switchTab('paste')">Paste Resume Text</button>
+      <button class="rtab on" id="rtab-upload" onclick="switchResumeTab('upload')">Upload PDF</button>
+      <button class="rtab" id="rtab-paste" onclick="switchResumeTab('paste')">Paste Text</button>
     </div>
-    <div class="resume-panel on" id="panel-paste">
+    <div class="resume-panel on" id="rpanel-upload" style="display:block;">
+      <div class="upload-area" id="pdfDropZone" onclick="document.getElementById('pdfInput').click()" ondragover="event.preventDefault();this.style.borderColor='var(--accent-dark)'" ondragleave="this.style.borderColor=''" ondrop="handlePdfDrop(event)">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;display:block;margin-left:auto;margin-right:auto;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        <div class="upload-text">Click to upload your resume PDF</div>
+        <div class="upload-hint">or drag and drop &middot; PDF only</div>
+        <div class="upload-success" id="pdfStatus" style="margin-top:0.5rem;font-size:0.78rem;"></div>
+      </div>
+      <div id="pdfExtractStatus" style="display:none;font-size:0.78rem;color:var(--text2);margin-top:0.75rem;padding:0.75rem 1rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;line-height:1.6;"></div>
+    </div>
+    <div class="resume-panel" id="rpanel-paste" style="display:none;">
       <textarea class="finput" id="iResume" placeholder="Paste your resume text — work experience, skills, education, achievements..."></textarea>
     </div>
 
@@ -592,6 +603,80 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     document.getElementById('processing').style.display='none';
   }
 }
+// ── PDF UPLOAD & TEXT EXTRACTION ──
+function switchResumeTab(tab){
+  document.getElementById('rtab-upload').classList.toggle('on', tab==='upload');
+  document.getElementById('rtab-paste').classList.toggle('on', tab==='paste');
+  document.getElementById('rpanel-upload').style.display = tab==='upload' ? 'block' : 'none';
+  document.getElementById('rpanel-paste').style.display = tab==='paste' ? 'block' : 'none';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const pdfInp = document.getElementById('pdfInput');
+  if(pdfInp) pdfInp.addEventListener('change', function(){
+    if(this.files[0]) processPdf(this.files[0]);
+  });
+});
+
+function handlePdfDrop(e){
+  e.preventDefault();
+  document.getElementById('pdfDropZone').style.borderColor = '';
+  const file = e.dataTransfer.files[0];
+  if(file && file.type === 'application/pdf') processPdf(file);
+  else showPdfError('Please drop a PDF file.');
+}
+
+async function processPdf(file){
+  const statusEl = document.getElementById('pdfExtractStatus');
+  const pdfStatus = document.getElementById('pdfStatus');
+  pdfStatus.style.display = 'block';
+  pdfStatus.textContent = 'Extracting text...';
+  pdfStatus.style.color = 'var(--text2)';
+  statusEl.style.display = 'none';
+  try {
+    if(!window.pdfjsLib){
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+    }
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = '';
+    for(let i = 1; i <= pdf.numPages; i++){
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(item => item.str).join(' ') + '\n';
+    }
+    fullText = fullText.replace(/  +/g, ' ').replace(/\n +/g, '\n').trim();
+    if(fullText.length < 50){
+      showPdfError('Could not extract readable text — this PDF may be scanned. Please paste your resume text instead.');
+      return;
+    }
+    document.getElementById('iResume').value = fullText;
+    switchResumeTab('paste');
+    pdfStatus.textContent = '\u2713 ' + file.name;
+    pdfStatus.style.color = 'var(--accent-dark)';
+    statusEl.style.display = 'block';
+    statusEl.style.borderColor = 'rgba(138,179,0,0.3)';
+    statusEl.style.background = 'rgba(138,179,0,0.05)';
+    statusEl.innerHTML = '<strong style="color:var(--accent-dark);">\u2713 Text extracted from ' + file.name + '</strong><br><span style="color:var(--text2);">Review and edit below before generating. Remove anything that looks garbled.</span>';
+  } catch(err){
+    showPdfError('Could not read this PDF. Please paste your resume text instead.');
+  }
+}
+
+function showPdfError(msg){
+  const s = document.getElementById('pdfStatus');
+  const e = document.getElementById('pdfExtractStatus');
+  s.style.display='block'; s.textContent='\u2717 '+msg; s.style.color='#e05c5c';
+  e.style.display='block'; e.style.borderColor='#fca5a5'; e.style.background='#fef2f2';
+  e.innerHTML='<span style="color:#dc2626;">'+msg+'</span>';
+}
+
 </script>
 </body>
 </html>
