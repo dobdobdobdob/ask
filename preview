@@ -478,7 +478,7 @@ gtag('config', 'G-96XWYGNS49');
     <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
       <div style="display:flex;align-items:center;gap:2px;">
         <div id="fmt-swatch-accent" style="width:20px;height:20px;border-radius:3px;background:#CCFF00;border:1px solid var(--border);cursor:pointer;flex-shrink:0;" onclick="document.getElementById('fmt-color-accent').click()" title="Accent"></div>
-        <input type="color" id="fmt-color-accent" value="#CCFF00" oninput="document.getElementById('fmt-swatch-accent').style.background=this.value;applyBrandColor()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+        <input type="color" id="fmt-color-accent" value="#CCFF00" oninput="document.getElementById('fmt-swatch-accent').style.background=this.value;applyBrandColor();autoSave();" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
         <input type="text" value="#CCFF00" maxlength="7" style="width:58px;font-family:monospace;font-size:0.62rem;border:1px solid var(--border);border-radius:2px;padding:2px 4px;background:none;color:var(--text1);outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-color-accent').value=this.value;document.getElementById('fmt-swatch-accent').style.background=this.value;applyBrandColor();}">
       </div>
       <span style="font-size:0.5rem;color:var(--text3);letter-spacing:0.05em;">ACCENT</span>
@@ -486,7 +486,7 @@ gtag('config', 'G-96XWYGNS49');
     <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
       <div style="display:flex;align-items:center;gap:2px;">
         <div id="fmt-swatch-bg" style="width:20px;height:20px;border-radius:3px;background:#F7F6F3;border:1px solid var(--border);cursor:pointer;flex-shrink:0;" onclick="document.getElementById('fmt-color-bg').click()" title="Background"></div>
-        <input type="color" id="fmt-color-bg" value="#F7F6F3" oninput="document.getElementById('fmt-swatch-bg').style.background=this.value;applyBrandColor()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+        <input type="color" id="fmt-color-bg" value="#F7F6F3" oninput="document.getElementById('fmt-swatch-bg').style.background=this.value;applyBrandColor();autoSave();" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
         <input type="text" value="#F7F6F3" maxlength="7" style="width:58px;font-family:monospace;font-size:0.62rem;border:1px solid var(--border);border-radius:2px;padding:2px 4px;background:none;color:var(--text1);outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-color-bg').value=this.value;document.getElementById('fmt-swatch-bg').style.background=this.value;applyBrandColor();}">
       </div>
       <span style="font-size:0.5rem;color:var(--text3);letter-spacing:0.05em;">BG</span>
@@ -494,7 +494,7 @@ gtag('config', 'G-96XWYGNS49');
     <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
       <div style="display:flex;align-items:center;gap:2px;">
         <div id="fmt-swatch-btn" style="width:20px;height:20px;border-radius:3px;background:#111111;border:1px solid var(--border);cursor:pointer;flex-shrink:0;" onclick="document.getElementById('fmt-color-button').click()" title="Button"></div>
-        <input type="color" id="fmt-color-button" value="#111111" oninput="document.getElementById('fmt-swatch-btn').style.background=this.value;applyBrandColor()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+        <input type="color" id="fmt-color-button" value="#111111" oninput="document.getElementById('fmt-swatch-btn').style.background=this.value;applyBrandColor();autoSave();" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
         <input type="text" value="#111111" maxlength="7" style="width:58px;font-family:monospace;font-size:0.62rem;border:1px solid var(--border);border-radius:2px;padding:2px 4px;background:none;color:var(--text1);outline:none;" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-color-button').value=this.value;document.getElementById('fmt-swatch-btn').style.background=this.value;applyBrandColor();}">
       </div>
       <span style="font-size:0.5rem;color:var(--text3);letter-spacing:0.05em;">BTN</span>
@@ -634,8 +634,6 @@ function applyBrandColor(){
 
   if(!hasCustom){ styleEl.textContent = ''; return; }
 
-  // Only override specific elements — never override --white or --black globally
-  // as they control backgrounds and text across the whole page
   styleEl.textContent = `
     :root { --accent:${accent}; --accent-dark:${accentDark}; }
     .profile-hero { background:${bg}!important; }
@@ -651,8 +649,7 @@ function applyBrandColor(){
     .btn-buy:hover { background:${accent}!important; color:#111!important; }
     .btn-purchase { background:${button}!important; color:${buttonText}!important; }
   `;
-
-  autoSave();
+  // Note: autoSave is NOT called here — it's called separately by user interactions
 }
 
 function resetBrandColors(){
