@@ -664,7 +664,9 @@ async function processPdf(file){
     statusEl.style.display = 'block';
     statusEl.style.borderColor = 'rgba(138,179,0,0.3)';
     statusEl.style.background = 'rgba(138,179,0,0.05)';
-    statusEl.innerHTML = '<strong style="color:var(--accent-dark);">\u2713 Text extracted from ' + file.name + '</strong><br><span style="color:var(--text2);">Review and edit below before generating. Remove anything that looks garbled.</span>';
+    statusEl.innerHTML = '<strong style="color:var(--accent-dark);">\u2713 Text extracted — ' + file.name + '</strong><br><span style="color:var(--text2);">Review the text below, then click <strong>Generate My Assistant \u2192</strong></span>';
+    // Scroll generate button into view
+    setTimeout(() => { const btn = document.querySelector('.btn-generate'); if(btn) btn.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 400);
   } catch(err){
     showPdfError('Could not read this PDF. Please paste your resume text instead.');
   }

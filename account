@@ -279,7 +279,37 @@ footer{background:var(--black);padding:1.5rem 4rem;display:flex;align-items:cent
           <div class="social-field"><span class="social-icon">◻</span><input class="social-input" id="sInstagram" placeholder="Instagram URL"></div>
         </div>
 
-        <p class="form-section-title" style="margin-top:1.5rem;">Profile Theme</p>
+        <p class="form-section-title" style="margin-top:1.5rem;">Brand Colors <span style="font-size:0.6rem;color:var(--text3);text-transform:none;letter-spacing:0;font-weight:300;">— override the theme with your own colors</span></p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-bottom:1rem;">
+          <div class="field" style="margin-bottom:0;">
+            <label class="flabel">Accent</label>
+            <div style="display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.75rem;">
+              <input type="color" id="cAccent" value="#CCFF00" style="width:28px;height:28px;border:none;background:none;cursor:pointer;padding:0;border-radius:2px;">
+              <input type="text" id="cAccentHex" class="finput" value="#CCFF00" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.78rem;width:60px;" oninput="syncColorFromHex('cAccent','cAccentHex')">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label class="flabel">Background</label>
+            <div style="display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.75rem;">
+              <input type="color" id="cBg" value="#F7F6F3" style="width:28px;height:28px;border:none;background:none;cursor:pointer;padding:0;border-radius:2px;">
+              <input type="text" id="cBgHex" class="finput" value="#F7F6F3" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.78rem;width:60px;" oninput="syncColorFromHex('cBg','cBgHex')">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label class="flabel">Button / Nav</label>
+            <div style="display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.75rem;">
+              <input type="color" id="cButton" value="#111111" style="width:28px;height:28px;border:none;background:none;cursor:pointer;padding:0;border-radius:2px;">
+              <input type="text" id="cButtonHex" class="finput" value="#111111" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.78rem;width:60px;" oninput="syncColorFromHex('cButton','cButtonHex')">
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
+          <button onclick="previewBrandColors()" style="font-size:0.72rem;font-weight:500;padding:0.4rem 0.9rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent-dark)'" onmouseout="this.style.borderColor='var(--border)'">Preview Colors</button>
+          <button onclick="resetBrandColors()" style="font-size:0.72rem;color:var(--text3);padding:0.4rem 0.9rem;background:none;border:1px solid var(--border);border-radius:2px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">Reset to Theme</button>
+          <span style="font-size:0.72rem;color:var(--text3);">Colors save with "Save Info & Theme →"</span>
+        </div>
+
+        <p class="form-section-title" style="margin-top:0.5rem;">Profile Theme</p>
         <div class="theme-picker">
           <div class="theme-card on" data-theme="classic" onclick="pickTheme('classic',this)">
             <div class="theme-preview" style="background:#F7F6F3;border:1px solid #E2DED8;"><div style="width:55%;height:6px;background:#1A1A1A;border-radius:2px;margin-bottom:4px;"></div><div style="width:80%;height:2px;background:#E2DED8;border-radius:2px;"></div></div>
@@ -566,6 +596,9 @@ function prefillForm(p){
   if(p.avatar){
     document.getElementById('avatarCircle').innerHTML = `<img src="${p.avatar}" alt="avatar"><div class="avatar-cam"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
   } else { updateInitials(); }
+
+  // Brand colors
+  prefillBrandColors(p.customColors || null);
 }
 
 // ── TAB SWITCHING ──
@@ -652,11 +685,13 @@ async function saveInfo(){
   try {
     let existing = {};
     try{ const er=await fetch(`${ASK_SERVER}/${currentSlug}`); existing=await er.json(); }catch(e){}
+    const customColors = getCustomColors();
     const updated = {
       ...existing, name, title, city, email, socials,
       theme: selectedTheme, font: selectedFont,
       meta: [title,city].filter(Boolean).join(' · '),
-      ...(avatarDataUrl ? {avatar: avatarDataUrl} : {})
+      ...(avatarDataUrl ? {avatar: avatarDataUrl} : {}),
+      ...(customColors ? {customColors} : {customColors: null})
     };
     await fetch(`${ASK_SERVER}/update`, {
       method:'POST', headers:{'Content-Type':'application/json'},
@@ -827,7 +862,8 @@ async function processPdf(file){
     statusEl.style.display = 'block';
     statusEl.style.borderColor = 'rgba(138,179,0,0.3)';
     statusEl.style.background = 'rgba(138,179,0,0.05)';
-    statusEl.innerHTML = '<strong style="color:var(--accent-dark);">\u2713 Text extracted from ' + file.name + '</strong><br><span style="color:var(--text2);">Review and edit below before generating. Remove anything that looks garbled.</span>';
+    statusEl.innerHTML = '<strong style="color:var(--accent-dark);">\u2713 Text extracted — ' + file.name + '</strong><br><span style="color:var(--text2);">Review the text below, then click <strong>Regenerate My Assistant \u2192</strong></span>';
+    setTimeout(() => { const btn = document.getElementById('editActions'); if(btn) btn.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 400);
   } catch(err){
     showPdfError('Could not read this PDF. Please paste your resume text instead.');
   }
@@ -843,6 +879,57 @@ function showPdfError(msg){
   statusEl.style.borderColor = '#fca5a5';
   statusEl.style.background = '#fef2f2';
   statusEl.innerHTML = '<span style="color:#dc2626;">' + msg + '</span>';
+}
+
+// ── BRAND COLORS ──
+function syncColorFromHex(colorId, hexId){
+  const hex = document.getElementById(hexId).value;
+  if(/^#[0-9A-Fa-f]{6}$/.test(hex)) document.getElementById(colorId).value = hex;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  ['cAccent','cBg','cButton'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', function(){
+      document.getElementById(id + 'Hex').value = this.value;
+    });
+  });
+});
+
+function getCustomColors(){
+  const accent = document.getElementById('cAccent').value;
+  const bg = document.getElementById('cBg').value;
+  const button = document.getElementById('cButton').value;
+  const defaults = { accent:'#ccff00', bg:'#f7f6f3', button:'#111111' };
+  if(accent.toLowerCase()===defaults.accent && bg.toLowerCase()===defaults.bg && button.toLowerCase()===defaults.button) return null;
+  return {
+    accent, bg, buttonBg: button,
+    accentDark: darkenHex(accent, 0.3),
+    bgAlt: lightenHex(bg, 0.5),
+    buttonText: getLuminance(button) > 0.4 ? '#111111' : '#ffffff'
+  };
+}
+function darkenHex(hex, amt){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return '#'+[r,g,b].map(v=>Math.max(0,Math.round(v*(1-amt))).toString(16).padStart(2,'0')).join(''); }
+function lightenHex(hex, amt){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return '#'+[r,g,b].map(v=>Math.min(255,Math.round(v+(255-v)*amt)).toString(16).padStart(2,'0')).join(''); }
+function getLuminance(hex){ const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255; return 0.299*r+0.587*g+0.114*b; }
+
+function previewBrandColors(){
+  const c = getCustomColors(); if(!c) return;
+  let el = document.getElementById('brandColorPreview');
+  if(!el){ el=document.createElement('style'); el.id='brandColorPreview'; document.head.appendChild(el); }
+  el.textContent=`:root{--accent:${c.accent};--accent-dark:${c.accentDark};--white:${c.bg};--off-white:${c.bgAlt};--black:${c.buttonBg};}`;
+}
+
+function resetBrandColors(){
+  const defaults = [['cAccent','#CCFF00'],['cAccentHex','#CCFF00'],['cBg','#F7F6F3'],['cBgHex','#F7F6F3'],['cButton','#111111'],['cButtonHex','#111111']];
+  defaults.forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.value=val; });
+  const el = document.getElementById('brandColorPreview'); if(el) el.textContent='';
+}
+
+function prefillBrandColors(c){
+  if(!c) return;
+  if(c.accent){ document.getElementById('cAccent').value=c.accent; document.getElementById('cAccentHex').value=c.accent; }
+  if(c.bg){ document.getElementById('cBg').value=c.bg; document.getElementById('cBgHex').value=c.bg; }
+  if(c.buttonBg){ document.getElementById('cButton').value=c.buttonBg; document.getElementById('cButtonHex').value=c.buttonBg; }
 }
 
 // ── GDPR ──
