@@ -175,7 +175,7 @@
       .stats-row{grid-template-columns:1fr;}
       #editPanel{max-width:100%;}
     }
-
+  
     #gdpr-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--black);border-top:1px solid rgba(255,255,255,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transform:translateY(100%);transition:transform 0.3s ease;}
     #gdpr-banner.show{transform:translateY(0);}
     .gdpr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;font-weight:300;}
@@ -472,7 +472,7 @@ const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 // Password is stored as a SHA-256 hash. On first login, the hash is auto-generated
 // from PASS_SEED and stored in localStorage. Then clear PASS_SEED from source.
 // To reset: clear localStorage key 'ask_pw_v1', set PASS_SEED to new password, login once, clear again.
-const PASS_SEED = ''; // ← clear after first login
+const PASS_SEED = '7f6fkEb0MCVcrz22'; // ← clear after first login
 let allProfiles = [], editUploadText = '', dashSelectedTheme = 'classic', dashSelectedFont = 'classic', dashAvatarDataUrl = null;
 function pickDashTheme(name,el){dashSelectedTheme=name;document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('on',c===el));}
 function pickDashFont(name,el){dashSelectedFont=name;document.querySelectorAll('.dfont-card').forEach(c=>c.classList.toggle('on',c===el));}
@@ -902,7 +902,7 @@ ${resume}
             name: name,
             email: email,
             subject: 'Your Ask profile has been updated',
-            html: '<p>Hi ' + name + ',</p><p>Your Ask assistant profile has been updated and is live at:</p><p><a href="https://ask.menoslabs.com/' + slug + '">ask.menoslabs.com/' + slug + '</a></p><p>The Menos Labs Team</p>'
+            html: '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#F7F6F3;font-family:Helvetica Neue,Arial,sans-serif;"><table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F6F3;padding:40px 20px;"><tr><td align="center"><table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;"><tr><td style="background:#111111;padding:28px 40px;border-radius:4px 4px 0 0;"><table width="100%" cellpadding="0" cellspacing="0"><tr><td style="font-family:Georgia,serif;font-size:1.2rem;font-weight:700;color:#ffffff;">Ask<span style="background:#CCFF00;color:#111111;padding:0 5px;font-style:italic;">.</span></td><td align="right" style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;">by Menos Labs</td></tr></table></td></tr><tr><td style="background:#CCFF00;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr><tr><td style="background:#ffffff;padding:40px 40px 32px;border-radius:0 0 4px 4px;"><p style="font-size:0.78rem;font-weight:500;text-transform:uppercase;color:#999990;margin:0 0 12px;">Profile updated</p><h1 style="font-family:Georgia,serif;font-size:1.75rem;font-weight:700;color:#1A1A1A;margin:0 0 8px;">Hi ' + name + ',</h1><p style="font-size:0.95rem;color:#555550;font-weight:300;line-height:1.7;margin:0 0 28px;">Your Ask assistant profile has been updated and is live.</p><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;"><tr><td style="background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:14px 18px;"><p style="font-size:0.7rem;text-transform:uppercase;color:#999990;margin:0 0 4px;">Your page</p><a href="https://ask.menoslabs.com/' + slug + '" style="font-size:0.9rem;color:#1A1A1A;text-decoration:none;font-family:monospace;">ask.menoslabs.com/' + slug + '</a></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;"><tr><td align="center"><a href="https://ask.menoslabs.com/' + slug + '" style="display:inline-block;background:#111111;color:#ffffff;font-size:0.85rem;font-weight:500;padding:14px 32px;border-radius:2px;text-decoration:none;">View My Page &#8594;</a></td></tr></table><p style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.7;margin:0 0 8px;">Need to make more changes? Visit <a href="https://ask.menoslabs.com/account" style="color:#8AB300;text-decoration:none;">ask.menoslabs.com/account</a> to manage your profile.</p><p style="font-size:0.82rem;color:#555550;font-weight:300;margin:8px 0 0;">&mdash; The Menos Labs Team</p></td></tr><tr><td style="padding:24px 0 8px;text-align:center;"><p style="font-size:0.7rem;color:#999990;margin:0 0 8px;">Powered by Menos Labs</p><p style="font-size:0.7rem;margin:0;"><a href="https://www.menoslabs.com" style="color:#999990;text-decoration:none;margin:0 8px;">menoslabs.com</a>&middot;<a href="https://ask.menoslabs.com" style="color:#999990;text-decoration:none;margin:0 8px;">ask.menoslabs.com</a>&middot;<a href="https://waveform.rocks" style="color:#999990;text-decoration:none;margin:0 8px;">waveform.rocks</a></p></td></tr></table></td></tr></table></body></html>'
           })
         });
         emailSent = true;

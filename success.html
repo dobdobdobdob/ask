@@ -116,8 +116,14 @@ footer{background:#111111;padding:2rem 4rem;display:flex;align-items:center;just
 </div>
 </div>
 <footer>
-<a href="/" class="footer-logo">Ask<span>.</span></a>
-<div class="footer-copy">Made in Chicago &nbsp;|&nbsp; Menos Labs LLC 2026</div>
+  <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+    <a href="/" class="footer-logo">Ask<span>.</span></a>
+    <a href="/faq" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">FAQ</a>
+    <span style="color:rgba(255,255,255,0.15);font-size:0.72rem;">&middot;</span>
+    <div class="footer-copy">Powered by Menos Labs LLC 2026 &middot; <a href="https://www.menoslabs.com" style="color:rgba(255,255,255,0.25);text-decoration:none;">menoslabs.com</a></div>
+    <span style="color:rgba(255,255,255,0.15);font-size:0.72rem;">|</span>
+    <a href="/account" style="font-size:0.72rem;font-weight:600;color:#CCFF00;text-decoration:none;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Already have an Ask page? Manage it here &#8594;</a>
+  </div>
 </footer>
 <script>
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
@@ -215,7 +221,7 @@ function buildConfirmationEmail(name, url, slug) {
                 </tr>
                 <tr>
                   <td width="28" valign="top" style="padding-top:1px;"><span style="display:inline-block;width:20px;height:20px;background:#111;border-radius:50%;text-align:center;line-height:20px;font-size:0.6rem;font-weight:700;color:#CCFF00;">3</span></td>
-                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;"><strong style="color:#1A1A1A;font-weight:500;">Edit anytime</strong> — visit <a href="https://ask.menoslabs.com/edit?slug=${slug}" style="color:#8AB300;text-decoration:none;">ask.menoslabs.com/edit</a> to update your profile.</td>
+                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;"><strong style="color:#1A1A1A;font-weight:500;">Manage anytime</strong> — visit <a href="https://ask.menoslabs.com/manage?slug=${slug}" style="color:#8AB300;text-decoration:none;">ask.menoslabs.com/manage</a> to update your profile.</td>
                 </tr>
               </table>
             </td></tr>
