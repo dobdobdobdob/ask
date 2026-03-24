@@ -652,7 +652,7 @@ function sortProfiles(col){
 }
 
 function updateSortHeaders(){
-  ['name','createdAt','views'].forEach(col => {
+  ['name','createdAt','updatedAt','views'].forEach(col => {
     const th = document.getElementById('th-' + col);
     if(!th) return;
     th.classList.remove('sort-asc','sort-desc');
@@ -665,7 +665,7 @@ function getFilteredProfiles(){
   const filtered = q ? allProfiles.filter(p=>(p.name||'').toLowerCase().includes(q)||(p.slug||'').toLowerCase().includes(q)||(p.email||'').toLowerCase().includes(q)) : [...allProfiles];
   filtered.sort((a,b)=>{
     let av = a[sortCol], bv = b[sortCol];
-    if(sortCol==='createdAt'){ av=av?new Date(av).getTime():0; bv=bv?new Date(bv).getTime():0; }
+    if(sortCol==='createdAt'||sortCol==='updatedAt'){ av=av?new Date(av).getTime():0; bv=bv?new Date(bv).getTime():0; }
     else if(sortCol==='views'){ av=Number(av)||0; bv=Number(bv)||0; }
     else { av=(av||'').toLowerCase(); bv=(bv||'').toLowerCase(); }
     if(av<bv) return sortDir==='asc'?-1:1;
@@ -690,11 +690,13 @@ function renderTable(profiles){
       <td style="font-size:0.75rem;color:var(--text3);">${p.email||'—'}</td>
       <td><a href="https://ask.menoslabs.com/${p.slug}" target="_blank" style="color:var(--accent-dark);font-size:0.75rem;text-decoration:none;">${p.slug} →</a></td>
       <td style="font-size:0.75rem;color:var(--text3);">${p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-GB') : '—'}</td>
+      <td style="font-size:0.75rem;color:var(--text3);">${p.updatedAt ? new Date(p.updatedAt).toLocaleDateString('en-GB') : '—'}</td>
       <td style="font-size:0.82rem;font-weight:500;color:var(--text1);">${p.views ?? '—'}</td>
       <td><span class="status-badge">Active</span></td>
       <td>
         <a href="https://ask.menoslabs.com/${p.slug}" target="_blank" class="btn-edit" style="text-decoration:none;display:inline-block;background:var(--off-white);color:var(--text1);border:1px solid var(--border);">View</a>
         <button class="btn-edit" onclick="openEdit('${p.slug}')">Edit</button>
+        <button class="btn-edit" style="background:var(--off-white);color:var(--text1);border:1px solid var(--border);" data-slug="${p.slug}" data-name="${(p.name||'').replace(/'/g,'').replace(/"/g,'')}" data-email="${(p.email||'').replace(/'/g,'').replace(/"/g,'')}" onclick="resendWelcome(this.dataset.slug,this.dataset.name,this.dataset.email)">Resend</button>
         <button class="btn-delete" data-slug="${p.slug}" data-name="${(p.name||'Profile').replace(/'/g,'').replace(/"/g,'')}" onclick="confirmDelete(this.dataset.slug,this.dataset.name)">Delete</button>
       </td>
     </tr>
@@ -707,6 +709,7 @@ function renderTable(profiles){
         <th>Email</th>
         <th>URL</th>
         <th class="sortable" id="th-createdAt" onclick="sortProfiles('createdAt')">Created<span class="sort-arrow"></span></th>
+        <th class="sortable" id="th-updatedAt" onclick="sortProfiles('updatedAt')">Last Updated<span class="sort-arrow"></span></th>
         <th class="sortable" id="th-views" onclick="sortProfiles('views')">Views<span class="sort-arrow"></span></th>
         <th>Status</th>
         <th>Actions</th>
@@ -977,6 +980,122 @@ async function confirmDelete(slug, name){
 }
 
 // ── SAVE INFO (no regen) ──
+// ── RESEND WELCOME EMAIL ──
+async function resendWelcome(slug, name, email){
+  if(!email){ toast('No email address on file for this profile.', 'error'); return; }
+  try {
+    const res = await fetch(`${ASK_SERVER}/${slug}`);
+    const profile = await res.json();
+    const url = 'https://ask.menoslabs.com/' + slug;
+    const accountUrl = 'https://ask.menoslabs.com/account?slug=' + slug;
+    const chatCode = '<script src="https://ask.menoslabs.com/embed.js" data-slug="' + slug + '"><\\/script>';
+    const iframeCode = '<iframe src="' + url + '" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"><\\/iframe>';
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Your Ask assistant is live</title></head>
+<body style="margin:0;padding:0;background:#F7F6F3;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F6F3;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+        <tr><td style="background:#111111;padding:28px 40px;border-radius:4px 4px 0 0;">
+          <table width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td style="font-family:Georgia,serif;font-size:1.2rem;font-weight:700;color:#ffffff;">Ask<span style="background:#CCFF00;color:#111111;padding:0 5px;font-style:italic;">.</span></td>
+            <td align="right" style="font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.12em;text-transform:uppercase;">by Menos Labs</td>
+          </tr></table>
+        </td></tr>
+        <tr><td style="background:#CCFF00;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>
+        <tr><td style="background:#ffffff;padding:40px 40px 32px;border-radius:0 0 4px 4px;">
+          <p style="font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#999990;margin:0 0 12px;">Your assistant is live</p>
+          <h1 style="font-family:Georgia,serif;font-size:1.75rem;font-weight:700;color:#1A1A1A;margin:0 0 8px;">Hi ${profile.name},</h1>
+          <p style="font-size:0.95rem;color:#555550;font-weight:300;line-height:1.7;margin:0 0 28px;">Your AI assistant page is live and ready to share. Anyone who visits your link can ask questions about your background, experience, and skills — just like talking to you.</p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+            <tr><td style="background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:14px 18px;">
+              <p style="font-size:0.7rem;font-weight:500;text-transform:uppercase;color:#999990;margin:0 0 4px;">Your page</p>
+              <a href="${url}" style="font-size:0.9rem;color:#1A1A1A;text-decoration:none;font-family:monospace;">${url}</a>
+            </td></tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+            <tr><td align="center">
+              <a href="${url}" style="display:inline-block;background:#111111;color:#ffffff;font-size:0.85rem;font-weight:500;padding:14px 32px;border-radius:2px;text-decoration:none;">View My Page →</a>
+            </td></tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;border-top:1px solid #E2DED8;padding-top:28px;">
+            <tr><td>
+              <p style="font-size:0.72rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:#999990;margin:0 0 16px;">What's next</p>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="28" valign="top"><span style="display:inline-block;width:20px;height:20px;background:#111;border-radius:50%;text-align:center;line-height:20px;font-size:0.6rem;font-weight:700;color:#CCFF00;">1</span></td>
+                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;padding-bottom:10px;"><strong style="color:#1A1A1A;font-weight:500;">Share your link</strong> — add it to your LinkedIn, email signature, or resume.</td>
+                </tr>
+                <tr>
+                  <td width="28" valign="top"><span style="display:inline-block;width:20px;height:20px;background:#111;border-radius:50%;text-align:center;line-height:20px;font-size:0.6rem;font-weight:700;color:#CCFF00;">2</span></td>
+                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;padding-bottom:10px;"><strong style="color:#1A1A1A;font-weight:500;">Embed on your site</strong> — add a floating chat button or full profile to any website using the codes below.</td>
+                </tr>
+                <tr>
+                  <td width="28" valign="top"><span style="display:inline-block;width:20px;height:20px;background:#111;border-radius:50%;text-align:center;line-height:20px;font-size:0.6rem;font-weight:700;color:#CCFF00;">3</span></td>
+                  <td style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.6;"><strong style="color:#1A1A1A;font-weight:500;">Manage your account</strong> — visit <a href="${accountUrl}" style="color:#8AB300;text-decoration:none;">ask.menoslabs.com/account</a> to update your profile anytime.</td>
+                </tr>
+              </table>
+            </td></tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;border-top:1px solid #E2DED8;padding-top:28px;">
+            <tr><td>
+              <p style="font-size:0.72rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:#999990;margin:0 0 16px;">Embed your assistant</p>
+              <p style="font-size:0.82rem;font-weight:500;color:#1A1A1A;margin:0 0 6px;">Chat Button</p>
+              <p style="font-size:0.78rem;color:#555550;font-weight:300;margin:0 0 8px;">Paste before your closing &lt;/body&gt; tag.</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+                <tr><td style="background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:12px 16px;font-family:monospace;font-size:0.72rem;color:#1A1A1A;word-break:break-all;line-height:1.6;">
+                  &lt;script src="https://ask.menoslabs.com/embed.js" data-slug="${slug}"&gt;&lt;/script&gt;
+                </td></tr>
+              </table>
+              <p style="font-size:0.82rem;font-weight:500;color:#1A1A1A;margin:0 0 6px;">Full Profile Page</p>
+              <p style="font-size:0.78rem;color:#555550;font-weight:300;margin:0 0 8px;">Embed your complete profile with experience, skills, and chat.</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
+                <tr><td style="background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:12px 16px;font-family:monospace;font-size:0.72rem;color:#1A1A1A;word-break:break-all;line-height:1.6;">
+                  &lt;iframe src="${url}" width="100%" height="700" frameborder="0" style="border:none;border-radius:4px;"&gt;&lt;/iframe&gt;
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;border-top:1px solid #E2DED8;padding-top:28px;">
+            <tr><td align="center">
+              <p style="font-size:0.82rem;color:#555550;font-weight:300;margin:0 0 16px;">Need to update your profile, change your theme, or edit your details?</p>
+              <a href="${accountUrl}" style="display:inline-block;background:#CCFF00;color:#111111;font-size:0.85rem;font-weight:600;padding:14px 32px;border-radius:2px;text-decoration:none;">Manage My Account →</a>
+            </td></tr>
+          </table>
+          <p style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.7;margin:0;">Questions? Reply to this email or visit our <a href="https://ask.menoslabs.com/faq" style="color:#8AB300;text-decoration:none;">FAQ</a>.</p>
+          <p style="font-size:0.82rem;color:#555550;font-weight:300;line-height:1.7;margin:8px 0 0;">— The Menos Labs Team</p>
+        </td></tr>
+        <tr><td style="padding:24px 0 8px;text-align:center;">
+          <p style="font-size:0.7rem;color:#999990;margin:0 0 8px;">Powered by Menos Labs</p>
+          <p style="font-size:0.7rem;margin:0;">
+            <a href="https://www.menoslabs.com" style="color:#999990;text-decoration:none;margin:0 8px;">menoslabs.com</a>&middot;
+            <a href="https://ask.menoslabs.com" style="color:#999990;text-decoration:none;margin:0 8px;">ask.menoslabs.com</a>&middot;
+            <a href="https://waveform.rocks" style="color:#999990;text-decoration:none;margin:0 8px;">waveform.rocks</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    await fetch('https://menoslabs-contact.thedobrien.workers.dev', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        name: profile.name,
+        email: profile.email,
+        subject: 'Your Ask assistant is live — ' + profile.name,
+        html
+      })
+    });
+    toast('Welcome email resent to ' + profile.email, 'success');
+  } catch(e){
+    toast('Failed to resend: ' + e.message, 'error');
+  }
+}
+
 async function saveInfo(){
   const slug = document.getElementById('editSlug').value;
   if(slug === '__new__'){ toast('New profiles require a resume to generate. Use Regenerate.','info'); return; }
