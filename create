@@ -170,13 +170,7 @@
     }
 
     /* FONT PICKER */
-    .font-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;margin-bottom:1.5rem;}
-    .font-card{border:1px solid var(--border);border-radius:4px;padding:0.85rem 1rem;cursor:pointer;transition:all 0.2s;text-align:center;}
-    .font-card:hover{border-color:var(--accent-dark);}
-    .font-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
-    .font-card-name{font-size:1rem;font-weight:500;color:var(--text1);margin-bottom:2px;line-height:1.2;}
-    .font-card-label{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
-    @media(max-width:480px){.font-picker{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:480px){.theme-picker{grid-template-columns:repeat(2,1fr);}}
 
     /* ALIGNMENT TOOLBAR */
     .align-toolbar{display:flex;gap:0;margin-bottom:0.5rem;}
@@ -336,56 +330,6 @@
       </div>
     </div>
 
-    <!-- FONT PICKER -->
-    <div style="margin-top:1.75rem;margin-bottom:1rem;padding:1rem 1.25rem;background:rgba(204,255,0,0.06);border:1px solid rgba(139,179,0,0.2);border-radius:4px;display:flex;align-items:center;gap:0.75rem;">
-      <div style="width:8px;height:8px;background:var(--accent-dark);border-radius:50%;flex-shrink:0;"></div>
-      <div>
-        <div style="font-size:0.78rem;font-weight:500;color:var(--text1);margin-bottom:0.15rem;">Choose your font style</div>
-        <div style="font-size:0.72rem;color:var(--text2);font-weight:300;">This sets the typography across your entire profile page.</div>
-      </div>
-    </div>
-    <div class="font-picker" id="fontPicker">
-      <div class="font-card on" data-font="classic" onclick="pickFont('classic',this)">
-        <div class="font-card-name" style="font-family:'DM Sans',sans-serif;">Aa</div>
-        <div class="font-card-label">Classic</div>
-      </div>
-      <div class="font-card" data-font="editorial" onclick="pickFont('editorial',this)">
-        <div class="font-card-name" style="font-family:'Playfair Display',serif;font-style:italic;">Aa</div>
-        <div class="font-card-label">Editorial</div>
-      </div>
-      <div class="font-card" data-font="modern" onclick="pickFont('modern',this)">
-        <div class="font-card-name" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;">Aa</div>
-        <div class="font-card-label">Modern</div>
-      </div>
-      <div class="font-card" data-font="minimal" onclick="pickFont('minimal',this)">
-        <div class="font-card-name" style="font-family:'Inter Tight',sans-serif;font-weight:300;">Aa</div>
-        <div class="font-card-label">Minimal</div>
-      </div>
-      <div class="font-card" data-font="bold" onclick="pickFont('bold',this)">
-        <div class="font-card-name" style="font-family:'Syne',sans-serif;font-weight:800;">Aa</div>
-        <div class="font-card-label">Bold</div>
-      </div>
-      <div class="font-card" data-font="warm" onclick="pickFont('warm',this)">
-        <div class="font-card-name" style="font-family:'Nunito',sans-serif;font-weight:600;">Aa</div>
-        <div class="font-card-label">Warm</div>
-      </div>
-    </div>
-
-    <!-- PERSONAL STATEMENT -->
-    <p class="form-section-title" style="margin-top:1.5rem;">Personal Statement <span style="font-size:0.6rem;color:var(--text3);text-transform:none;letter-spacing:0;font-weight:300;">(optional — shown above your AI-generated bio)</span></p>
-    <div class="align-toolbar" id="alignToolbar">
-      <button class="align-btn on" id="align-left" onclick="setAlign('left')" title="Align left">
-        <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="1" y="6" width="10" height="2"/><rect x="1" y="10" width="14" height="2"/><rect x="1" y="14" width="8" height="2"/></svg>
-      </button>
-      <button class="align-btn" id="align-center" onclick="setAlign('center')" title="Center">
-        <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="3" y="6" width="10" height="2"/><rect x="1" y="10" width="14" height="2"/><rect x="4" y="14" width="8" height="2"/></svg>
-      </button>
-      <button class="align-btn" id="align-right" onclick="setAlign('right')" title="Align right">
-        <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="5" y="6" width="10" height="2"/><rect x="1" y="10" width="14" height="2"/><rect x="7" y="14" width="8" height="2"/></svg>
-      </button>
-    </div>
-    <textarea class="finput align-left" id="iStatement" placeholder="Write a short personal intro — who you are, what drives you, what you're looking for..." style="min-height:100px;"></textarea>
-
     <p class="form-section-title" style="margin-top:1.5rem;text-align:center;">Resume *</p>
 
     <div class="tab-row">
@@ -417,24 +361,6 @@
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 let selectedTheme = 'classic';
 let selectedFont = 'classic';
-let selectedAlign = 'left';
-
-// ── FONT PICKER ──
-function pickFont(name, el){
-  selectedFont = name;
-  document.querySelectorAll('.font-card').forEach(c => c.classList.toggle('on', c === el));
-}
-
-// ── ALIGNMENT ──
-function setAlign(dir){
-  selectedAlign = dir;
-  ['left','center','right'].forEach(d => {
-    document.getElementById('align-' + d).classList.toggle('on', d === dir);
-  });
-  const ta = document.getElementById('iStatement');
-  ta.classList.remove('align-left','align-center','align-right');
-  ta.classList.add('align-' + dir);
-}
 
 function pickTheme(name,el){
   selectedTheme=name;
@@ -579,8 +505,6 @@ async function generate(){
     .replace(/\b[A-Za-z\s]+,\s*[A-Z]{2}\s+\d{5}(?:-\d{4})?\b/g, '[address removed]')
     .trim();
 
-  const statement = document.getElementById('iStatement').value.trim();
-
   if(!usernameValid || !chosenUsername){ alert('Please choose an available username above.'); return; }
   if(!name){ alert('Please enter your name.'); return; }
   if(!resume){ alert('Please paste your resume text above.'); return; }
@@ -656,7 +580,7 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     clearInterval(iv);
 
     // Save to sessionStorage and go to preview
-    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], education:parsed.education||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl, chosenUsername, theme:selectedTheme, font:selectedFont, statement, statementAlign:selectedAlign, resume:resume };
+    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], education:parsed.education||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl, chosenUsername, theme:selectedTheme, font:selectedFont, resume:resume };
     profileData.theme = selectedTheme;
     sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
     window.location.href = '/preview.html';
