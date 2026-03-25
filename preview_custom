@@ -499,7 +499,7 @@ gtag('config', 'G-96XWYGNS49');
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
 const STRIPE_URL = 'https://buy.stripe.com/aFa8wR9fo6Er9l87JSgEg00';
-const STRIPE_URL_CUSTOM = 'STRIPE_CUSTOM_LINK_HERE'; // ← swap in live custom Stripe link
+const STRIPE_URL_CUSTOM = 'https://buy.stripe.com/test_aFa8wR9fo6Er9l87JSgEg00';
 const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
 let systemPrompt='', chatHistory=[], chatLoading=false, chatOpen=false, avatarDataUrl=null;
 let isEditMode = false, editSlug = '';
