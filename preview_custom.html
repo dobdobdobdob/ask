@@ -596,7 +596,7 @@ window.addEventListener('load', () => {
   }
 
   systemPrompt = d.systemPrompt;
-  // Apply brand colors
+  // Apply brand colors — stored and applied after content renders
   if(d.customColors){
     const c = d.customColors;
     const aC = c.accentDark || c.accent;
@@ -608,8 +608,8 @@ window.addEventListener('load', () => {
     root.style.setProperty('--custom-button', c.buttonBg);
     root.style.setProperty('--custom-button-text', bT);
     root.classList.add('custom');
-    // Also force inline styles as fallback
-    document.querySelector('.profile-hero').style.background = c.bg;
+    // Store colors for applyBrandColors() — called after content is in DOM
+    window._brandColors = { accent: c.accent, accentDark: aC, bg: c.bg, button: c.buttonBg, buttonText: bT };
   }
   avatarDataUrl = d.avatar || sessionStorage.getItem('ask_avatar');
   if(d.avatar) { sessionStorage.setItem('ask_avatar', d.avatar); delete d.avatar; sessionStorage.setItem('ask_draft', JSON.stringify(d)); }
@@ -702,6 +702,7 @@ window.addEventListener('load', () => {
   addMessage('assistant',`Hi! I'm ${d.name}'s AI assistant. Try asking me anything about their background — this is a live preview!`);
   if(!isEditMode) resetIdleTimer();
   wireEditableFields();
+  if(window._brandColors) applyBrandColors(window._brandColors);
 });
 
 let idleTimer = null;
@@ -714,6 +715,31 @@ function resetIdleTimer(){
 });
 
 function showPurchaseModal(){ document.getElementById('purchaseModal').classList.add('show'); }
+
+function applyBrandColors(c){
+  // Hero bg
+  const hero = document.querySelector('.profile-hero');
+  if(hero) hero.style.background = c.bg;
+  // Nav logo
+  const navSpan = document.querySelector('.nav-logo span');
+  if(navSpan) navSpan.style.background = c.accent;
+  // Footer logo
+  const footSpan = document.querySelector('.footer-logo span');
+  if(footSpan) footSpan.style.background = c.accent;
+  // Chat toggle
+  const chatBtn = document.getElementById('chat-toggle');
+  if(chatBtn){ chatBtn.style.background = c.button; chatBtn.style.color = c.buttonText; }
+  // Chat send
+  document.querySelectorAll('.chat-send').forEach(el => el.style.background = c.button);
+  // Buy buttons
+  document.querySelectorAll('.btn-buy,.btn-purchase').forEach(el => { el.style.background = c.button; el.style.color = c.buttonText; });
+  // Exp company labels (dynamically created)
+  document.querySelectorAll('.exp-company').forEach(el => el.style.color = c.accentDark);
+  // Bullet markers — inject a style tag for ::before pseudo-elements
+  let st = document.getElementById('brand-bullets');
+  if(!st){ st = document.createElement('style'); st.id = 'brand-bullets'; document.head.appendChild(st); }
+  st.textContent = `.exp-bullets li::before{color:${c.accentDark}!important;}.exp-card:hover::before{background:${c.accent}!important;}`;
+}
 
 function saveEdits(){ autoSave(); }
 
