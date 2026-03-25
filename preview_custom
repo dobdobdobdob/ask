@@ -231,6 +231,17 @@ html.soft .social-pill{background:#F5EDE0!important;border-color:#DDD0BB!importa
 html.soft #chat-toggle{background:#D48B3A!important;border-radius:50px!important;}
 html.soft footer{background:#2D2318!important;}
 html.soft .main-content{background:#FDF8F3!important;}
+html.custom .profile-hero{background:var(--custom-bg)!important;}
+html.custom .exp-company{color:var(--custom-accent-dark)!important;}
+html.custom .exp-bullets li::before{color:var(--custom-accent-dark)!important;}
+html.custom .exp-card:hover::before{background:var(--custom-accent)!important;}
+html.custom .nav-logo span{background:var(--custom-accent)!important;}
+html.custom .footer-logo span{background:var(--custom-accent)!important;}
+html.custom #chat-toggle{background:var(--custom-button)!important;color:var(--custom-button-text)!important;}
+html.custom #chat-toggle:hover{background:var(--custom-accent)!important;color:#111!important;}
+html.custom .chat-send{background:var(--custom-button)!important;}
+html.custom .btn-buy{background:var(--custom-button)!important;color:var(--custom-button-text)!important;}
+html.custom .btn-purchase{background:var(--custom-button)!important;color:var(--custom-button-text)!important;}
 #faqModal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:none;align-items:flex-start;justify-content:center;backdrop-filter:blur(6px);padding:5rem 1.5rem 2rem;overflow-y:auto;}
 #faqModal.show{display:flex;}
 .faq-modal-card{background:var(--white);border:1px solid var(--border);border-radius:4px;width:100%;max-width:680px;position:relative;margin:auto;}
@@ -697,30 +708,17 @@ window.addEventListener('load', () => {
   }
 
   systemPrompt = d.systemPrompt;
-  // Apply brand colors from create.html
+  // Apply brand colors
   if(d.customColors){
     const c = d.customColors;
     const aC = c.accentDark || c.accent;
     const bT = c.buttonText || '#ffffff';
-    const styleEl = document.createElement('style');
-    styleEl.id = 'brand-color-override';
-    // Use html[class] prefix alongside base selector so brand colors win over
-    // theme-specific rules (html.dark .xxx etc.) which have higher specificity.
-    // Equal specificity + later in document = brand colors take precedence.
-    // !important on CSS vars overrides :root.dark{} non-!important declarations.
-    styleEl.textContent = ':root{--accent:'+c.accent+' !important;--accent-dark:'+aC+' !important;}'
-      +'body .profile-hero,html[class] .profile-hero{background:'+c.bg+'!important;}'
-      +'body .exp-company,html[class] .exp-company{color:'+aC+'!important;}'
-      +'body .exp-bullets li::before,html[class] .exp-bullets li::before{color:'+aC+'!important;}'
-      +'body .exp-card:hover::before,html[class] .exp-card:hover::before{background:'+c.accent+'!important;}'
-      +'body .nav-logo span,html[class] .nav-logo span{background:'+c.accent+'!important;}'
-      +'body .footer-logo span,html[class] .footer-logo span{background:'+c.accent+'!important;}'
-      +'body #chat-toggle,html[class] #chat-toggle{background:'+c.buttonBg+'!important;color:'+bT+'!important;}'
-      +'body #chat-toggle:hover,html[class] #chat-toggle:hover{background:'+c.accent+'!important;color:#111!important;}'
-      +'body .chat-send,html[class] .chat-send{background:'+c.buttonBg+'!important;}'
-      +'body .btn-buy,html[class] .btn-buy{background:'+c.buttonBg+'!important;color:'+bT+'!important;}'
-      +'body .btn-purchase,html[class] .btn-purchase{background:'+c.buttonBg+'!important;color:'+bT+'!important;}';
-    document.head.appendChild(styleEl);
+    document.documentElement.style.setProperty('--custom-accent', c.accent);
+    document.documentElement.style.setProperty('--custom-accent-dark', aC);
+    document.documentElement.style.setProperty('--custom-bg', c.bg);
+    document.documentElement.style.setProperty('--custom-button', c.buttonBg);
+    document.documentElement.style.setProperty('--custom-button-text', bT);
+    document.documentElement.classList.add('custom');
   }
   avatarDataUrl = d.avatar || sessionStorage.getItem('ask_avatar');
   if(d.avatar) { sessionStorage.setItem('ask_avatar', d.avatar); delete d.avatar; sessionStorage.setItem('ask_draft', JSON.stringify(d)); }
