@@ -709,17 +709,17 @@ window.addEventListener('load', () => {
     // Equal specificity + later in document = brand colors take precedence.
     // !important on CSS vars overrides :root.dark{} non-!important declarations.
     styleEl.textContent = ':root{--accent:'+c.accent+' !important;--accent-dark:'+aC+' !important;}'
-      +'.profile-hero,html[class] .profile-hero{background:'+c.bg+'!important;}'
-      +'.exp-company,html[class] .exp-company{color:'+aC+'!important;}'
-      +'.exp-bullets li::before,html[class] .exp-bullets li::before{color:'+aC+'!important;}'
-      +'.exp-card:hover::before,html[class] .exp-card:hover::before{background:'+c.accent+'!important;}'
-      +'.nav-logo span,html[class] .nav-logo span{background:'+c.accent+'!important;}'
-      +'.footer-logo span,html[class] .footer-logo span{background:'+c.accent+'!important;}'
-      +'#chat-toggle,html[class] #chat-toggle{background:'+c.buttonBg+'!important;color:'+bT+'!important;}'
-      +'#chat-toggle:hover,html[class] #chat-toggle:hover{background:'+c.accent+'!important;color:#111!important;}'
-      +'.chat-send,html[class] .chat-send{background:'+c.buttonBg+'!important;}'
-      +'.btn-buy,html[class] .btn-buy{background:'+c.buttonBg+'!important;color:'+bT+'!important;}'
-      +'.btn-purchase,html[class] .btn-purchase{background:'+c.buttonBg+'!important;color:'+bT+'!important;}';
+      +'body .profile-hero,html[class] .profile-hero{background:'+c.bg+'!important;}'
+      +'body .exp-company,html[class] .exp-company{color:'+aC+'!important;}'
+      +'body .exp-bullets li::before,html[class] .exp-bullets li::before{color:'+aC+'!important;}'
+      +'body .exp-card:hover::before,html[class] .exp-card:hover::before{background:'+c.accent+'!important;}'
+      +'body .nav-logo span,html[class] .nav-logo span{background:'+c.accent+'!important;}'
+      +'body .footer-logo span,html[class] .footer-logo span{background:'+c.accent+'!important;}'
+      +'body #chat-toggle,html[class] #chat-toggle{background:'+c.buttonBg+'!important;color:'+bT+'!important;}'
+      +'body #chat-toggle:hover,html[class] #chat-toggle:hover{background:'+c.accent+'!important;color:#111!important;}'
+      +'body .chat-send,html[class] .chat-send{background:'+c.buttonBg+'!important;}'
+      +'body .btn-buy,html[class] .btn-buy{background:'+c.buttonBg+'!important;color:'+bT+'!important;}'
+      +'body .btn-purchase,html[class] .btn-purchase{background:'+c.buttonBg+'!important;color:'+bT+'!important;}';
     document.head.appendChild(styleEl);
   }
   avatarDataUrl = d.avatar || sessionStorage.getItem('ask_avatar');
