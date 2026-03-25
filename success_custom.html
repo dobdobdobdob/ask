@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're Live — Ask</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text1);min-height:100vh;display:flex;flex-direction:column;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
+.nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
+
+.page{max-width:680px;margin:0 auto;padding:8rem 2rem 5rem;flex:1;}
+
+/* HERO */
+.success-hero{text-align:center;margin-bottom:3rem;}
+.success-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent-dark);margin-bottom:1rem;}
+.success-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;letter-spacing:-0.03em;line-height:1.15;margin-bottom:0.75rem;}
+.success-title span{font-style:italic;background:var(--accent);color:var(--black);padding:0 8px;}
+.success-sub{font-size:0.95rem;color:var(--text2);font-weight:300;line-height:1.7;}
+
+/* LIVE LINK CARD */
+.live-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2rem;margin-bottom:1.5rem;text-align:center;}
+.live-label{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
+.live-url{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;letter-spacing:-0.02em;color:var(--text1);margin-bottom:1.25rem;word-break:break-all;}
+.live-url a{color:var(--text1);text-decoration:none;border-bottom:2px solid var(--accent);transition:color 0.2s;}
+.live-url a:hover{color:var(--accent-dark);}
+.btn-view{display:inline-block;background:var(--black);color:var(--white);padding:0.85rem 2rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;text-decoration:none;transition:all 0.2s;margin-right:0.75rem;}
+.btn-view:hover{background:var(--accent);color:var(--black);}
+.btn-copy{display:inline-block;background:none;color:var(--text2);padding:0.85rem 1.5rem;font-size:0.85rem;font-weight:400;border:1px solid var(--border);border-radius:2px;cursor:pointer;transition:all 0.2s;}
+.btn-copy:hover{border-color:var(--accent-dark);color:var(--text1);}
+.btn-copy.copied{border-color:var(--accent-dark);color:var(--accent-dark);}
+
+/* SECTION CARD */
+.section-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2rem;margin-bottom:1.5rem;}
+.section-card-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.section-card-heading{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;}
+.section-card-body{font-size:0.88rem;color:var(--text2);font-weight:300;line-height:1.75;margin-bottom:1.25rem;}
+
+/* CNAME STEPS */
+.cname-steps{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.5rem;}
+.cname-step{display:flex;gap:1rem;align-items:flex-start;}
+.cname-step-num{width:26px;height:26px;background:var(--black);color:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+.cname-step-text{font-size:0.85rem;color:var(--text2);font-weight:300;line-height:1.65;}
+.cname-step-text strong{color:var(--text1);font-weight:500;}
+
+/* CNAME TABLE */
+.cname-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin:1rem 0;}
+.cname-table th{font-size:0.6rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);text-align:left;padding:0.5rem 0.75rem;border-bottom:1px solid var(--border);}
+.cname-table td{padding:0.65rem 0.75rem;border-bottom:1px solid var(--border);color:var(--text2);font-weight:300;}
+.cname-table td:first-child{color:var(--text1);font-weight:500;}
+.cname-table code{font-family:monospace;font-size:0.8rem;background:var(--off-white);padding:2px 6px;border-radius:2px;color:var(--text1);border:1px solid var(--border);}
+.cname-copy-row{display:flex;align-items:center;gap:0.5rem;}
+.cname-copy-btn{font-size:0.65rem;padding:2px 8px;background:none;border:1px solid var(--border);border-radius:2px;cursor:pointer;color:var(--text3);transition:all 0.2s;white-space:nowrap;}
+.cname-copy-btn:hover{border-color:var(--accent-dark);color:var(--text1);}
+.cname-copy-btn.copied{border-color:var(--accent-dark);color:var(--accent-dark);}
+
+/* PROVIDER TABS */
+.provider-tabs{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.ptab{font-size:0.68rem;font-weight:500;letter-spacing:0.08em;padding:0.45rem 1rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;margin-bottom:-1px;transition:all 0.2s;}
+.ptab:hover{color:var(--text1);}
+.ptab.on{color:var(--text1);border-bottom-color:var(--black);}
+.provider-panel{display:none;}
+.provider-panel.on{display:block;}
+
+/* EMAIL CTA */
+.email-row{display:flex;gap:0.75rem;align-items:center;background:rgba(204,255,0,0.06);border:1px solid rgba(139,179,0,0.2);border-radius:4px;padding:1rem 1.25rem;}
+.email-dot{width:8px;height:8px;background:var(--accent-dark);border-radius:50%;flex-shrink:0;}
+.email-text{font-size:0.82rem;color:var(--text2);font-weight:300;line-height:1.6;}
+.email-text strong{color:var(--text1);font-weight:500;}
+.email-text a{color:var(--accent-dark);text-decoration:none;font-weight:500;}
+.email-text a:hover{text-decoration:underline;}
+
+/* WHAT'S NEXT */
+.next-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:1.25rem;}
+.next-item{background:var(--off-white);border:1px solid var(--border);border-radius:4px;padding:1.25rem;}
+.next-item-title{font-size:0.78rem;font-weight:500;color:var(--text1);margin-bottom:0.35rem;}
+.next-item-body{font-size:0.75rem;color:var(--text3);font-weight:300;line-height:1.6;}
+
+footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+.footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
+.footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.03em;}
+
+@media(max-width:640px){
+  nav{padding:1.25rem 1.5rem;}
+  .page{padding:7rem 1.25rem 4rem;}
+  .success-title{font-size:1.75rem;}
+  .btn-view,.btn-copy{display:block;width:100%;text-align:center;margin-right:0;margin-bottom:0.5rem;}
+  .next-grid{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:1rem;padding:1.5rem;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Ask<span>.</span></a>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="success-hero">
+    <p class="success-eyebrow">You're live</p>
+    <h1 class="success-title">Your assistant is <span>ready.</span></h1>
+    <p class="success-sub">Share your link anywhere — email signature, LinkedIn, resume. Anyone can ask your AI questions 24/7.</p>
+  </div>
+
+  <!-- LIVE LINK -->
+  <div class="live-card">
+    <p class="live-label">Your permanent page</p>
+    <div class="live-url"><a id="liveLink" href="#" target="_blank">ask.menoslabs.com/—</a></div>
+    <a id="btnView" href="#" target="_blank" class="btn-view">View My Page →</a>
+    <button class="btn-copy" id="btnCopy" onclick="copyLink()">Copy Link</button>
+  </div>
+
+  <!-- CNAME SETUP -->
+  <div class="section-card">
+    <p class="section-card-title">Custom Domain Setup</p>
+    <h2 class="section-card-heading">Point your domain to your Ask page</h2>
+    <p class="section-card-body">Add a CNAME record in your DNS provider to map your domain (e.g. <strong>ask.yourdomain.com</strong>) to your Ask page. Then email us and we'll configure the routing on our end — usually done within a few hours.</p>
+
+    <div class="cname-steps">
+      <div class="cname-step">
+        <div class="cname-step-num">1</div>
+        <div class="cname-step-text">Log in to your domain provider and go to your <strong>DNS settings</strong>.</div>
+      </div>
+      <div class="cname-step">
+        <div class="cname-step-num">2</div>
+        <div class="cname-step-text">Add a new <strong>CNAME record</strong> using the values below.</div>
+      </div>
+      <div class="cname-step">
+        <div class="cname-step-num">3</div>
+        <div class="cname-step-text"><strong>Email us</strong> at <a href="mailto:hello@menoslabs.com" style="color:var(--accent-dark);font-weight:500;">hello@menoslabs.com</a> with your custom domain and your Ask slug — we'll activate it.</div>
+      </div>
+    </div>
+
+    <table class="cname-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Name / Host</th>
+          <th>Value / Target</th>
+          <th>TTL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CNAME</td>
+          <td><div class="cname-copy-row"><code>ask</code> <button class="cname-copy-btn" onclick="copyVal(this,'ask')">Copy</button></div></td>
+          <td><div class="cname-copy-row"><code>ask-domains.menoslabs.com</code> <button class="cname-copy-btn" onclick="copyVal(this,'ask-domains.menoslabs.com')">Copy</button></div></td>
+          <td>Auto</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:0.75rem;color:var(--text3);margin-bottom:1.5rem;">DNS changes can take up to 24 hours to propagate, though usually much faster.</p>
+
+    <!-- PROVIDER TABS -->
+    <div class="provider-tabs">
+      <button class="ptab on" onclick="switchTab('godaddy',this)">GoDaddy</button>
+      <button class="ptab" onclick="switchTab('namecheap',this)">Namecheap</button>
+      <button class="ptab" onclick="switchTab('cloudflare',this)">Cloudflare</button>
+      <button class="ptab" onclick="switchTab('squarespace',this)">Squarespace</button>
+      <button class="ptab" onclick="switchTab('other',this)">Other</button>
+    </div>
+
+    <div class="provider-panel on" id="tab-godaddy">
+      <p class="cname-step-text"><strong>My Products</strong> → your domain → <strong>DNS</strong> → <strong>Add New Record</strong> → Type: CNAME → Name: <code>ask</code> → Value: the target above → Save.</p>
+    </div>
+    <div class="provider-panel" id="tab-namecheap">
+      <p class="cname-step-text"><strong>Domain List</strong> → Manage → <strong>Advanced DNS</strong> → Add New Record → Type: CNAME → Host: <code>ask</code> → Value: the target above → Save.</p>
+    </div>
+    <div class="provider-panel" id="tab-cloudflare">
+      <p class="cname-step-text"><strong>DNS</strong> → Add Record → Type: CNAME → Name: <code>ask</code> → Target: the value above → <strong>Proxy: OFF (DNS only)</strong> → Save.</p>
+    </div>
+    <div class="provider-panel" id="tab-squarespace">
+      <p class="cname-step-text"><strong>Domains</strong> → your domain → <strong>DNS Settings</strong> → Add Record → Type: CNAME → Host: <code>ask</code> → Data: the target above → Save.</p>
+    </div>
+    <div class="provider-panel" id="tab-other">
+      <p class="cname-step-text">Find your DNS management panel, add a CNAME record with host <code>ask</code> pointing to the target value above. If you're unsure, email us and we'll walk you through it.</p>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <div class="email-row">
+        <div class="email-dot"></div>
+        <div class="email-text">Once your CNAME is set, email <a href="mailto:hello@menoslabs.com">hello@menoslabs.com</a> with your domain and Ask slug. We'll configure routing and confirm when it's live — usually within a few hours.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT'S NEXT -->
+  <div class="section-card">
+    <p class="section-card-title">What's next</p>
+    <div class="next-grid">
+      <div class="next-item">
+        <div class="next-item-title">Share your link</div>
+        <div class="next-item-body">Add it to your email signature, LinkedIn bio, or the top of your resume.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-item-title">Embed on your site</div>
+        <div class="next-item-body">Paste one script tag before &lt;/body&gt; to add the chat button to any website.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-item-title">Update your profile</div>
+        <div class="next-item-body">Email us with your updated resume anytime — we'll regenerate and your URL stays the same.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-item-title">Need help?</div>
+        <div class="next-item-body">Email <a href="mailto:hello@menoslabs.com" style="color:var(--accent-dark);">hello@menoslabs.com</a> — we respond fast.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="/" class="footer-logo">Ask<span>.</span></a>
+  <div class="footer-copy">Made in Chicago &nbsp;|&nbsp; Menos Labs LLC 2026</div>
+</footer>
+
+<script>
+// Read slug from URL param or localStorage
+const params = new URLSearchParams(window.location.search);
+let slug = params.get('slug') || '';
+
+// Try to recover from purchase data if no slug in URL
+if(!slug){
+  try {
+    const raw = localStorage.getItem('ask_purchase_data');
+    if(raw){ const d = JSON.parse(raw); slug = d.chosenUsername || ''; }
+  } catch(e){}
+}
+
+if(slug){
+  const url = 'https://ask.menoslabs.com/' + slug;
+  document.getElementById('liveLink').textContent = 'ask.menoslabs.com/' + slug;
+  document.getElementById('liveLink').href = url;
+  document.getElementById('btnView').href = url;
+} else {
+  document.getElementById('liveLink').textContent = 'ask.menoslabs.com/your-slug';
+  document.getElementById('btnView').style.display = 'none';
+}
+
+function copyLink(){
+  const url = document.getElementById('liveLink').href;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('btnCopy');
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyVal(btn, val){
+  navigator.clipboard.writeText(val).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.provider-panel').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tab-' + name).classList.add('on');
+}
+</script>
+</body>
+</html>

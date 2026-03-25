@@ -8,3 +8,4 @@
 /account /account.html 200
 /create_custom  /create_custom.html  200
 /preview_custom /preview_custom.html 200
+/success_custom  /success_custom.html  200
