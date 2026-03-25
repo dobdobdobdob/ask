@@ -802,8 +802,12 @@ function handlePurchase(){
   saveEdits();
   const raw = sessionStorage.getItem('ask_draft');
   if(raw) localStorage.setItem('ask_purchase_data', raw);
-  const plan = raw ? (JSON.parse(raw).plan || 'basic') : 'basic';
-  const url = plan === 'custom' ? STRIPE_URL_CUSTOM : STRIPE_URL;
+  const d = raw ? JSON.parse(raw) : {};
+  const plan = d.plan || 'basic';
+  const slug = d.chosenUsername || '';
+  let url = plan === 'custom' ? STRIPE_URL_CUSTOM : STRIPE_URL;
+  // Append slug as a query param so success page can read it from the URL
+  if(slug) url += (url.includes('?') ? '&' : '?') + 'client_reference_id=' + encodeURIComponent(slug);
   window.location.href = url;
 }
 

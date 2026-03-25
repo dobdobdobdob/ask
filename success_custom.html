@@ -230,12 +230,20 @@ footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center
 <script>
 // Read slug from URL param or localStorage
 const params = new URLSearchParams(window.location.search);
-let slug = params.get('slug') || '';
+let slug = params.get('slug') || params.get('client_reference_id') || '';
 
 // Try to recover from purchase data if no slug in URL
 if(!slug){
   try {
     const raw = localStorage.getItem('ask_purchase_data');
+    if(raw){ const d = JSON.parse(raw); slug = d.chosenUsername || ''; }
+  } catch(e){}
+}
+
+// Try sessionStorage as last resort
+if(!slug){
+  try {
+    const raw = sessionStorage.getItem('ask_draft');
     if(raw){ const d = JSON.parse(raw); slug = d.chosenUsername || ''; }
   } catch(e){}
 }
