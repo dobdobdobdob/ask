@@ -801,13 +801,12 @@ function saveEdits(){ autoSave(); }
 function handlePurchase(){
   saveEdits();
   const raw = sessionStorage.getItem('ask_draft');
-  if(raw) localStorage.setItem('ask_purchase_data', raw);
   const d = raw ? JSON.parse(raw) : {};
   const plan = d.plan || 'basic';
   const slug = d.chosenUsername || '';
-  let url = plan === 'custom' ? STRIPE_URL_CUSTOM : STRIPE_URL;
-  // Append slug as a query param so success page can read it from the URL
-  if(slug) url += (url.includes('?') ? '&' : '?') + 'client_reference_id=' + encodeURIComponent(slug);
+  // Save slug in cookie — survives Stripe redirect
+  if(slug) document.cookie = 'ask_slug=' + slug + ';path=/;max-age=3600;samesite=lax';
+  const url = plan === 'custom' ? STRIPE_URL_CUSTOM : STRIPE_URL;
   window.location.href = url;
 }
 

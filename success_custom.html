@@ -228,19 +228,15 @@ footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center
 </footer>
 
 <script>
-// Read slug from URL param or localStorage
+// Read slug — cookie survives Stripe redirect
 const params = new URLSearchParams(window.location.search);
-let slug = params.get('slug') || params.get('client_reference_id') || '';
+let slug = params.get('slug') || '';
 
-// Try to recover from purchase data if no slug in URL
 if(!slug){
-  try {
-    const raw = localStorage.getItem('ask_purchase_data');
-    if(raw){ const d = JSON.parse(raw); slug = d.chosenUsername || ''; }
-  } catch(e){}
+  const match = document.cookie.match(/(?:^|;\s*)ask_slug=([^;]+)/);
+  if(match) slug = decodeURIComponent(match[1]);
 }
 
-// Try sessionStorage as last resort
 if(!slug){
   try {
     const raw = sessionStorage.getItem('ask_draft');
