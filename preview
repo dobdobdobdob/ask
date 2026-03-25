@@ -357,7 +357,6 @@ gtag('config', 'G-96XWYGNS49');
 
 <nav>
 <a href="/" class="nav-logo">Ask<span>.</span></a>
-<button onclick="openFaq()" style="font-size:0.78rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:1.5rem;transition:color 0.2s;padding:0;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">FAQ</button>
 <span class="nav-badge">Preview Mode</span>
 </nav>
 
@@ -681,9 +680,13 @@ window.addEventListener('load', () => {
     // Disable idle timer purchase modal in edit mode
   }
 
+  // Always reset theme first, then apply
+  document.documentElement.className = '';
   if(d.theme && d.theme !== 'classic'){
     document.documentElement.className = d.theme;
     document.querySelectorAll('.ts-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===d.theme));
+  } else {
+    document.querySelectorAll('.ts-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme==='classic'));
   }
 
   // Apply font
