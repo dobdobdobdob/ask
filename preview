@@ -696,6 +696,8 @@ window.addEventListener('load', () => {
   }
 
   systemPrompt = d.systemPrompt;
+  // Clear any customColors that could interfere with rendering
+  if(d.customColors) { delete d.customColors; sessionStorage.setItem('ask_draft', JSON.stringify(d)); }
   avatarDataUrl = d.avatar || sessionStorage.getItem('ask_avatar');
   if(d.avatar) { sessionStorage.setItem('ask_avatar', d.avatar); delete d.avatar; sessionStorage.setItem('ask_draft', JSON.stringify(d)); }
 
