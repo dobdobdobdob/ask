@@ -648,7 +648,7 @@ Respond with ONLY a valid JSON object (no markdown, no backticks):
     const cButton = document.getElementById('cButton').value;
     const defaults = { accent:'#ccff00', bg:'#f7f6f3', button:'#111111' };
     const hasCustomColors = cAccent.toLowerCase()!==defaults.accent || cBg.toLowerCase()!==defaults.bg || cButton.toLowerCase()!==defaults.button;
-    const customColors = hasCustomColors ? { accent:cAccent, bg:cBg, buttonBg:cButton, accentDark:cAccent, bgAlt:cBg, buttonText:'#ffffff' } : null;
+    const customColors = hasCustomColors ? { accent:cAccent, bg:cBg, buttonBg:cButton, accentDark:darkenColor(cAccent,0.3), bgAlt:cBg, buttonText:getColorLuminance(cButton)>0.4?'#111111':'#ffffff' } : null;
 
     const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], education:parsed.education||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl, chosenUsername, theme:selectedTheme, font:selectedFont, resume:resume, plan:SELECTED_PLAN, customColors };
     profileData.theme = selectedTheme;

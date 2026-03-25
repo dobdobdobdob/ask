@@ -357,7 +357,6 @@ gtag('config', 'G-96XWYGNS49');
 
 <nav>
 <a href="/" class="nav-logo">Ask<span>.</span></a>
-<button onclick="openFaq()" style="font-size:0.78rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:1.5rem;transition:color 0.2s;padding:0;" onmouseover="this.style.color='var(--text1)'" onmouseout="this.style.color='var(--text3)'">FAQ</button>
 <span class="nav-badge">Preview Mode</span>
 </nav>
 
@@ -472,7 +471,6 @@ gtag('config', 'G-96XWYGNS49');
       <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="5" y="6" width="10" height="2"/><rect x="1" y="10" width="14" height="2"/><rect x="7" y="14" width="8" height="2"/></svg>
     </button>
   </div>
-</div>
 
 <div id="theme-switcher">
 <button class="ts-btn on" data-theme="classic" onclick="switchTheme('classic',this)">Classic</button>
@@ -635,8 +633,10 @@ function hideToolbar(e){
 function autoSave(){
   const raw = sessionStorage.getItem('ask_draft');
   if(!raw) return;
+  const name = document.getElementById('profileName').textContent.trim();
+  if(!name || name === '—') return;
   const d = JSON.parse(raw);
-  d.name = document.getElementById('profileName').textContent.trim();
+  d.name = name;
   d.meta = document.getElementById('profileMeta').textContent.trim();
   d.bio = document.getElementById('profileBio').textContent.trim();
   d.font = currentFont;
@@ -697,6 +697,24 @@ window.addEventListener('load', () => {
   }
 
   systemPrompt = d.systemPrompt;
+  // Apply brand colors from create.html
+  if(d.customColors){
+    const c = d.customColors;
+    const styleEl = document.createElement('style');
+    styleEl.textContent = ':root{--accent:'+c.accent+';--accent-dark:'+(c.accentDark||c.accent)+';}'
+      +'.profile-hero{background:'+c.bg+'!important;}'
+      +'.exp-company{color:'+(c.accentDark||c.accent)+'!important;}'
+      +'.exp-bullets li::before{color:'+(c.accentDark||c.accent)+'!important;}'
+      +'.exp-card:hover::before{background:'+c.accent+'!important;}'
+      +'.nav-logo span{background:'+c.accent+'!important;}'
+      +'.footer-logo span{background:'+c.accent+'!important;}'
+      +'#chat-toggle{background:'+c.buttonBg+'!important;color:'+(c.buttonText||'#ffffff')+'!important;}'
+      +'#chat-toggle:hover{background:'+c.accent+'!important;color:#111!important;}'
+      +'.chat-send{background:'+c.buttonBg+'!important;}'
+      +'.btn-buy{background:'+c.buttonBg+'!important;color:'+(c.buttonText||'#ffffff')+'!important;}'
+      +'.btn-purchase{background:'+c.buttonBg+'!important;color:'+(c.buttonText||'#ffffff')+'!important;}';
+    document.head.appendChild(styleEl);
+  }
   avatarDataUrl = d.avatar || sessionStorage.getItem('ask_avatar');
   if(d.avatar) { sessionStorage.setItem('ask_avatar', d.avatar); delete d.avatar; sessionStorage.setItem('ask_draft', JSON.stringify(d)); }
 
