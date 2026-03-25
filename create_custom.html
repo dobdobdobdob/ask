@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<!-- v2026-03-19T12:19:09.646424 -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Custom Assistant — Ask</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Lora:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--white:#FFFFFF;--off-white:#F7F6F3;--light:#EEECE8;--border:#E2DED8;--text1:#1A1A1A;--text2:#555550;--text3:#999990;--accent:#CCFF00;--accent-dark:#8AB300;--black:#111111;}
+    body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text1);min-height:100vh;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:var(--text1);text-decoration:none;letter-spacing:-0.02em;}
+    .nav-logo span{display:inline-block;background:var(--accent);color:var(--black);padding:0 6px;margin-left:2px;font-style:italic;}
+    .nav-back{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s;}
+    .nav-back:hover{color:var(--text1);}
+
+    .page{max-width:620px;margin:0 auto;padding:7rem 2rem 4rem;}
+
+    .page-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:0.75rem;}
+    .page-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem;}
+    .page-sub{font-size:0.9rem;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:2.5rem;}
+
+    .form-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:2.5rem;}
+    .form-section-title{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+
+    /* AVATAR */
+    .avatar-row{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;}
+    .avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:0.4rem;}
+    .avatar-circle{width:72px;height:72px;border-radius:50%;border:1px solid var(--border);background:var(--off-white);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;transition:border-color 0.2s;}
+    .avatar-circle:hover{border-color:var(--accent-dark);}
+    .avatar-circle:hover .avatar-cam-overlay{opacity:1;}
+    .avatar-circle img{width:100%;height:100%;object-fit:cover;}
+    .avatar-initials{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text3);}
+    .avatar-hint{font-size:0.62rem;color:var(--text3);letter-spacing:0.08em;}
+    .avatar-name-col{flex:1;display:flex;flex-direction:column;gap:0.75rem;}
+
+    .field{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem;}
+    .field:last-of-type{margin-bottom:0;}
+    .flabel{font-size:0.62rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);}
+    .finput{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:300;background:var(--off-white);border:1px solid var(--border);color:var(--text1);padding:0.7rem 1rem;outline:none;transition:border-color 0.2s;border-radius:2px;width:100%;}
+    .finput:focus{border-color:var(--accent-dark);}
+    .finput::placeholder{color:var(--text3);}
+    textarea.finput{resize:vertical;min-height:130px;line-height:1.65;}
+    .fields-2{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+
+    /* SOCIALS */
+    .socials-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.5rem;}
+    .social-field{display:flex;align-items:center;gap:0.5rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;padding:0.6rem 0.9rem;transition:border-color 0.2s;}
+    .social-field:focus-within{border-color:var(--accent-dark);}
+    .social-icon{font-size:0.85rem;flex-shrink:0;width:18px;text-align:center;color:var(--text3);}
+    .social-input{flex:1;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:300;background:none;border:none;color:var(--text1);outline:none;}
+    .social-input::placeholder{color:var(--text3);}
+
+    /* RESUME TABS */
+    .tab-row{display:flex;gap:0;margin-bottom:0.75rem;}
+    .rtab{font-size:0.62rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0.5rem 1.1rem;background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer;transition:all 0.2s;}
+    .rtab:first-child{border-radius:2px 0 0 2px;}
+    .rtab:last-child{border-radius:0 2px 2px 0;border-left:none;}
+    .rtab.on{background:var(--off-white);border-color:var(--accent-dark);color:var(--text1);}
+    .resume-panel{display:none;}
+    .resume-panel.on{display:block;padding:1px;}
+    .upload-area{border:1px dashed var(--border);padding:2rem;text-align:center;cursor:pointer;border-radius:2px;transition:all 0.2s;background:var(--off-white);}
+    .upload-area:hover{border-color:var(--accent-dark);background:var(--light);}
+    .upload-text{font-size:0.85rem;color:var(--text2);}
+    .upload-hint{font-size:0.72rem;color:var(--text3);margin-top:0.25rem;}
+    .upload-success{font-size:0.75rem;color:var(--accent-dark);margin-top:0.5rem;display:none;font-weight:500;}
+
+    .btn-generate{background:var(--black);color:var(--white);padding:0.9rem;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;border:none;border-radius:2px;cursor:pointer;width:100%;margin-top:1.5rem;transition:all 0.2s;display:block;text-align:center;}
+    .btn-generate:hover{background:var(--accent);color:var(--black);}
+
+    /* PROCESSING STATE */
+    .processing{display:none;text-align:center;padding:2.5rem 0;}
+    .proc-dots{display:flex;gap:6px;justify-content:center;margin-bottom:1rem;}
+    .proc-dot{width:8px;height:8px;background:var(--accent-dark);border-radius:50%;animation:dotPulse 1.4s ease-in-out infinite;}
+    .proc-dot:nth-child(2){animation-delay:0.2s;}
+    .proc-dot:nth-child(3){animation-delay:0.4s;}
+    @keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
+    .proc-text{font-size:0.82rem;color:var(--text2);letter-spacing:0.05em;}
+
+    /* USERNAME */
+    .username-wrap{position:relative;}
+    .url-preview{font-size:0.78rem;color:var(--text2);margin-top:0.4rem;font-weight:300;}
+    .url-preview strong{color:var(--text1);font-weight:500;}
+    .username-status{font-size:0.72rem;margin-top:0.4rem;min-height:1.2em;}
+    .username-status.checking{color:var(--text3);}
+    .username-status.available{color:var(--accent-dark);}
+    .username-status.taken{color:#e05c5c;}
+    .username-suggestions{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;}
+    .username-sugg{font-size:0.75rem;padding:0.3rem 0.8rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;cursor:pointer;color:var(--text2);transition:all 0.2s;}
+    .username-sugg:hover{border-color:var(--accent-dark);color:var(--text1);}
+    .username-sugg.selected{border-color:var(--accent-dark);background:rgba(138,179,0,0.08);color:var(--text1);}
+
+    #fileInput,#avatarInput{display:none;}
+    .theme-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+    .theme-card{border:1px solid var(--border);border-radius:4px;padding:0.75rem;cursor:pointer;transition:all 0.2s;}
+    .theme-card:hover{border-color:var(--accent-dark);}
+    .theme-card.on{border-color:var(--accent-dark);background:var(--off-white);box-shadow:0 0 0 1px var(--accent-dark);}
+    .theme-preview{width:100%;height:52px;border-radius:3px;padding:8px;display:flex;flex-direction:column;justify-content:center;margin-bottom:0.5rem;overflow:hidden;}
+    .theme-label{font-size:0.75rem;font-weight:500;color:var(--text1);margin-bottom:1px;}
+    .theme-desc{font-size:0.62rem;color:var(--text3);}
+    @media(max-width:480px){.theme-picker{grid-template-columns:repeat(2,1fr);}}
+
+    /* Theme preview on form card */
+    .page.preview-dark{background:#0a0a0a;}
+    .page.preview-dark .page-eyebrow{color:rgba(255,255,255,0.3);}
+    .page.preview-dark .page-title{color:#ffffff;}
+    .page.preview-dark .page-sub{color:rgba(255,255,255,0.5);}
+    .form-card.preview-dark{background:#141414;border-color:rgba(255,255,255,0.1);}
+    .form-card.preview-dark .form-section-title{color:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.08);}
+    .form-card.preview-dark .flabel{color:rgba(255,255,255,0.3);}
+    .form-card.preview-dark .finput{background:#1e1e1e;border-color:rgba(255,255,255,0.1);color:#fff;}
+    .form-card.preview-dark .finput::placeholder{color:rgba(255,255,255,0.2);}
+    .form-card.preview-dark .social-field{background:#1e1e1e;border-color:rgba(255,255,255,0.1);}
+    .form-card.preview-dark .social-input{color:#fff;}
+    .form-card.preview-dark .social-input::placeholder{color:rgba(255,255,255,0.2);}
+    .form-card.preview-dark .rtab{border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);}
+    .form-card.preview-dark .rtab.on{background:#1e1e1e;border-color:#CCFF00;color:#fff;}
+    .form-card.preview-dark .upload-area{background:#1e1e1e;border-color:rgba(255,255,255,0.15);}
+    .form-card.preview-dark .upload-text{color:rgba(255,255,255,0.5);}
+    .form-card.preview-dark .theme-card{border-color:rgba(255,255,255,0.1);background:#1e1e1e;}
+    .form-card.preview-dark .theme-card.on{border-color:#CCFF00;background:#252525;}
+    .form-card.preview-dark .theme-label{color:#fff;}
+    .form-card.preview-dark .theme-desc{color:rgba(255,255,255,0.3);}
+    .form-card.preview-dark .btn-generate{background:#CCFF00;color:#000;}
+    .form-card.preview-dark .avatar-circle{background:#1e1e1e;border-color:rgba(255,255,255,0.15);}
+    .form-card.preview-dark .avatar-initials{color:rgba(255,255,255,0.4);}
+    .form-card.preview-dark .avatar-hint{color:rgba(255,255,255,0.2);}
+
+    .page.preview-bold{background:#ffffff;}
+    .page.preview-bold .page-title{color:#000000;}
+    .form-card.preview-bold{background:#fff;border:3px solid #000;}
+    .form-card.preview-bold .form-section-title{color:#000;border-color:#000;letter-spacing:0.2em;}
+    .form-card.preview-bold .flabel{color:#000;font-weight:700;}
+    .form-card.preview-bold .finput{background:#f5f5f5;border:2px solid #000;border-radius:0;}
+    .form-card.preview-bold .social-field{background:#f5f5f5;border:2px solid #000;border-radius:0;}
+    .form-card.preview-bold .rtab{border:2px solid #000;border-radius:0;color:#000;font-weight:700;}
+    .form-card.preview-bold .rtab.on{background:#000;color:#fff;border-color:#000;}
+    .form-card.preview-bold .upload-area{background:#f5f5f5;border:2px dashed #000;border-radius:0;}
+    .form-card.preview-bold .theme-card{border:2px solid #ccc;border-radius:0;}
+    .form-card.preview-bold .theme-card.on{border:2px solid #000;background:#f5f5f5;}
+    .form-card.preview-bold .btn-generate{background:#000;color:#fff;border-radius:0;letter-spacing:0.2em;}
+    .form-card.preview-bold .avatar-circle{border:2px solid #000;border-radius:0;background:#f5f5f5;}
+
+    .page.preview-soft{background:#FDF8F3;}
+    .page.preview-soft .page-title{color:#2D2318;}
+    .page.preview-soft .page-sub{color:#6B5744;}
+    .form-card.preview-soft{background:#FFFAF5;border-color:#DDD0BB;border-radius:12px;}
+    .form-card.preview-soft .form-section-title{color:#A8917A;border-color:#EDE0CC;}
+    .form-card.preview-soft .flabel{color:#A8917A;}
+    .form-card.preview-soft .finput{background:#F5EDE0;border-color:#DDD0BB;color:#2D2318;border-radius:8px;}
+    .form-card.preview-soft .finput::placeholder{color:#A8917A;}
+    .form-card.preview-soft .social-field{background:#F5EDE0;border-color:#DDD0BB;border-radius:8px;}
+    .form-card.preview-soft .rtab{border-color:#DDD0BB;color:#A8917A;border-radius:6px 0 0 6px;}
+    .form-card.preview-soft .rtab:last-child{border-radius:0 6px 6px 0;}
+    .form-card.preview-soft .rtab.on{background:#F5EDE0;border-color:#D48B3A;color:#2D2318;}
+    .form-card.preview-soft .upload-area{background:#F5EDE0;border-color:#DDD0BB;border-radius:8px;}
+    .form-card.preview-soft .theme-card{border-color:#DDD0BB;border-radius:8px;}
+    .form-card.preview-soft .theme-card.on{border-color:#D48B3A;background:#F5EDE0;}
+    .form-card.preview-soft .btn-generate{background:#D48B3A;color:#fff;border-radius:8px;}
+    .form-card.preview-soft .avatar-circle{border-color:#DDD0BB;background:#F5EDE0;border-radius:50%;}
+
+    @media(max-width:640px){
+      nav{padding:1.25rem 1.5rem;}
+      .form-card{padding:1.75rem;}
+      .fields-2,.socials-grid{grid-template-columns:1fr;}
+    }
+
+    /* FONT PICKER */
+    @media(max-width:480px){.theme-picker{grid-template-columns:repeat(2,1fr);}}
+
+    /* ALIGNMENT TOOLBAR */
+    .align-toolbar{display:flex;gap:0;margin-bottom:0.5rem;}
+    .align-btn{width:34px;height:30px;background:none;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;color:var(--text3);}
+    .align-btn:first-child{border-radius:2px 0 0 2px;}
+    .align-btn:last-child{border-radius:0 2px 2px 0;border-left:none;}
+    .align-btn:not(:last-child):not(:first-child){border-left:none;}
+    .align-btn:hover{background:var(--off-white);color:var(--text1);}
+    .align-btn.on{background:var(--off-white);border-color:var(--accent-dark);color:var(--text1);}
+    .align-btn svg{width:14px;height:14px;fill:currentColor;}
+    textarea.align-left{text-align:left;}
+    textarea.align-center{text-align:center;}
+    textarea.align-right{text-align:right;}
+
+    /* FOOTER */
+    .site-footer{background:var(--black);padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;margin-top:3rem;}
+    .site-footer-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.4);text-decoration:none;}
+    .site-footer-logo span{background:var(--accent);color:var(--black);padding:0 5px;font-style:italic;}
+    .site-footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.25);letter-spacing:0.03em;}
+    @media(max-width:640px){.site-footer{flex-direction:column;gap:0.75rem;padding:1.25rem 1.5rem;text-align:center;}}
+  </style>
+</head>
+<body>
+
+<input type="file" id="avatarInput" accept="image/*">
+<input type="file" id="pdfInput" accept=".pdf" style="display:none">
+
+<nav>
+  <a href="/" class="nav-logo">Ask<span>.</span></a>
+  <a href="/" class="nav-back">← Back</a>
+</nav>
+
+<div class="page">
+  <p class="page-eyebrow">Step 1 of 2</p>
+  <h1 class="page-title">Tell us about yourself.</h1>
+  <p class="page-sub">Fill in your details and upload your resume. We'll generate your personal AI assistant in under 30 seconds.</p>
+
+  <div class="form-card">
+
+    <p class="form-section-title">Choose Your Username *</p>
+    <div class="field">
+      <label class="flabel">Username</label>
+      <div class="username-wrap">
+        <input class="finput" id="iUsername" type="text" placeholder="janesmith" oninput="onUsernameInput()" onblur="checkUsername()">
+      </div>
+      <div class="url-preview">Your URL: ask.menoslabs.com/<strong id="urlPreview">username</strong></div>
+      <div class="username-status" id="usernameStatus"></div>
+      <div class="username-suggestions" id="usernameSuggestions"></div>
+    </div>
+
+    <p class="form-section-title" style="margin-top:1.5rem;">Profile</p>
+
+    <div class="avatar-row">
+      <div class="avatar-wrap">
+        <div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()" style="position:relative;">
+          <div class="avatar-initials" id="avatarInitials">?</div>
+          <div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;" class="avatar-cam-overlay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+        </div>
+        <div class="avatar-hint">Upload photo</div>
+      </div>
+      <div class="avatar-name-col">
+        <div class="field" style="margin-bottom:0">
+          <label class="flabel">Full Name *</label>
+          <input class="finput" id="iName" type="text" placeholder="Jane Smith" oninput="updateInitials()">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label class="flabel">Title / Role</label>
+          <input class="finput" id="iTitle" type="text" placeholder="Senior Product Manager">
+        </div>
+      </div>
+    </div>
+
+    <div class="fields-2" style="margin-bottom:1.5rem;">
+      <div class="field" style="margin-bottom:0">
+        <label class="flabel">City</label>
+        <input class="finput" id="iCity" type="text" placeholder="Chicago, IL">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label class="flabel">Email</label>
+        <input class="finput" id="iEmail" type="email" placeholder="jane@example.com">
+      </div>
+    </div>
+
+    <p class="form-section-title" style="margin-top:1.5rem;">Social Links</p>
+
+    <div class="socials-grid">
+      <div class="social-field">
+        <span class="social-icon">in</span>
+        <input class="social-input" id="sLinkedIn" placeholder="LinkedIn URL">
+      </div>
+      <div class="social-field">
+        <span class="social-icon">⌂</span>
+        <input class="social-input" id="sPortfolio" placeholder="Portfolio URL">
+      </div>
+      <div class="social-field">
+        <span class="social-icon">gh</span>
+        <input class="social-input" id="sGithub" placeholder="GitHub URL">
+      </div>
+      <div class="social-field">
+        <span class="social-icon">𝕏</span>
+        <input class="social-input" id="sTwitter" placeholder="X / Twitter URL">
+      </div>
+      <div class="social-field">
+        <span class="social-icon">▶</span>
+        <input class="social-input" id="sTiktok" placeholder="TikTok URL">
+      </div>
+      <div class="social-field">
+        <span class="social-icon">◻</span>
+        <input class="social-input" id="sInstagram" placeholder="Instagram URL">
+      </div>
+    </div>
+
+    <p class="form-section-title" style="margin-top:1.5rem;">Brand Colors <span style="font-size:0.6rem;color:var(--text3);text-transform:none;letter-spacing:0;font-weight:300;">— optional, customize your accent, background & button</span></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+      <div class="field" style="margin-bottom:0;">
+        <label class="flabel">Accent</label>
+        <div style="display:flex;align-items:center;gap:0.5rem;background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:0.5rem 0.75rem;">
+          <div id="swatch-accent" style="width:22px;height:22px;border-radius:3px;background:#CCFF00;border:1px solid #E2DED8;flex-shrink:0;cursor:pointer;" onclick="document.getElementById('cAccent').click()" title="Click to open color picker"></div>
+          <input type="color" id="cAccent" value="#CCFF00" oninput="document.getElementById('cAccentHex').value=this.value;document.getElementById('swatch-accent').style.background=this.value;applyCreateColors()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+          <input type="text" id="cAccentHex" value="#CCFF00" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.82rem;width:70px;color:#1A1A1A;outline:none;" placeholder="#CCFF00" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cAccent').value=this.value;document.getElementById('swatch-accent').style.background=this.value;applyCreateColors();}">
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label class="flabel">Background</label>
+        <div style="display:flex;align-items:center;gap:0.5rem;background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:0.5rem 0.75rem;">
+          <div id="swatch-bg" style="width:22px;height:22px;border-radius:3px;background:#F7F6F3;border:1px solid #E2DED8;flex-shrink:0;cursor:pointer;" onclick="document.getElementById('cBg').click()" title="Click to open color picker"></div>
+          <input type="color" id="cBg" value="#F7F6F3" oninput="document.getElementById('cBgHex').value=this.value;document.getElementById('swatch-bg').style.background=this.value;applyCreateColors()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+          <input type="text" id="cBgHex" value="#F7F6F3" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.82rem;width:70px;color:#1A1A1A;outline:none;" placeholder="#F7F6F3" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cBg').value=this.value;document.getElementById('swatch-bg').style.background=this.value;applyCreateColors();}">
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label class="flabel">Button / Nav</label>
+        <div style="display:flex;align-items:center;gap:0.5rem;background:#F7F6F3;border:1px solid #E2DED8;border-radius:2px;padding:0.5rem 0.75rem;">
+          <div id="swatch-button" style="width:22px;height:22px;border-radius:3px;background:#111111;border:1px solid #E2DED8;flex-shrink:0;cursor:pointer;" onclick="document.getElementById('cButton').click()" title="Click to open color picker"></div>
+          <input type="color" id="cButton" value="#111111" oninput="document.getElementById('cButtonHex').value=this.value;document.getElementById('swatch-button').style.background=this.value;applyCreateColors()" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+          <input type="text" id="cButtonHex" value="#111111" maxlength="7" style="padding:0;background:none;border:none;font-family:monospace;font-size:0.82rem;width:70px;color:#1A1A1A;outline:none;" placeholder="#111111" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cButton').value=this.value;document.getElementById('swatch-button').style.background=this.value;applyCreateColors();}">
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.72rem;color:var(--text3);margin-bottom:1.5rem;">Type a hex code or click the swatch to pick a color. Fine-tune in the preview step.</p>
+
+    <p class="form-section-title" style="margin-top:0.5rem;text-align:center;">Resume *</p>
+
+    <div class="tab-row">
+      <button class="rtab on" id="rtab-upload" onclick="switchResumeTab('upload')">Upload PDF</button>
+      <button class="rtab" id="rtab-paste" onclick="switchResumeTab('paste')">Paste Text</button>
+    </div>
+    <div class="resume-panel on" id="rpanel-upload" style="display:block;">
+      <div class="upload-area" id="pdfDropZone" onclick="document.getElementById('pdfInput').click()" ondragover="event.preventDefault();this.style.borderColor='var(--accent-dark)'" ondragleave="this.style.borderColor=''" ondrop="handlePdfDrop(event)">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;display:block;margin-left:auto;margin-right:auto;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        <div class="upload-text">Click to upload your resume PDF</div>
+        <div class="upload-hint">or drag and drop &middot; PDF only</div>
+        <div class="upload-success" id="pdfStatus" style="margin-top:0.5rem;font-size:0.78rem;"></div>
+      </div>
+      <div id="pdfExtractStatus" style="display:none;font-size:0.78rem;color:var(--text2);margin-top:0.75rem;padding:0.75rem 1rem;background:var(--off-white);border:1px solid var(--border);border-radius:2px;line-height:1.6;"></div>
+    </div>
+    <div class="resume-panel" id="rpanel-paste" style="display:none;">
+      <textarea class="finput" id="iResume" placeholder="Paste your resume text — work experience, skills, education, achievements..."></textarea>
+    </div>
+
+
+    <div id="formActions">
+      <button class="btn-generate" onclick="generate()">Generate My Assistant →</button>
+    </div>
+
+    <div class="processing" id="processing">
+      <div class="proc-dots"><div class="proc-dot"></div><div class="proc-dot"></div><div class="proc-dot"></div></div>
+      <div class="proc-text" id="procText">Reading your resume...</div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="site-footer">
+  <a href="/" class="site-footer-logo">Ask<span>.</span></a>
+  <div class="site-footer-copy">Made in Chicago &nbsp;|&nbsp; Menos Labs LLC 2026</div>
+</footer>
+
+<script>
+const WORKER = 'https://spring-pine-fd21.thedobrien.workers.dev/';
+let selectedTheme = 'classic';
+let selectedFont = 'classic';
+const SELECTED_PLAN = 'custom';
+
+function applyCreateColors(){
+  const accent = document.getElementById('cAccent').value;
+  const bg = document.getElementById('cBg').value;
+  const button = document.getElementById('cButton').value;
+  const accentDark = darkenColor(accent, 0.3);
+  const buttonText = getColorLuminance(button) > 0.4 ? '#111111' : '#ffffff';
+  let el = document.getElementById('create-color-override');
+  if(!el){ el = document.createElement('style'); el.id='create-color-override'; document.head.appendChild(el); }
+  el.textContent = `
+    :root { --accent:${accent}; --accent-dark:${accentDark}; }
+    .form-card { background:${bg}!important; }
+    .page { background:${bg === '#F7F6F3' ? 'var(--off-white)' : bg}!important; }
+    .nav-logo span { background:${accent}!important; }
+    .btn-generate { background:${button}!important; color:${buttonText}!important; }
+    .btn-generate:hover { background:${accent}!important; color:#111!important; }
+    .theme-card.on { border-color:${accentDark}!important; box-shadow:0 0 0 1px ${accentDark}!important; }
+    .finput:focus { border-color:${accentDark}!important; }
+  `;
+}
+function darkenColor(hex, amt){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return '#'+[r,g,b].map(v=>Math.max(0,Math.round(v*(1-amt))).toString(16).padStart(2,'0')).join(''); }
+function getColorLuminance(hex){ const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255; return 0.299*r+0.587*g+0.114*b; }
+
+function pickTheme(name,el){
+  selectedTheme=name;
+  document.querySelectorAll('.theme-card').forEach(c=>c.classList.toggle('on',c===el));
+  const card = document.querySelector('.form-card');
+  card.className = 'form-card' + (name !== 'classic' ? ' preview-' + name : '');
+  const page = document.querySelector('.page');
+  page.className = 'page' + (name !== 'classic' ? ' preview-' + name : '');
+}
+let avatarDataUrl = null;
+
+document.getElementById('avatarInput').addEventListener('change', function(){
+  const file = this.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200; canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width - size) / 2;
+      const sy = (img.height - size) / 2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
+      avatarDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      document.getElementById('avatarCircle').innerHTML = `<img src="${avatarDataUrl}" alt="avatar">`;
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(file);
+});
+
+function updateInitials(){
+  const el = document.getElementById('avatarInitials');
+  if(!el) return;
+  const n = document.getElementById('iName').value.trim();
+  const p = n.split(' ').filter(Boolean);
+  const i = p.length>=2 ? p[0][0]+p[p.length-1][0] : p[0]?.[0]||'?';
+  el.textContent = i.toUpperCase();
+}
+
+
+
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
+let chosenUsername = '';
+let usernameValid = false;
+let usernameCheckTimer = null;
+
+function sanitizeUsername(val){
+  return val.toLowerCase().replace(/[^a-z0-9\-_]/g, '').slice(0, 30);
+}
+
+function onUsernameInput(){
+  const raw = document.getElementById('iUsername').value;
+  const clean = sanitizeUsername(raw);
+  // Keep cursor position by only updating if changed
+  if(raw !== clean) document.getElementById('iUsername').value = clean;
+  document.getElementById('urlPreview').textContent = clean || 'username';
+  document.getElementById('usernameSuggestions').innerHTML = '';
+  usernameValid = false;
+  chosenUsername = '';
+  const status = document.getElementById('usernameStatus');
+  if(!clean){ status.textContent = ''; status.className = 'username-status'; return; }
+  if(clean.length < 3){ status.textContent = 'Must be at least 3 characters'; status.className = 'username-status taken'; return; }
+  status.textContent = 'Checking availability...';
+  status.className = 'username-status checking';
+  clearTimeout(usernameCheckTimer);
+  usernameCheckTimer = setTimeout(()=>checkUsername(), 600);
+}
+
+async function checkUsername(){
+  const val = document.getElementById('iUsername').value;
+  const clean = sanitizeUsername(val);
+  if(!clean || clean.length < 3) return;
+  const status = document.getElementById('usernameStatus');
+  const suggsEl = document.getElementById('usernameSuggestions');
+  status.textContent = 'Checking...';
+  status.className = 'username-status checking';
+  try {
+    const res = await fetch(`${ASK_SERVER}/${clean}`);
+    if(res.status === 404){
+      // Available
+      status.textContent = '✓ Available!';
+      status.className = 'username-status available';
+      suggsEl.innerHTML = '';
+      chosenUsername = clean;
+      usernameValid = true;
+    } else {
+      // Taken — show suggestions
+      status.textContent = '✗ Already taken. Try one of these:';
+      status.className = 'username-status taken';
+      usernameValid = false;
+      chosenUsername = '';
+      const suggestions = [
+        clean + new Date().getFullYear().toString().slice(2),
+        clean + Math.floor(Math.random()*900+100),
+        clean + '_pro',
+      ];
+      suggsEl.innerHTML = suggestions.map(s =>
+        `<button class="username-sugg" onclick="selectSuggestion('${s}')">${s}</button>`
+      ).join('');
+    }
+  } catch(e) {
+    status.textContent = 'Could not check — please try again.';
+    status.className = 'username-status taken';
+  }
+}
+
+async function selectSuggestion(slug){
+  document.getElementById('iUsername').value = slug;
+  document.getElementById('urlPreview').textContent = slug;
+  document.getElementById('usernameSuggestions').innerHTML = '';
+  const status = document.getElementById('usernameStatus');
+  status.textContent = 'Checking...';
+  status.className = 'username-status checking';
+  try {
+    const res = await fetch(`${ASK_SERVER}/${slug}`);
+    if(res.status === 404){
+      status.textContent = '✓ Available!';
+      status.className = 'username-status available';
+      chosenUsername = slug;
+      usernameValid = true;
+    } else {
+      status.textContent = '✗ Also taken — please try another.';
+      status.className = 'username-status taken';
+    }
+  } catch(e) {
+    status.textContent = 'Could not check — please try again.';
+    status.className = 'username-status taken';
+  }
+}
+
+async function generate(){
+  const name = document.getElementById('iName').value.trim().replace(/[^a-zA-Z0-9\s\-]/g, '').trim();
+  const title = document.getElementById('iTitle').value.trim();
+  const city = document.getElementById('iCity').value.trim();
+  const email = document.getElementById('iEmail').value.trim();
+  const rawResume = document.getElementById('iResume').value.trim();
+  const resume = rawResume
+    .replace(/\+?[\d][\d\s\-().]{7,}[\d]/g, '[phone removed]')
+    .replace(/\d+\s+[A-Za-z0-9\s,\.]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Way|Place|Pl|Circle|Cir|Trail|Tr|Parkway|Pkwy|Highway|Hwy)[^\n]*/gi, '[address removed]')
+    .replace(/\b[A-Za-z\s]+,\s*[A-Z]{2}\s+\d{5}(?:-\d{4})?\b/g, '[address removed]')
+    .trim();
+
+  if(!usernameValid || !chosenUsername){ alert('Please choose an available username above.'); return; }
+  if(!name){ alert('Please enter your name.'); return; }
+  if(!resume){ alert('Please paste your resume text above.'); return; }
+  if(resume.length < 100){ alert('Resume content seems too short. Please paste your full resume text for best results.'); return; }
+
+  const socials = {
+    linkedin: document.getElementById('sLinkedIn').value.trim(),
+    portfolio: document.getElementById('sPortfolio').value.trim(),
+    github: document.getElementById('sGithub').value.trim(),
+    twitter: document.getElementById('sTwitter').value.trim(),
+    tiktok: document.getElementById('sTiktok').value.trim(),
+    instagram: document.getElementById('sInstagram').value.trim(),
+  };
+
+  document.getElementById('formActions').style.display='none';
+  document.getElementById('processing').style.display='block';
+
+  const texts = ['Reading your resume...','Extracting experience...','Building your assistant...','Almost ready...'];
+  let gi=0;
+  const iv = setInterval(()=>{ gi=(gi+1)%texts.length; document.getElementById('procText').textContent=texts[gi]; }, 1800);
+
+  try {
+    const res = await fetch(WORKER, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:8000,
+        messages:[{role:'user', content:
+`You are parsing a resume. CRITICAL RULES:
+- Only use information explicitly stated in the resume text below
+- Do NOT invent, assume, or hallucinate any companies, roles, dates, or achievements
+- If the resume text looks garbled or unreadable, return an error field instead
+- Only include companies and roles that are clearly named in the text
+- Do NOT include any physical addresses or phone numbers in any field
+
+Resume for ${name}:
+---
+${resume}
+---
+
+Respond with ONLY a valid JSON object (no markdown, no backticks):
+{
+  "bio": "2-3 sentence bio using ONLY facts from the resume above. Third person.",
+  "experience": [
+    {
+      "company": "EXACT company name from resume only",
+      "role": "EXACT job title from resume only",
+      "dates": "dates as written in resume",
+      "location": "city and state only, no street addresses",
+      "bullets": ["achievement or responsibility exactly as described in resume"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "EXACT school name from resume only",
+      "degree": "degree and field as written in resume",
+      "dates": "dates as written in resume",
+      "location": "city and state only if mentioned"
+    }
+  ],
+  "skills": ["only skills explicitly mentioned in the resume"],
+  "systemPrompt": "You are a professional AI assistant for ${name}. Only discuss what is in their resume. If asked about something not in their background, say you don't have that information. Background from resume: [paste all key facts from the resume here]"
+}`
+        }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '{}';
+    let parsed;
+    try { parsed = JSON.parse(raw); }
+    catch(e){ const m=raw.match(/\{[\s\S]*\}/); parsed=m?JSON.parse(m[0]):{bio:'',experience:[],skills:[],systemPrompt:`You are an AI assistant for ${name}.`}; }
+
+    clearInterval(iv);
+
+    // Save to sessionStorage and go to preview
+    const cAccent = document.getElementById('cAccent').value;
+    const cBg = document.getElementById('cBg').value;
+    const cButton = document.getElementById('cButton').value;
+    const defaults = { accent:'#ccff00', bg:'#f7f6f3', button:'#111111' };
+    const hasCustomColors = cAccent.toLowerCase()!==defaults.accent || cBg.toLowerCase()!==defaults.bg || cButton.toLowerCase()!==defaults.button;
+    const customColors = hasCustomColors ? { accent:cAccent, bg:cBg, buttonBg:cButton, accentDark:darkenColor(cAccent,0.3), bgAlt:cBg, buttonText:getColorLuminance(cButton)>0.4?'#111111':'#ffffff' } : null;
+
+    const profileData = { name, title, city, email, socials, bio:parsed.bio, experience:parsed.experience||[], education:parsed.education||[], skills:parsed.skills||[], systemPrompt:parsed.systemPrompt, avatar:avatarDataUrl, chosenUsername, theme:selectedTheme, font:selectedFont, resume:resume, plan:SELECTED_PLAN, customColors };
+    profileData.theme = selectedTheme;
+    sessionStorage.setItem('ask_draft', JSON.stringify(profileData));
+    window.location.href = '/preview_custom.html';
+
+  } catch(err){
+    clearInterval(iv);
+    document.getElementById('procText').textContent='Something went wrong. Please try again.';
+    document.getElementById('formActions').style.display='block';
+    document.getElementById('processing').style.display='none';
+  }
+}
+// ── PDF UPLOAD & TEXT EXTRACTION ──
+function switchResumeTab(tab){
+  document.getElementById('rtab-upload').classList.toggle('on', tab==='upload');
+  document.getElementById('rtab-paste').classList.toggle('on', tab==='paste');
+  document.getElementById('rpanel-upload').style.display = tab==='upload' ? 'block' : 'none';
+  document.getElementById('rpanel-paste').style.display = tab==='paste' ? 'block' : 'none';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const pdfInp = document.getElementById('pdfInput');
+  if(pdfInp) pdfInp.addEventListener('change', function(){
+    if(this.files[0]) processPdf(this.files[0]);
+  });
+});
+
+function handlePdfDrop(e){
+  e.preventDefault();
+  document.getElementById('pdfDropZone').style.borderColor = '';
+  const file = e.dataTransfer.files[0];
+  if(file && file.type === 'application/pdf') processPdf(file);
+  else showPdfError('Please drop a PDF file.');
+}
+
+async function processPdf(file){
+  const statusEl = document.getElementById('pdfExtractStatus');
+  const pdfStatus = document.getElementById('pdfStatus');
+  pdfStatus.style.display = 'block';
+  pdfStatus.textContent = 'Extracting text...';
+  pdfStatus.style.color = 'var(--text2)';
+  statusEl.style.display = 'none';
+  try {
+    if(!window.pdfjsLib){
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+    }
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = '';
+    for(let i = 1; i <= pdf.numPages; i++){
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(item => item.str).join(' ') + '\n';
+    }
+    fullText = fullText.replace(/  +/g, ' ').replace(/\n +/g, '\n').trim();
+    if(fullText.length < 50){
+      showPdfError('Could not extract readable text — this PDF may be scanned. Please paste your resume text instead.');
+      return;
+    }
+    document.getElementById('iResume').value = fullText;
+    switchResumeTab('paste');
+    pdfStatus.textContent = '\u2713 ' + file.name;
+    pdfStatus.style.color = 'var(--accent-dark)';
+    statusEl.style.display = 'block';
+    statusEl.style.borderColor = 'rgba(138,179,0,0.3)';
+    statusEl.style.background = 'rgba(138,179,0,0.05)';
+    statusEl.innerHTML = '<strong style="color:var(--accent-dark);">\u2713 Text extracted — ' + file.name + '</strong><br><span style="color:var(--text2);">Review the text below, then click <strong>Generate My Assistant \u2192</strong></span>';
+    // Scroll generate button into view
+    setTimeout(() => { const btn = document.querySelector('.btn-generate'); if(btn) btn.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 400);
+  } catch(err){
+    showPdfError('Could not read this PDF. Please paste your resume text instead.');
+  }
+}
+
+function showPdfError(msg){
+  const s = document.getElementById('pdfStatus');
+  const e = document.getElementById('pdfExtractStatus');
+  s.style.display='block'; s.textContent='\u2717 '+msg; s.style.color='#e05c5c';
+  e.style.display='block'; e.style.borderColor='#fca5a5'; e.style.background='#fef2f2';
+  e.innerHTML='<span style="color:#dc2626;">'+msg+'</span>';
+}
+
+</script>
+</body>
+</html>
