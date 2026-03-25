@@ -191,8 +191,12 @@ body.font-warm{--profile-font:'Nunito',sans-serif;--profile-heading:'Nunito',san
 .profile-bio,.profile-meta,.exp-role,.exp-company,.exp-bullets li,.skill-pill,.social-pill{font-family:var(--profile-font,'DM Sans',sans-serif)!important;}
 
 /* FORMATTING TOOLBAR */
-#fmt-toolbar{position:fixed;z-index:400;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,0.12);padding:6px 8px;display:none;align-items:center;gap:6px;flex-wrap:wrap;max-width:320px;}
+#fmt-toolbar{position:fixed;z-index:400;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,0.12);padding:6px 8px;display:none;align-items:center;gap:6px;flex-wrap:wrap;max-width:520px;}
 #fmt-toolbar.visible{display:flex;}
+.fmt-color-wrap{position:relative;display:flex;align-items:center;gap:3px;}
+.fmt-swatch{width:18px;height:18px;border-radius:3px;border:1px solid var(--border);cursor:pointer;flex-shrink:0;background:#F7F6F3;}
+.fmt-hex-input{width:58px;font-family:monospace;font-size:0.7rem;background:none;border:1px solid var(--border);border-radius:2px;padding:2px 4px;color:var(--text1);outline:none;}
+.fmt-hex-input:focus{border-color:var(--accent-dark);}
 html.dark #fmt-toolbar{background:#1e1e1e;border-color:rgba(255,255,255,0.15);}
 html.dark .fmt-font-btn{background:none;border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);}
 html.dark .fmt-font-btn:hover{background:rgba(255,255,255,0.08);border-color:#CCFF00;color:#fff;}
@@ -358,21 +362,13 @@ gtag('config', 'G-96XWYGNS49');
 
 <!-- FORMATTING TOOLBAR -->
 <div id="fmt-toolbar">
-  <span class="fmt-label">Hero</span>
-  <button class="fmt-font-btn on" data-hero="classic" style="font-family:'DM Sans',sans-serif;" onclick="setHeroFont('classic',this)" title="Classic">Aa</button>
-  <button class="fmt-font-btn" data-hero="editorial" style="font-family:'Playfair Display',serif;font-style:italic;" onclick="setHeroFont('editorial',this)" title="Editorial">Aa</button>
-  <button class="fmt-font-btn" data-hero="modern" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;" onclick="setHeroFont('modern',this)" title="Modern">Aa</button>
-  <button class="fmt-font-btn" data-hero="minimal" style="font-family:'Inter Tight',sans-serif;font-weight:300;" onclick="setHeroFont('minimal',this)" title="Minimal">Aa</button>
-  <button class="fmt-font-btn" data-hero="bold" style="font-family:'Syne',sans-serif;font-weight:800;" onclick="setHeroFont('bold',this)" title="Bold">Aa</button>
-  <button class="fmt-font-btn" data-hero="warm" style="font-family:'Nunito',sans-serif;" onclick="setHeroFont('warm',this)" title="Warm">Aa</button>
-  <div class="fmt-sep"></div>
-  <span class="fmt-label">Body</span>
-  <button class="fmt-font-btn on" data-body="classic" style="font-family:'DM Sans',sans-serif;" onclick="setBodyFont('classic',this)" title="Classic">Aa</button>
-  <button class="fmt-font-btn" data-body="editorial" style="font-family:'Playfair Display',serif;font-style:italic;" onclick="setBodyFont('editorial',this)" title="Editorial">Aa</button>
-  <button class="fmt-font-btn" data-body="modern" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;" onclick="setBodyFont('modern',this)" title="Modern">Aa</button>
-  <button class="fmt-font-btn" data-body="minimal" style="font-family:'Inter Tight',sans-serif;font-weight:300;" onclick="setBodyFont('minimal',this)" title="Minimal">Aa</button>
-  <button class="fmt-font-btn" data-body="bold" style="font-family:'Syne',sans-serif;font-weight:800;" onclick="setBodyFont('bold',this)" title="Bold">Aa</button>
-  <button class="fmt-font-btn" data-body="warm" style="font-family:'Nunito',sans-serif;" onclick="setBodyFont('warm',this)" title="Warm">Aa</button>
+  <span class="fmt-label">Font</span>
+  <button class="fmt-font-btn on" data-font="classic" style="font-family:'DM Sans',sans-serif;" onclick="setFont('classic')" title="Classic">Aa</button>
+  <button class="fmt-font-btn" data-font="editorial" style="font-family:'Playfair Display',serif;font-style:italic;" onclick="setFont('editorial')" title="Editorial">Aa</button>
+  <button class="fmt-font-btn" data-font="modern" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;" onclick="setFont('modern')" title="Modern">Aa</button>
+  <button class="fmt-font-btn" data-font="minimal" style="font-family:'Inter Tight',sans-serif;font-weight:300;" onclick="setFont('minimal')" title="Minimal">Aa</button>
+  <button class="fmt-font-btn" data-font="bold" style="font-family:'Syne',sans-serif;font-weight:800;" onclick="setFont('bold')" title="Bold">Aa</button>
+  <button class="fmt-font-btn" data-font="warm" style="font-family:'Nunito',sans-serif;" onclick="setFont('warm')" title="Warm">Aa</button>
   <div class="fmt-sep"></div>
   <span class="fmt-label">Align</span>
   <div style="display:flex;">
@@ -387,7 +383,24 @@ gtag('config', 'G-96XWYGNS49');
     </button>
   </div>
   <div class="fmt-sep"></div>
-  <button id="fmt-apply" onclick="applyChanges()" style="font-size:0.62rem;font-weight:600;letter-spacing:0.08em;padding:0.3rem 0.85rem;background:var(--black);color:var(--white);border:none;border-radius:3px;cursor:pointer;white-space:nowrap;transition:all 0.2s;">Apply Changes</button>
+  <span class="fmt-label">Bg</span>
+  <div class="fmt-color-wrap" title="Background color">
+    <div class="fmt-swatch" id="fmt-swatch-bg" onclick="document.getElementById('fmt-input-bg').click()"></div>
+    <input type="color" id="fmt-input-bg" value="#F7F6F3" oninput="applyColorPick('bg',this.value)" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+    <input type="text" id="fmt-hex-bg" value="#F7F6F3" maxlength="7" class="fmt-hex-input" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-input-bg').value=this.value;applyColorPick('bg',this.value);}">
+  </div>
+  <span class="fmt-label">Text</span>
+  <div class="fmt-color-wrap" title="Text color">
+    <div class="fmt-swatch" id="fmt-swatch-text" onclick="document.getElementById('fmt-input-text').click()" style="background:#1A1A1A;"></div>
+    <input type="color" id="fmt-input-text" value="#1A1A1A" oninput="applyColorPick('text',this.value)" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+    <input type="text" id="fmt-hex-text" value="#1A1A1A" maxlength="7" class="fmt-hex-input" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-input-text').value=this.value;applyColorPick('text',this.value);}">
+  </div>
+  <span class="fmt-label">Button</span>
+  <div class="fmt-color-wrap" title="Button color">
+    <div class="fmt-swatch" id="fmt-swatch-btn" onclick="document.getElementById('fmt-input-btn').click()" style="background:#111111;"></div>
+    <input type="color" id="fmt-input-btn" value="#111111" oninput="applyColorPick('btn',this.value)" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+    <input type="text" id="fmt-hex-btn" value="#111111" maxlength="7" class="fmt-hex-input" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('fmt-input-btn').value=this.value;applyColorPick('btn',this.value);}">
+  </div>
 </div><!-- /#fmt-toolbar -->
 
 <div class="profile-hero">
@@ -494,43 +507,42 @@ let currentFont = 'classic';
 let activeEditEl = null;
 
 // ── FONT ──
-const fontMap = {
-  classic:   { heading: "'DM Sans',sans-serif",          body: "'DM Sans',sans-serif" },
-  editorial: { heading: "'Playfair Display',serif",       body: "'Lora',serif" },
-  modern:    { heading: "'Plus Jakarta Sans',sans-serif", body: "'Plus Jakarta Sans',sans-serif" },
-  minimal:   { heading: "'Inter Tight',sans-serif",       body: "'Inter Tight',sans-serif" },
-  bold:      { heading: "'Syne',sans-serif",              body: "'Syne',sans-serif" },
-  warm:      { heading: "'Nunito',sans-serif",            body: "'Nunito',sans-serif" },
-};
-let currentHeroFont = 'classic';
-let currentBodyFont = 'classic';
-
-function setHeroFont(name, el){
-  currentHeroFont = name;
-  document.querySelectorAll('[data-hero]').forEach(b => b.classList.toggle('on', b.dataset.hero === name));
-  const f = fontMap[name] || fontMap.classic;
-  document.documentElement.style.setProperty('--profile-heading', f.heading);
+function setFont(name){
+  currentFont = name;
+  document.body.className = document.body.className.replace(/font-\w+/g,'').trim();
+  document.body.classList.add('font-' + name);
+  document.querySelectorAll('.fmt-font-btn').forEach(b => b.classList.toggle('on', b.dataset.font === name));
   autoSave();
 }
 
-function setBodyFont(name, el){
-  currentBodyFont = name;
-  document.querySelectorAll('[data-body]').forEach(b => b.classList.toggle('on', b.dataset.body === name));
-  const f = fontMap[name] || fontMap.classic;
-  document.documentElement.style.setProperty('--profile-font', f.body);
-  autoSave();
-}
+// ── COLOR PICKERS ──
+let pageColors = { bg: '#F7F6F3', text: '#1A1A1A', btn: '#111111' };
 
-function applyChanges(){
-  const btn = document.getElementById('fmt-apply');
-  btn.textContent = '✓ Applied!';
-  btn.style.background = 'var(--accent-dark, #8AB300)';
-  setTimeout(() => {
-    btn.textContent = 'Apply Changes';
-    btn.style.background = '';
-  }, 2000);
+function applyColorPick(type, val){
+  pageColors[type] = val;
+  // Update swatch
+  const swatchId = {bg:'fmt-swatch-bg', text:'fmt-swatch-text', btn:'fmt-swatch-btn'}[type];
+  const hexId = {bg:'fmt-hex-bg', text:'fmt-hex-text', btn:'fmt-hex-btn'}[type];
+  document.getElementById(swatchId).style.background = val;
+  document.getElementById(hexId).value = val;
+  // Apply to page
+  if(type === 'bg'){
+    document.querySelector('.profile-hero').style.background = val;
+    document.querySelector('.main-content') && (document.querySelector('.main-content').style.background = val);
+  }
+  if(type === 'text'){
+    document.getElementById('profileName').style.color = val;
+    document.getElementById('profileMeta').style.color = val;
+    document.getElementById('profileBio').style.color = val;
+  }
+  if(type === 'btn'){
+    const lum = parseInt(val.slice(1,3),16)*0.299/255 + parseInt(val.slice(3,5),16)*0.587/255 + parseInt(val.slice(5,7),16)*0.114/255;
+    const btnText = lum > 0.4 ? '#111111' : '#ffffff';
+    const chatBtn = document.getElementById('chat-toggle');
+    if(chatBtn){ chatBtn.style.background = val; chatBtn.style.color = btnText; }
+    document.querySelectorAll('.chat-send,.btn-buy,.btn-purchase').forEach(el => { el.style.background = val; if(el.tagName !== 'INPUT') el.style.color = btnText; });
+  }
   autoSave();
-  setTimeout(() => showPurchaseModal(), 5000);
 }
 
 // ── ALIGNMENT ──
@@ -581,8 +593,7 @@ function autoSave(){
   d.name = name;
   d.meta = document.getElementById('profileMeta').textContent.trim();
   d.bio = document.getElementById('profileBio').textContent.trim();
-  d.heroFont = currentHeroFont;
-  d.bodyFont = currentBodyFont;
+  d.font = currentFont;
   d.alignName = document.getElementById('profileName').dataset.align || 'left';
   d.alignMeta = document.getElementById('profileMeta').dataset.align || 'left';
   d.alignBio = document.getElementById('profileBio').dataset.align || 'left';
@@ -630,10 +641,7 @@ window.addEventListener('load', () => {
   }
 
   // Apply fonts
-  document.body.classList.add('font-classic');
-  if(d.heroFont){ setHeroFont(d.heroFont); }
-  if(d.bodyFont){ setBodyFont(d.bodyFont); }
-
+  if(d.font){ setFont(d.font); } else { document.body.classList.add('font-classic'); }
   systemPrompt = d.systemPrompt;
   // Apply brand colors — stored and applied after content renders
   if(d.customColors){
@@ -647,6 +655,14 @@ window.addEventListener('load', () => {
     root.style.setProperty('--custom-button', c.buttonBg);
     root.style.setProperty('--custom-button-text', bT);
     root.classList.add('custom');
+    // Seed toolbar color pickers
+    pageColors = { bg: c.bg, text: '#1A1A1A', btn: c.buttonBg };
+    document.getElementById('fmt-swatch-bg').style.background = c.bg;
+    document.getElementById('fmt-hex-bg').value = c.bg;
+    document.getElementById('fmt-input-bg').value = c.bg;
+    document.getElementById('fmt-swatch-btn').style.background = c.buttonBg;
+    document.getElementById('fmt-hex-btn').value = c.buttonBg;
+    document.getElementById('fmt-input-btn').value = c.buttonBg;
     // Store colors for applyBrandColors() — called after content is in DOM
     window._brandColors = { accent: c.accent, accentDark: aC, bg: c.bg, button: c.buttonBg, buttonText: bT };
   }
