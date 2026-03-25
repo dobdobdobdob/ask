@@ -180,6 +180,7 @@ html.custom .btn-purchase{background:var(--custom-button)!important;color:var(--
 @media(max-width:640px){#gdpr-banner{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem;}.gdpr-btns{width:100%;}.gdpr-accept,.gdpr-decline{flex:1;text-align:center;}}
 
 /* FONT DEFINITIONS */
+:root{--profile-font:'DM Sans',sans-serif;--profile-heading:'Playfair Display',serif;}
 body.font-classic{--profile-font:'DM Sans',sans-serif;--profile-heading:'Playfair Display',serif;}
 body.font-editorial{--profile-font:'Lora',serif;--profile-heading:'Playfair Display',serif;}
 body.font-modern{--profile-font:'Plus Jakarta Sans',sans-serif;--profile-heading:'Plus Jakarta Sans',sans-serif;}
@@ -357,13 +358,21 @@ gtag('config', 'G-96XWYGNS49');
 
 <!-- FORMATTING TOOLBAR -->
 <div id="fmt-toolbar">
-  <span class="fmt-label">Font</span>
-  <button class="fmt-font-btn on" data-font="classic" style="font-family:'DM Sans',sans-serif;" onclick="setFont('classic')" title="Classic">Aa</button>
-  <button class="fmt-font-btn" data-font="editorial" style="font-family:'Playfair Display',serif;font-style:italic;" onclick="setFont('editorial')" title="Editorial">Aa</button>
-  <button class="fmt-font-btn" data-font="modern" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;" onclick="setFont('modern')" title="Modern">Aa</button>
-  <button class="fmt-font-btn" data-font="minimal" style="font-family:'Inter Tight',sans-serif;font-weight:300;" onclick="setFont('minimal')" title="Minimal">Aa</button>
-  <button class="fmt-font-btn" data-font="bold" style="font-family:'Syne',sans-serif;font-weight:800;" onclick="setFont('bold')" title="Bold">Aa</button>
-  <button class="fmt-font-btn" data-font="warm" style="font-family:'Nunito',sans-serif;" onclick="setFont('warm')" title="Warm">Aa</button>
+  <span class="fmt-label">Hero</span>
+  <button class="fmt-font-btn on" data-hero="classic" style="font-family:'DM Sans',sans-serif;" onclick="setHeroFont('classic',this)" title="Classic">Aa</button>
+  <button class="fmt-font-btn" data-hero="editorial" style="font-family:'Playfair Display',serif;font-style:italic;" onclick="setHeroFont('editorial',this)" title="Editorial">Aa</button>
+  <button class="fmt-font-btn" data-hero="modern" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;" onclick="setHeroFont('modern',this)" title="Modern">Aa</button>
+  <button class="fmt-font-btn" data-hero="minimal" style="font-family:'Inter Tight',sans-serif;font-weight:300;" onclick="setHeroFont('minimal',this)" title="Minimal">Aa</button>
+  <button class="fmt-font-btn" data-hero="bold" style="font-family:'Syne',sans-serif;font-weight:800;" onclick="setHeroFont('bold',this)" title="Bold">Aa</button>
+  <button class="fmt-font-btn" data-hero="warm" style="font-family:'Nunito',sans-serif;" onclick="setHeroFont('warm',this)" title="Warm">Aa</button>
+  <div class="fmt-sep"></div>
+  <span class="fmt-label">Body</span>
+  <button class="fmt-font-btn on" data-body="classic" style="font-family:'DM Sans',sans-serif;" onclick="setBodyFont('classic',this)" title="Classic">Aa</button>
+  <button class="fmt-font-btn" data-body="editorial" style="font-family:'Playfair Display',serif;font-style:italic;" onclick="setBodyFont('editorial',this)" title="Editorial">Aa</button>
+  <button class="fmt-font-btn" data-body="modern" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;" onclick="setBodyFont('modern',this)" title="Modern">Aa</button>
+  <button class="fmt-font-btn" data-body="minimal" style="font-family:'Inter Tight',sans-serif;font-weight:300;" onclick="setBodyFont('minimal',this)" title="Minimal">Aa</button>
+  <button class="fmt-font-btn" data-body="bold" style="font-family:'Syne',sans-serif;font-weight:800;" onclick="setBodyFont('bold',this)" title="Bold">Aa</button>
+  <button class="fmt-font-btn" data-body="warm" style="font-family:'Nunito',sans-serif;" onclick="setBodyFont('warm',this)" title="Warm">Aa</button>
   <div class="fmt-sep"></div>
   <span class="fmt-label">Align</span>
   <div style="display:flex;">
@@ -377,6 +386,8 @@ gtag('config', 'G-96XWYGNS49');
       <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="5" y="6" width="10" height="2"/><rect x="1" y="10" width="14" height="2"/><rect x="7" y="14" width="8" height="2"/></svg>
     </button>
   </div>
+  <div class="fmt-sep"></div>
+  <button id="fmt-apply" onclick="applyChanges()" style="font-size:0.62rem;font-weight:600;letter-spacing:0.08em;padding:0.3rem 0.85rem;background:var(--black);color:var(--white);border:none;border-radius:3px;cursor:pointer;white-space:nowrap;transition:all 0.2s;">Apply Changes</button>
 </div><!-- /#fmt-toolbar -->
 
 <div class="profile-hero">
@@ -483,12 +494,43 @@ let currentFont = 'classic';
 let activeEditEl = null;
 
 // ── FONT ──
-function setFont(name){
-  currentFont = name;
-  document.body.className = document.body.className.replace(/font-\w+/g,'').trim();
-  document.body.classList.add('font-' + name);
-  document.querySelectorAll('.fmt-font-btn').forEach(b => b.classList.toggle('on', b.dataset.font === name));
+const fontMap = {
+  classic:   { heading: "'DM Sans',sans-serif",          body: "'DM Sans',sans-serif" },
+  editorial: { heading: "'Playfair Display',serif",       body: "'Lora',serif" },
+  modern:    { heading: "'Plus Jakarta Sans',sans-serif", body: "'Plus Jakarta Sans',sans-serif" },
+  minimal:   { heading: "'Inter Tight',sans-serif",       body: "'Inter Tight',sans-serif" },
+  bold:      { heading: "'Syne',sans-serif",              body: "'Syne',sans-serif" },
+  warm:      { heading: "'Nunito',sans-serif",            body: "'Nunito',sans-serif" },
+};
+let currentHeroFont = 'classic';
+let currentBodyFont = 'classic';
+
+function setHeroFont(name, el){
+  currentHeroFont = name;
+  document.querySelectorAll('[data-hero]').forEach(b => b.classList.toggle('on', b.dataset.hero === name));
+  const f = fontMap[name] || fontMap.classic;
+  document.documentElement.style.setProperty('--profile-heading', f.heading);
   autoSave();
+}
+
+function setBodyFont(name, el){
+  currentBodyFont = name;
+  document.querySelectorAll('[data-body]').forEach(b => b.classList.toggle('on', b.dataset.body === name));
+  const f = fontMap[name] || fontMap.classic;
+  document.documentElement.style.setProperty('--profile-font', f.body);
+  autoSave();
+}
+
+function applyChanges(){
+  const btn = document.getElementById('fmt-apply');
+  btn.textContent = '✓ Applied!';
+  btn.style.background = 'var(--accent-dark, #8AB300)';
+  setTimeout(() => {
+    btn.textContent = 'Apply Changes';
+    btn.style.background = '';
+  }, 2000);
+  autoSave();
+  setTimeout(() => showPurchaseModal(), 5000);
 }
 
 // ── ALIGNMENT ──
@@ -539,7 +581,8 @@ function autoSave(){
   d.name = name;
   d.meta = document.getElementById('profileMeta').textContent.trim();
   d.bio = document.getElementById('profileBio').textContent.trim();
-  d.font = currentFont;
+  d.heroFont = currentHeroFont;
+  d.bodyFont = currentBodyFont;
   d.alignName = document.getElementById('profileName').dataset.align || 'left';
   d.alignMeta = document.getElementById('profileMeta').dataset.align || 'left';
   d.alignBio = document.getElementById('profileBio').dataset.align || 'left';
@@ -586,14 +629,10 @@ window.addEventListener('load', () => {
     document.documentElement.className = d.theme;
   }
 
-  // Apply font
-  if(d.font){
-    currentFont = d.font;
-    document.body.classList.add('font-' + d.font);
-    document.querySelectorAll('.fmt-font-btn').forEach(b => b.classList.toggle('on', b.dataset.font === d.font));
-  } else {
-    document.body.classList.add('font-classic');
-  }
+  // Apply fonts
+  document.body.classList.add('font-classic');
+  if(d.heroFont){ setHeroFont(d.heroFont); }
+  if(d.bodyFont){ setBodyFont(d.bodyFont); }
 
   systemPrompt = d.systemPrompt;
   // Apply brand colors — stored and applied after content renders
