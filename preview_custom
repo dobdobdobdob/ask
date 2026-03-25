@@ -719,6 +719,9 @@ window.addEventListener('load', () => {
     document.documentElement.style.setProperty('--custom-button', c.buttonBg);
     document.documentElement.style.setProperty('--custom-button-text', bT);
     document.documentElement.classList.add('custom');
+    // Force hero bg as inline style — CSS vars on profile-hero are unreliable
+    const hero = document.querySelector('.profile-hero');
+    if(hero) hero.style.background = c.bg;
   }
   avatarDataUrl = d.avatar || sessionStorage.getItem('ask_avatar');
   if(d.avatar) { sessionStorage.setItem('ask_avatar', d.avatar); delete d.avatar; sessionStorage.setItem('ask_draft', JSON.stringify(d)); }
