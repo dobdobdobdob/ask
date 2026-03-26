@@ -804,7 +804,8 @@ function handlePurchase(){
   const d = raw ? JSON.parse(raw) : {};
   const plan = d.plan || 'basic';
   const slug = d.chosenUsername || '';
-  // Save slug in cookie — survives Stripe redirect
+  // Save to localStorage — survives Stripe redirect
+  if(raw) localStorage.setItem('ask_purchase_data', raw);
   if(slug) document.cookie = 'ask_slug=' + slug + ';path=/;max-age=3600;samesite=lax';
   const url = plan === 'custom' ? STRIPE_URL_CUSTOM : STRIPE_URL;
   window.location.href = url;

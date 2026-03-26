@@ -139,7 +139,7 @@ footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center
       </div>
       <div class="cname-step">
         <div class="cname-step-num">3</div>
-        <div class="cname-step-text"><strong>Email us</strong> at <a href="mailto:hello@menoslabs.com" style="color:var(--accent-dark);font-weight:500;">hello@menoslabs.com</a> with your custom domain and your Ask slug — we'll activate it.</div>
+        <div class="cname-step-text"><strong>Email us</strong> at <a href="/cdn-cgi/l/email-protection#4a222f2626250a272f242539262b283964292527" style="color:var(--accent-dark);font-weight:500;"><span class="__cf_email__" data-cfemail="f69e939a9a99b69b939899859a979485d895999b">[email&#160;protected]</span></a> with your custom domain and your Ask slug — we'll activate it.</div>
       </div>
     </div>
 
@@ -192,7 +192,7 @@ footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center
     <div style="margin-top:1.5rem;">
       <div class="email-row">
         <div class="email-dot"></div>
-        <div class="email-text">Once your CNAME is set, email <a href="mailto:hello@menoslabs.com">hello@menoslabs.com</a> with your domain and Ask slug. We'll configure routing and confirm when it's live — usually within a few hours.</div>
+        <div class="email-text">Once your CNAME is set, email <a href="/cdn-cgi/l/email-protection#7e161b1212113e131b10110d121f1c0d501d1113"><span class="__cf_email__" data-cfemail="bed6dbd2d2d1fed3dbd0d1cdd2dfdccd90ddd1d3">[email&#160;protected]</span></a> with your domain and Ask slug. We'll configure routing and confirm when it's live — usually within a few hours.</div>
       </div>
     </div>
   </div>
@@ -215,7 +215,7 @@ footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center
       </div>
       <div class="next-item">
         <div class="next-item-title">Need help?</div>
-        <div class="next-item-body">Email <a href="mailto:hello@menoslabs.com" style="color:var(--accent-dark);">hello@menoslabs.com</a> — we respond fast.</div>
+        <div class="next-item-body">Email <a href="/cdn-cgi/l/email-protection#bdd5d8d1d1d2fdd0d8d3d2ced1dcdfce93ded2d0" style="color:var(--accent-dark);"><span class="__cf_email__" data-cfemail="1c74797070735c717972736f707d7e6f327f7371">[email&#160;protected]</span></a> — we respond fast.</div>
       </div>
     </div>
   </div>
@@ -227,14 +227,21 @@ footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center
   <div class="footer-copy">Made in Chicago &nbsp;|&nbsp; Menos Labs LLC 2026</div>
 </footer>
 
-<script>
-// Read slug — cookie survives Stripe redirect
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Read slug — try URL param, cookie, localStorage, sessionStorage
 const params = new URLSearchParams(window.location.search);
 let slug = params.get('slug') || '';
 
 if(!slug){
   const match = document.cookie.match(/(?:^|;\s*)ask_slug=([^;]+)/);
   if(match) slug = decodeURIComponent(match[1]);
+}
+
+if(!slug){
+  try {
+    const raw = localStorage.getItem('ask_purchase_data');
+    if(raw){ const d = JSON.parse(raw); slug = d.chosenUsername || ''; }
+  } catch(e){}
 }
 
 if(!slug){
@@ -265,19 +272,4 @@ function copyLink(){
 }
 
 function copyVal(btn, val){
-  navigator.clipboard.writeText(val).then(() => {
-    btn.textContent = '✓ Copied';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-function switchTab(name, el){
-  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.provider-panel').forEach(p => p.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById('tab-' + name).classList.add('on');
-}
-</script>
-</body>
-</html>
+  navigator.clip
