@@ -228,9 +228,12 @@ footer{background:var(--black);padding:2rem 4rem;display:flex;align-items:center
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// Read slug — try URL param, cookie, localStorage, sessionStorage
+const ASK_SERVER = 'https://ask-server.thedobrien.workers.dev';
+
+// Read slug + full profile data — try URL param, cookie, localStorage, sessionStorage
 const params = new URLSearchParams(window.location.search);
 let slug = params.get('slug') || '';
+let profileData = null;
 
 if(!slug){
   const match = document.cookie.match(/(?:^|;\s*)ask_slug=([^;]+)/);
@@ -240,14 +243,14 @@ if(!slug){
 if(!slug){
   try {
     const raw = localStorage.getItem('ask_purchase_data');
-    if(raw){ const d = JSON.parse(raw); slug = d.chosenUsername || ''; }
+    if(raw){ profileData = JSON.parse(raw); slug = profileData.chosenUsername || ''; }
   } catch(e){}
 }
 
 if(!slug){
   try {
     const raw = sessionStorage.getItem('ask_draft');
-    if(raw){ const d = JSON.parse(raw); slug = d.chosenUsername || ''; }
+    if(raw){ profileData = JSON.parse(raw); slug = profileData.chosenUsername || ''; }
   } catch(e){}
 }
 
@@ -259,6 +262,21 @@ if(slug){
 } else {
   document.getElementById('liveLink').textContent = 'ask.menoslabs.com/your-slug';
   document.getElementById('btnView').style.display = 'none';
+}
+
+// Save profile to KV if we have the data
+if(profileData && slug){
+  fetch(ASK_SERVER + '/save', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({...profileData, requestedSlug: slug})
+  }).then(res => res.json()).then(result => {
+    if(result.slug){
+      localStorage.removeItem('ask_purchase_data');
+      sessionStorage.removeItem('ask_draft');
+      sessionStorage.removeItem('ask_avatar');
+    }
+  }).catch(e => console.error('Profile save failed:', e));
 }
 
 function copyLink(){
