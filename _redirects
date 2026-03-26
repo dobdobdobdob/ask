@@ -1,7 +1,5 @@
 /create_custom  /create_custom.html  200
 /preview_custom /preview_custom.html 200
-/success_custom/ /success_custom.html 200
-/success_custom /success_custom.html 200
 /create    /create.html    200
 /preview   /preview.html   200
 /success   /success.html   200
